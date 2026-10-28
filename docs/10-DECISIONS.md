@@ -1,0 +1,72 @@
+# 10 — Architecture Decision Records (ADRs)
+
+Each record: ID, status, context, decision, consequences, review trigger. Proposed decisions should be reviewed at project kickoff.
+
+## ADR-001 — Next.js App Router
+**Status:** Proposed accepted in product discussion.  
+**Decision:** Next.js + TypeScript for full-stack application.  
+**Reason:** unified UI/server development and modular feature delivery.  
+**Consequence:** long-running workers and realtime gateway deployed separately.
+
+## ADR-002 — Modular monolith
+**Status:** Proposed.  
+**Decision:** single application with explicit domain modules, not microservices at launch.  
+**Consequence:** simpler operations; avoid cross-domain circular imports.
+
+## ADR-003 — PostgreSQL + Prisma
+**Status:** Proposed.  
+**Reason:** transactional integrity, developer productivity and query control.  
+**Consequence:** add DB constraints and performance profiling; verify driver/ORM support.
+
+## ADR-004 — Better Auth organizations
+**Status:** Proposed.  
+**Decision:** use a vetted auth library with organizations and role support after plugin compatibility review.  
+**Consequence:** auth tables and permission hooks follow integration's documented schema.
+
+## ADR-005 — Shared-schema tenancy
+**Status:** Proposed.  
+**Decision:** organization-scoped tables in shared PostgreSQL database.  
+**Consequence:** strict query scoping, tenant-aware FK design, negative security tests, possible RLS defense in depth.
+
+## ADR-006 — AI actions are human-controlled
+**Status:** Proposed.  
+**Decision:** AI creates drafts by default; mutations require explicit approval and server-side authorization.  
+**Consequence:** slower than unrestricted agents, but safer and auditable.
+
+## ADR-007 — Independent implementation
+**Status:** Required.  
+**Decision:** screenshot observations inform requirements, but proprietary code, private assets, confidential data and pixel-perfect replication are outside scope absent rights/permission.  
+**Consequence:** original UX and business rules, with assumptions documented.
+
+## ADR-008 — Organization membership owned by the application (Phase 0)
+**Status:** Accepted for Phase 0 (2026-10-28); review before Phase 1 invitations.  
+**Context:** ADR-004 required a compatibility review of the Better Auth organization plugin. The plugin exposes its own HTTP endpoints for creating organizations, inviting members, and changing roles, with its own access-control checks. It has no membership status (needed for "disabled membership" tests in `07-SECURITY.md`) and its mutations would bypass the application audit trail and permission matrix.  
+**Decision:** Better Auth handles identity only (email/password, email verification, password reset, sessions). `organizations`, `members` and `audit_logs` are application tables. All organization access is resolved by `getAuthorizedOrganization()` / `requirePermission()` in `src/features/organizations/server/organization-service.ts`, using the single matrix in `src/lib/permissions/matrix.ts`. The organization plugin is **not** enabled, so no `/api/auth/organization/*` endpoints exist. The active workspace is the URL slug, re-checked against membership on every request.  
+**Consequences:** one authorization and audit path; invitations, role changes and member removal must be built as feature services in Phase 1. Revisit if the plugin later supports membership status and hooks that fit the audit model.
+
+## ADR-009 — Phase 0 tooling and versions
+**Status:** Accepted (2026-10-28).  
+**Decision:** versions were checked against npm registry metadata and peer ranges at implementation time:
+- Next.js 16.4.3 (App Router, Turbopack; `proxy.ts` replaces `middleware.ts`), React 19.3.1.
+- TypeScript 5.9 (typescript-eslint, used by `eslint-config-next`, supports `<6.1`; TypeScript 7 is not yet supported by the lint toolchain).
+- ESLint 9 (`eslint-plugin-react` peer range does not include ESLint 10).
+- Prisma 7.10.1 with `@prisma/adapter-pg` and `prisma.config.ts` (Prisma 8 is only a release candidate; Better Auth peer range is `^5 || ^6 || ^7`).
+- Better Auth 1.7.14 with the Prisma adapter; `advanced.database.generateId: "uuid"` leaves id generation to the ORM, so every table uses `@default(uuid(7))`.
+- Tailwind CSS 4 via `@tailwindcss/turbopack`; shadcn/ui-style primitives (`cva` + `tailwind-merge`, `components.json` ready for the shadcn CLI); Radix is added when a primitive needs it.
+- next-intl 4 for i18n (closes OD-07 for i18n; rich text package still open).
+- Vitest 5; `embedded-postgres` provides PostgreSQL binaries for local tests when Docker is unavailable. CI uses a PostgreSQL service container.
+- pnpm 11 as package manager.  
+**Consequence:** upgrades follow the change protocol below; re-check peer ranges before bumping major versions.
+
+## Open decisions
+- **OD-01:** Which deploy environment/hosting region and target scale?
+- **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?
+- **OD-03:** Realtime gateway: Socket.IO vs managed pub/sub?
+- **OD-04:** Storage provider and retention limits?
+- **OD-05:** Pricing model and AI quota/overage policy?
+- **OD-06:** Is personal workspace a special organization?
+- **OD-07:** Preferred rich text package? (i18n decided: next-intl, ADR-009)
+- **OD-08:** Which AI model providers and residency constraints apply?
+
+## Change protocol
+Before changing a major decision, add a dated ADR with alternatives, tradeoffs, migration cost and sign-off.
