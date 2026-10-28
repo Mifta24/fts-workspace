@@ -1,0 +1,8 @@
+node_modules
+.next
+coverage
+pnpm-lock.yaml
+src/generated
+.data
+docs
+*.md
