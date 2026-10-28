@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: fts
+          POSTGRES_PASSWORD: fts_ci_password
+          POSTGRES_DB: fts_workspace_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fts -d fts_workspace_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://fts:fts_ci_password@localhost:5432/fts_workspace_test
+      TEST_DATABASE_URL: postgresql://fts:fts_ci_password@localhost:5432/fts_workspace_test
+      BETTER_AUTH_SECRET: ci-only-secret-not-used-anywhere-else-000
+      BETTER_AUTH_URL: http://localhost:3000
+      EMAIL_TRANSPORT: log
+      LOG_LEVEL: warn
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      - run: pnpm db:deploy
+      - run: pnpm test
+      - run: pnpm build
