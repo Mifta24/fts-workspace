@@ -1,0 +1,72 @@
+{
+  "Common": {
+    "appName": "FTS Workspace",
+    "signOut": "ログアウト",
+    "loading": "処理中…",
+    "genericError": "問題が発生しました。もう一度お試しください。",
+    "errorTitle": "エラーが発生しました",
+    "errorBody": "予期しないエラーが発生しました。もう一度お試しください。",
+    "retry": "再試行"
+  },
+  "Home": {
+    "title": "目標を計画し、仕事を進め、チームの足並みをそろえる。",
+    "subtitle": "AIが下書きし、人が決める。安全なマルチテナントのワークスペース。",
+    "signIn": "ログイン",
+    "signUp": "アカウントを作成"
+  },
+  "Auth": {
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "passwordHint": "12文字以上で入力してください。",
+    "name": "氏名",
+    "signInTitle": "ログイン",
+    "signInSubmit": "ログイン",
+    "signInFailed": "メールアドレスまたはパスワードが正しくないか、メールが未確認です。",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "signUpTitle": "アカウントを作成",
+    "signUpSubmit": "アカウントを作成",
+    "signUpFailed": "アカウントを作成できませんでした。入力内容を確認してください。",
+    "haveAccount": "すでにアカウントをお持ちですか？",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "forgotTitle": "パスワードの再設定",
+    "forgotSubmit": "再設定リンクを送信",
+    "forgotSent": "該当するアカウントがある場合、再設定リンクを送信しました。",
+    "resetTitle": "新しいパスワードを設定",
+    "resetSubmit": "パスワードを更新",
+    "resetInvalid": "この再設定リンクは無効か、有効期限が切れています。",
+    "resetDone": "パスワードを更新しました。ログインできます。",
+    "verifyTitle": "メールを確認してください",
+    "verifyBody": "確認用リンクをメールで送信しました。リンクを開いてアカウントを有効化してください。",
+    "backToSignIn": "ログインに戻る"
+  },
+  "Workspaces": {
+    "title": "ワークスペース",
+    "empty": "まだワークスペースに参加していません。作成して始めましょう。",
+    "open": "開く",
+    "createTitle": "ワークスペースを作成",
+    "nameLabel": "ワークスペース名",
+    "slugLabel": "ワークスペースURL",
+    "slugHint": "半角英小文字、数字、ハイフンが使えます。",
+    "createSubmit": "ワークスペースを作成",
+    "invalid": "ワークスペース名とURLを確認してください。",
+    "conflict": "このワークスペースURLはすでに使われています。"
+  },
+  "Workspace": {
+    "overview": "概要",
+    "role": "あなたのロール：{role}",
+    "switch": "ワークスペースを切り替え",
+    "placeholder": "目標、タスク、ダッシュボードはフェーズ1で追加されます。"
+  },
+  "Roles": {
+    "OWNER": "オーナー",
+    "ADMIN": "管理者",
+    "MANAGER": "マネージャー",
+    "MEMBER": "メンバー",
+    "VIEWER": "閲覧者"
+  },
+  "NotFound": {
+    "title": "ページが見つかりません",
+    "body": "ページが存在しないか、アクセス権がありません。",
+    "back": "ワークスペース一覧へ"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "Common": {
+    "appName": "FTS Workspace",
+    "signOut": "Keluar",
+    "loading": "Memproses…",
+    "genericError": "Terjadi kesalahan. Silakan coba lagi.",
+    "errorTitle": "Terjadi kesalahan",
+    "errorBody": "Terjadi kesalahan tak terduga. Silakan coba lagi.",
+    "retry": "Coba lagi"
+  },
+  "Home": {
+    "title": "Rencanakan tujuan, jalankan pekerjaan, selaraskan tim.",
+    "subtitle": "Workspace multi-tenant yang aman: AI membuat draf, manusia yang memutuskan.",
+    "signIn": "Masuk",
+    "signUp": "Buat akun"
+  },
+  "Auth": {
+    "email": "Email",
+    "password": "Kata sandi",
+    "passwordHint": "Minimal 12 karakter.",
+    "name": "Nama lengkap",
+    "signInTitle": "Masuk",
+    "signInSubmit": "Masuk",
+    "signInFailed": "Email atau kata sandi salah, atau email belum diverifikasi.",
+    "noAccount": "Belum punya akun?",
+    "signUpTitle": "Buat akun Anda",
+    "signUpSubmit": "Buat akun",
+    "signUpFailed": "Akun tidak dapat dibuat. Periksa data Anda lalu coba lagi.",
+    "haveAccount": "Sudah punya akun?",
+    "forgotPassword": "Lupa kata sandi?",
+    "forgotTitle": "Atur ulang kata sandi",
+    "forgotSubmit": "Kirim tautan atur ulang",
+    "forgotSent": "Jika akun dengan email tersebut ada, tautan atur ulang sedang dikirim.",
+    "resetTitle": "Pilih kata sandi baru",
+    "resetSubmit": "Perbarui kata sandi",
+    "resetInvalid": "Tautan atur ulang ini tidak valid atau sudah kedaluwarsa.",
+    "resetDone": "Kata sandi diperbarui. Silakan masuk.",
+    "verifyTitle": "Periksa kotak masuk Anda",
+    "verifyBody": "Kami mengirim tautan verifikasi ke email Anda. Buka tautan itu untuk mengaktifkan akun.",
+    "backToSignIn": "Kembali ke halaman masuk"
+  },
+  "Workspaces": {
+    "title": "Workspace Anda",
+    "empty": "Anda belum menjadi anggota workspace mana pun. Buat satu untuk memulai.",
+    "open": "Buka",
+    "createTitle": "Buat workspace",
+    "nameLabel": "Nama workspace",
+    "slugLabel": "URL workspace",
+    "slugHint": "Huruf kecil, angka, dan tanda hubung.",
+    "createSubmit": "Buat workspace",
+    "invalid": "Periksa nama dan URL workspace.",
+    "conflict": "URL workspace ini sudah dipakai."
+  },
+  "Workspace": {
+    "overview": "Ringkasan",
+    "role": "Peran Anda: {role}",
+    "switch": "Ganti workspace",
+    "placeholder": "Tujuan, tugas, dan dasbor hadir di Fase 1."
+  },
+  "Roles": {
+    "OWNER": "Pemilik",
+    "ADMIN": "Admin",
+    "MANAGER": "Manajer",
+    "MEMBER": "Anggota",
+    "VIEWER": "Peninjau"
+  },
+  "NotFound": {
+    "title": "Halaman tidak ditemukan",
+    "body": "Halaman tidak ada atau Anda tidak memiliki akses.",
+    "back": "Ke daftar workspace"
+  }
+}

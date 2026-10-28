@@ -1,0 +1,72 @@
+{
+  "Common": {
+    "appName": "FTS Workspace",
+    "signOut": "Sign out",
+    "loading": "Working…",
+    "genericError": "Something went wrong. Please try again.",
+    "errorTitle": "Something went wrong",
+    "errorBody": "An unexpected error occurred. Please try again.",
+    "retry": "Try again"
+  },
+  "Home": {
+    "title": "Plan goals, run work, keep teams aligned.",
+    "subtitle": "A secure, multi-tenant workspace with AI that drafts and people who decide.",
+    "signIn": "Sign in",
+    "signUp": "Create an account"
+  },
+  "Auth": {
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 12 characters.",
+    "name": "Full name",
+    "signInTitle": "Sign in",
+    "signInSubmit": "Sign in",
+    "signInFailed": "Email or password is incorrect, or the email is not verified yet.",
+    "noAccount": "No account yet?",
+    "signUpTitle": "Create your account",
+    "signUpSubmit": "Create account",
+    "signUpFailed": "We could not create the account. Check the details and try again.",
+    "haveAccount": "Already have an account?",
+    "forgotPassword": "Forgot password?",
+    "forgotTitle": "Reset your password",
+    "forgotSubmit": "Send reset link",
+    "forgotSent": "If an account exists for that email, a reset link is on its way.",
+    "resetTitle": "Choose a new password",
+    "resetSubmit": "Update password",
+    "resetInvalid": "This reset link is invalid or has expired.",
+    "resetDone": "Password updated. You can sign in now.",
+    "verifyTitle": "Check your inbox",
+    "verifyBody": "We sent a verification link to your email. Open it to activate your account.",
+    "backToSignIn": "Back to sign in"
+  },
+  "Workspaces": {
+    "title": "Your workspaces",
+    "empty": "You are not a member of any workspace yet. Create one to get started.",
+    "open": "Open",
+    "createTitle": "Create a workspace",
+    "nameLabel": "Workspace name",
+    "slugLabel": "Workspace URL",
+    "slugHint": "Lowercase letters, numbers and hyphens.",
+    "createSubmit": "Create workspace",
+    "invalid": "Check the workspace name and URL.",
+    "conflict": "This workspace URL is already taken."
+  },
+  "Workspace": {
+    "overview": "Overview",
+    "role": "Your role: {role}",
+    "switch": "Switch workspace",
+    "placeholder": "Goals, tasks and the dashboard arrive in Phase 1."
+  },
+  "Roles": {
+    "OWNER": "Owner",
+    "ADMIN": "Admin",
+    "MANAGER": "Manager",
+    "MEMBER": "Member",
+    "VIEWER": "Viewer"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "body": "The page does not exist or you do not have access to it.",
+    "back": "Go to your workspaces"
+  }
+}
