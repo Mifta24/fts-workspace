@@ -4,6 +4,8 @@
  */
 export const E2E_PORT = 3100;
 export const E2E_BASE_URL = `http://localhost:${E2E_PORT}`;
+export const GATEWAY_PORT = 4100;
+export const GATEWAY_SECRET = "e2e-only-gateway-secret-0123456789abcdef";
 export const E2E_PASSWORD = "e2e-only-password-123";
 
 const LOCAL_URL = "postgresql://fts:fts_e2e_password@127.0.0.1:54330/fts_workspace_e2e";

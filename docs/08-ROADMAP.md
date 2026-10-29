@@ -26,10 +26,10 @@ No durations are commitments; estimate after technical discovery and staffing as
 **Post-gate addition (2026-10-29):** member invitations (create, list, revoke, accept; members page).
 
 ## Phase 2 — Collaboration & Engagement
-- [ ] Dedicated realtime service and authenticated channels
+- [x] Dedicated realtime service and authenticated channels (slice 8: Socket.IO gateway, ADR-012)
 - [x] DM, channels, pagination, notifications (slice 7, database-backed; realtime delivery is the next slice; mentions and deadline reminders are not built)
 - [ ] Audit-backed point events, challenges, streaks, leaderboard visibility
-**Exit gate:** permissions tested on socket joins; load tests for message delivery.
+**Exit gate:** permissions tested on socket joins; load tests for message delivery. Both exist (`tests/integration/gateway.test.ts`, `pnpm test:load`); the challenge/points item is still open, so the gate is not yet met.
 
 ## Phase 3 — AI & Knowledge
 - [ ] File upload, ACL, metadata, storage lifecycle

@@ -62,7 +62,8 @@
     "tasks": "タスク",
     "members": "メンバー",
     "chat": "チャット",
-    "notifications": "受信トレイ"
+    "notifications": "受信トレイ",
+    "unread": "未読の通知 {count} 件"
   },
   "Roles": {
     "OWNER": "オーナー",

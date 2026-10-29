@@ -39,7 +39,7 @@ export default async function ChannelPage({
   const latestId = page.messages.at(-1)?.id ?? null;
 
   return (
-    <WorkspaceShell context={context} active="chat">
+    <WorkspaceShell context={context} active="chat" channelId={channelId}>
       <h1 className="text-2xl font-semibold tracking-tight">
         {channel.type === "CHANNEL" ? `# ${channel.name}` : channel.name}
       </h1>

@@ -62,7 +62,8 @@
     "tasks": "Tugas",
     "members": "Anggota",
     "chat": "Obrolan",
-    "notifications": "Kotak masuk"
+    "notifications": "Kotak masuk",
+    "unread": "{count} notifikasi belum dibaca"
   },
   "Roles": {
     "OWNER": "Pemilik",

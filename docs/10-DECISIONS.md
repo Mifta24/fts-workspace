@@ -70,10 +70,16 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Alternatives:** a vendor SDK (ties us to one provider and its streaming types), or streaming output (no benefit for a short structured plan).  
 **Consequence:** no data leaves the deployment until an operator sets `AI_BASE_URL`; choosing the real provider is a configuration step after OD-08, plus the usage ledger and budgets listed in `07-SECURITY.md`.
 
+## ADR-012 — Realtime via a Socket.IO gateway (closes OD-03)
+**Status:** Accepted (2026-10-29).  
+**Context:** Phase 2 needs live chat and notifications with authorization checked on every room join. Next.js route handlers cannot hold WebSocket connections on serverless hosting.  
+**Decision:** a separate Node process (`gateway/`, `pnpm gateway`) running Socket.IO 4.8.4 (latest at implementation time; `socket.io` and `socket.io-client` pinned together). Postgres stays the source of truth. The app publishes **identifier-only** events to the gateway over an HTTP endpoint protected by a shared secret (`REALTIME_URL`, `REALTIME_PUBLISH_SECRET`); the browser refreshes server-rendered data when an event arrives. The gateway never trusts the client: it verifies the session by calling the app (`/api/realtime/session`, Better Auth stays the only session authority), resolves the organization from the slug, and checks the active membership and channel membership in the database on every `subscribe`/`join`; sockets are re-validated every 60 seconds and lose rooms whose membership was revoked.  
+**Alternatives:** SSE from Next.js (simpler, no extra process, one-way and weaker at fan-out; kept as the fallback shape if the gateway is not wanted), a managed pub/sub vendor (token-based authorization, per-message cost, data leaves the deployment).  
+**Consequences:** one more service to run, monitor and patch. If the gateway is down or unconfigured the app keeps working: messages are saved and appear on the next load. Scaling past one instance needs the Socket.IO Redis adapter (not added yet). Browser and gateway must share a cookie domain (same host name; production: reverse proxy `/socket.io`).
+
 ## Open decisions
 - **OD-01:** Which deploy environment/hosting region and target scale?
 - **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?
-- **OD-03:** Realtime gateway: Socket.IO vs managed pub/sub?
 - **OD-04:** Storage provider and retention limits?
 - **OD-05:** Pricing model and AI quota/overage policy?
 - **OD-06:** Is personal workspace a special organization?

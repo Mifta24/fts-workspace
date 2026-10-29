@@ -13,6 +13,15 @@ const envSchema = z.object({
   AI_BASE_URL: z.url().optional(),
   AI_API_KEY: z.string().min(1).optional(),
   AI_MODEL: z.string().min(1).optional(),
+  // Realtime gateway (Socket.IO). Without REALTIME_URL the app publishes nothing and works
+  // exactly as before; the gateway only broadcasts identifiers.
+  REALTIME_URL: z.url().optional(),
+  // Browser-facing gateway URL (may differ from the internal REALTIME_URL).
+  REALTIME_PUBLIC_URL: z.url().optional(),
+  REALTIME_PUBLISH_SECRET: z
+    .string()
+    .min(32, "REALTIME_PUBLISH_SECRET must be at least 32 characters")
+    .optional(),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
 });
 

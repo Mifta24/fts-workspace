@@ -1,4 +1,8 @@
 import { getTranslations } from "next-intl/server";
+import { RealtimeBridge } from "@/features/realtime/components/realtime-bridge";
+import { countUnread } from "@/features/notifications/server/notification-service";
+import { db } from "@/lib/db";
+import { env } from "@/lib/env";
 import type { ReactNode } from "react";
 import { SignOutButton } from "@/features/auth/components/auth-forms";
 import { Link } from "@/i18n/navigation";
@@ -20,13 +24,20 @@ const SECTIONS: { key: Section; path: string }[] = [
 export async function WorkspaceShell({
   context,
   active,
+  channelId,
   children,
 }: {
   context: OrganizationContext;
   active: Section;
+  /** Open chat channel, so the page also receives its live messages. */
+  channelId?: string;
   children: ReactNode;
 }) {
-  const [t, roles] = await Promise.all([getTranslations("Workspace"), getTranslations("Roles")]);
+  const [t, roles, unread] = await Promise.all([
+    getTranslations("Workspace"),
+    getTranslations("Roles"),
+    countUnread({ prisma: db() }, context),
+  ]);
   const base = `/w/${context.organization.slug}`;
 
   return (
@@ -47,6 +58,14 @@ export async function WorkspaceShell({
             )}
           >
             {t(key)}
+            {key === "notifications" && unread > 0 && (
+              <span
+                className="ml-2 rounded-full bg-white/20 px-2 text-xs"
+                aria-label={t("unread", { count: unread })}
+              >
+                {unread}
+              </span>
+            )}
           </Link>
         ))}
       </nav>
@@ -66,6 +85,11 @@ export async function WorkspaceShell({
         </header>
         {children}
       </main>
+      <RealtimeBridge
+        url={env().REALTIME_PUBLIC_URL}
+        organizationSlug={context.organization.slug}
+        channelId={channelId}
+      />
     </div>
   );
 }

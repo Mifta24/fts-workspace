@@ -62,7 +62,8 @@
     "tasks": "Tasks",
     "members": "Members",
     "chat": "Chat",
-    "notifications": "Inbox"
+    "notifications": "Inbox",
+    "unread": "{count} unread notifications"
   },
   "Roles": {
     "OWNER": "Owner",

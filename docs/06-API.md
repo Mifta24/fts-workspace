@@ -37,6 +37,11 @@
 | Server action | `markNotificationReadAction`, `markAllNotificationsReadAction` | Inbox | `notification:read` (own notifications only) |
 | Page | `/[locale]/w/[slug]/chat`, `/chat/[channelId]?before=<messageId>`, `/notifications` | Chat (cursor pagination, 30 per page), inbox | `chat:read`, `notification:read` |
 
+| Socket.IO (gateway) | `subscribe {organizationSlug}`, `join {organizationSlug, channelId}`, `leave` | Authorized per call; ack `{ok}` with the same answer for every refusal | session cookie + active membership (+ channel membership) |
+| Socket.IO events | `message.created`, `message.updated` `{channelId, messageId}`, `notification.created` `{notificationId}`, `revoked` | Identifiers only; fetch content through the normal authorized pages | joined rooms |
+| HTTP (gateway, internal) | `POST /internal/publish`, `GET /health` | App → gateway fan-out (4 KB limit, shared secret); liveness | secret / public |
+| HTTP | `GET /api/realtime/session` | Gateway asks which user a cookie belongs to | session |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

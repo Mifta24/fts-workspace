@@ -57,6 +57,9 @@ tests/
 docs/
 ```
 
+## Realtime gateway (Phase 2)
+`gateway/server.ts` is a plain Node HTTP + Socket.IO server (`pnpm gateway`, default port 4000). Flow: the browser connects with its session cookie → the gateway asks the app `/api/realtime/session` who the user is → `subscribe {organizationSlug}` joins the user's notification room → `join {organizationSlug, channelId}` joins a channel room only if the database shows an active member who belongs to the channel (`src/server/realtime/authorize.ts`). The app publishes events to `POST /internal/publish` (header `x-realtime-secret`); the gateway emits identifiers to the matching room; the page refreshes its data. Details and decision: ADR-012.
+
 ## Deployment proposal
 - Docker Compose on VPS for pilot: reverse proxy/TLS, Next.js app, separate worker, gateway, PostgreSQL, Redis, private object store or managed compatible service.
 - Prefer managed database/backups if the team lacks database operations coverage.
