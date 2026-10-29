@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { SignOutButton } from "@/features/auth/components/auth-forms";
 import { Link } from "@/i18n/navigation";
 import type { OrganizationContext } from "@/features/organizations/server/organization-service";
+import type { Permission } from "@/lib/permissions/matrix";
 import { cn } from "@/lib/utils";
 
 type Section =
@@ -20,9 +21,10 @@ type Section =
   | "files"
   | "knowledge"
   | "assistant"
+  | "crm"
   | "members";
 
-const SECTIONS: { key: Section; path: string }[] = [
+const SECTIONS: { key: Section; path: string; permission?: Permission }[] = [
   { key: "overview", path: "" },
   { key: "projects", path: "/projects" },
   { key: "goals", path: "/goals" },
@@ -32,7 +34,8 @@ const SECTIONS: { key: Section; path: string }[] = [
   { key: "progress", path: "/progress" },
   { key: "files", path: "/files" },
   { key: "knowledge", path: "/knowledge" },
-  { key: "assistant", path: "/assistant" },
+  { key: "assistant", path: "/assistant", permission: "ai:use" },
+  { key: "crm", path: "/crm", permission: "crm:read" },
   { key: "members", path: "/members" },
 ];
 
@@ -62,7 +65,9 @@ export async function WorkspaceShell({
         className="flex shrink-0 gap-2 overflow-x-auto bg-sidebar p-4 text-sidebar-foreground md:w-60 md:flex-col"
       >
         <p className="hidden truncate px-2 font-semibold md:block">{context.organization.name}</p>
-        {SECTIONS.map(({ key, path }) => (
+        {SECTIONS.filter(
+          ({ permission }) => !permission || context.permissions.includes(permission),
+        ).map(({ key, path }) => (
           <Link
             key={key}
             href={`${base}${path}`}

@@ -67,7 +67,8 @@
     "progress": "進捗",
     "files": "ファイル",
     "knowledge": "ナレッジ",
-    "assistant": "アシスタント"
+    "assistant": "アシスタント",
+    "crm": "CRM"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -429,5 +430,73 @@
     "usage": "本日（UTC）{budget} トークン中 {used} を使用",
     "budgetLabel": "1 日のトークン予算（0 で AI を無効化）",
     "saveBudget": "予算を保存"
+  },
+  "Crm": {
+    "title": "コンタクト",
+    "pipeline": "パイプライン",
+    "introAll": "このワークスペースのすべてのコンタクトです。コンタクトにはチーム外の人の個人情報が含まれます。必要な情報だけを収集し、同意を得た方法を記録してください。",
+    "introOwn": "あなたのコンタクトです。コンタクトにはチーム外の人の個人情報が含まれます。必要な情報だけを収集し、同意を得た方法を記録してください。",
+    "searchLabel": "コンタクトを検索",
+    "search": "検索",
+    "noResults": "一致するコンタクトはありません。",
+    "empty": "コンタクトはまだありません。下から最初のコンタクトを追加してください。",
+    "emptyReadOnly": "コンタクトはまだありません。",
+    "createTitle": "コンタクトを追加",
+    "create": "コンタクトを追加",
+    "name": "名前",
+    "company": "会社",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "consentLabel": "連絡することへの同意",
+    "consentSource": "同意を得た方法",
+    "consentSourceHint": "同意ありの場合は必須です。例：「署名済みフォーム」「Web フォーム」。",
+    "consent": {
+      "UNKNOWN": "未記録",
+      "GRANTED": "同意あり",
+      "WITHDRAWN": "撤回済み"
+    },
+    "back": "戻る",
+    "erasedNotice": "このコンタクトの個人情報は消去されました。案件と同意履歴は保持されます。",
+    "noDetails": "連絡先情報はありません。",
+    "editTitle": "詳細",
+    "save": "保存",
+    "consentTitle": "同意",
+    "consentNow": "現在のステータス：{status}",
+    "recordConsent": "記録する",
+    "deals": "案件",
+    "noDeals": "案件はまだありません。",
+    "stage": {
+      "LEAD": "リード",
+      "QUALIFIED": "有望",
+      "PROPOSAL": "提案",
+      "NEGOTIATION": "交渉",
+      "WON": "受注",
+      "LOST": "失注"
+    },
+    "stageLabel": "{title} のステージ",
+    "move": "移動",
+    "addDeal": "案件を追加",
+    "dealTitle": "案件名",
+    "amount": "金額",
+    "currency": "通貨",
+    "activity": "アクティビティ",
+    "noActivity": "アクティビティはまだありません。",
+    "activityType": {
+      "NOTE": "メモ",
+      "CALL": "電話",
+      "EMAIL": "メール",
+      "MEETING": "打ち合わせ"
+    },
+    "activityTypeLabel": "種類",
+    "activityBody": "内容",
+    "addActivity": "アクティビティを追加",
+    "formerMember": "元メンバー",
+    "eraseTitle": "個人情報を消去",
+    "eraseBody": "このコンタクトの名前、メール、電話、会社、アクティビティの本文を削除します。案件、同意の証跡、レポートは保持されます。元に戻せません。",
+    "erase": "個人情報を消去",
+    "pipelineIntro": "ステージ別の進行中の案件と、過去 {days} 日間に完了した案件です。通貨をまたいで合算することはありません。",
+    "wonCount": "受注",
+    "lostCount": "失注",
+    "winRate": "受注率"
   }
 }

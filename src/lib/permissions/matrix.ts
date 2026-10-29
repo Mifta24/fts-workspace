@@ -44,6 +44,10 @@ export const PERMISSIONS = [
   "file:delete-any",
   "knowledge:read",
   "knowledge:manage",
+  "crm:read",
+  "crm:read-all",
+  "crm:write",
+  "crm:erase",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -84,6 +88,10 @@ const MATRIX: Record<Permission, readonly OrganizationRole[]> = {
   "file:delete-any": ["OWNER", "ADMIN"],
   "knowledge:read": ALL_ROLES,
   "knowledge:manage": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "crm:read": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "crm:read-all": ["OWNER", "ADMIN", "MANAGER"],
+  "crm:write": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "crm:erase": ["OWNER", "ADMIN"],
 };
 
 export function isOrganizationRole(value: unknown): value is OrganizationRole {

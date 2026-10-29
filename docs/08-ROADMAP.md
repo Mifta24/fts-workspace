@@ -40,7 +40,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 **Exit gate:** document ACL holds across retrieval; no unauthorized tool execution. Met for what exists: the ACL parity and retrieval tests, the file and knowledge E2E tests, and the absence of any model tool execution (`11-MCP-THREAT-MODEL.md`) pass in CI (commit `eb5ec94`, run 40836686028). **Not delivered in Phase 3:** semantic/embedding retrieval, PDF/office extraction, malware scanning, the automation prototype, a production object store (OD-04) and a chosen model provider (OD-08).
 
 ## Phase 4 — Business
-- [ ] CRM contacts and deal stages
+- [x] CRM contacts and deal stages (slice 13: contacts, consent history, erasure, deals, activity timeline, pipeline report)
 - [ ] Scheduling and customer journeys
 - [ ] Analytics, reports, templates/forms
 **Exit gate:** privacy controls, consent pathways, and reliable reporting.

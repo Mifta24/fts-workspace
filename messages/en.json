@@ -67,7 +67,8 @@
     "progress": "Progress",
     "files": "Files",
     "knowledge": "Knowledge",
-    "assistant": "Assistant"
+    "assistant": "Assistant",
+    "crm": "CRM"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -429,5 +430,73 @@
     "usage": "{used} of {budget} tokens used today (UTC).",
     "budgetLabel": "Daily token budget (0 turns AI off)",
     "saveBudget": "Save budget"
+  },
+  "Crm": {
+    "title": "Contacts",
+    "pipeline": "Pipeline",
+    "introAll": "All contacts in this workspace. Contacts hold personal data about people outside your team: only collect what you need and record how consent was given.",
+    "introOwn": "Your contacts. Contacts hold personal data about people outside your team: only collect what you need and record how consent was given.",
+    "searchLabel": "Search contacts",
+    "search": "Search",
+    "noResults": "No contacts match.",
+    "empty": "No contacts yet. Add the first one below.",
+    "emptyReadOnly": "No contacts yet.",
+    "createTitle": "Add a contact",
+    "create": "Add contact",
+    "name": "Name",
+    "company": "Company",
+    "email": "Email",
+    "phone": "Phone",
+    "consentLabel": "Consent to be contacted",
+    "consentSource": "How consent was given",
+    "consentSourceHint": "Required when consent is granted, for example “signed form” or “web form”.",
+    "consent": {
+      "UNKNOWN": "Not recorded",
+      "GRANTED": "Granted",
+      "WITHDRAWN": "Withdrawn"
+    },
+    "back": "Back",
+    "erasedNotice": "This contact's personal data was erased. Deals and the consent history are kept.",
+    "noDetails": "No contact details.",
+    "editTitle": "Details",
+    "save": "Save",
+    "consentTitle": "Consent",
+    "consentNow": "Current status: {status}",
+    "recordConsent": "Record decision",
+    "deals": "Deals",
+    "noDeals": "No deals yet.",
+    "stage": {
+      "LEAD": "Lead",
+      "QUALIFIED": "Qualified",
+      "PROPOSAL": "Proposal",
+      "NEGOTIATION": "Negotiation",
+      "WON": "Won",
+      "LOST": "Lost"
+    },
+    "stageLabel": "Stage of {title}",
+    "move": "Move",
+    "addDeal": "Add deal",
+    "dealTitle": "Deal title",
+    "amount": "Amount",
+    "currency": "Currency",
+    "activity": "Activity",
+    "noActivity": "No activity yet.",
+    "activityType": {
+      "NOTE": "Note",
+      "CALL": "Call",
+      "EMAIL": "Email",
+      "MEETING": "Meeting"
+    },
+    "activityTypeLabel": "Type",
+    "activityBody": "What happened",
+    "addActivity": "Add activity",
+    "formerMember": "Former member",
+    "eraseTitle": "Erase personal data",
+    "eraseBody": "Removes the name, email, phone, company and activity text of this contact. Deals, consent proof and reports are kept. This cannot be undone.",
+    "erase": "Erase personal data",
+    "pipelineIntro": "Open deals by stage, and deals closed in the last {days} days. Values are never added across currencies.",
+    "wonCount": "Won",
+    "lostCount": "Lost",
+    "winRate": "Win rate"
   }
 }

@@ -128,6 +128,10 @@ model Organization {
   documentChunks     DocumentChunk[]
   jobs               Job[]
   aiUsageEvents      AiUsageEvent[]
+  crmContacts        CrmContact[]
+  crmDeals           CrmDeal[]
+  crmActivities      CrmActivity[]
+  consentEvents      ConsentEvent[]
 
   @@map("organizations")
 }
@@ -670,6 +674,123 @@ model AiUsageEvent {
   @@index([organizationId, createdAt])
   @@index([organizationId, userId, createdAt])
   @@map("ai_usage_events")
+}
+
+// ---------------------------------------------------------------------------
+// CRM
+// ---------------------------------------------------------------------------
+
+enum ConsentStatus {
+  UNKNOWN
+  GRANTED
+  WITHDRAWN
+}
+
+enum DealStage {
+  LEAD
+  QUALIFIED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum ActivityType {
+  NOTE
+  CALL
+  EMAIL
+  MEETING
+}
+
+/// Personal data about someone outside the organization. Owned by one member; access rules live in
+/// the CRM service. Erasure anonymizes the personal fields and keeps the row so deals and reports
+/// stay consistent.
+model CrmContact {
+  id               String        @id @default(uuid(7)) @db.Uuid
+  organizationId   String        @db.Uuid
+  organization     Organization  @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  name             String
+  /// Stored lowercase.
+  email            String?
+  phone            String?
+  company          String?
+  ownerId          String        @db.Uuid
+  consentStatus    ConsentStatus @default(UNKNOWN)
+  consentUpdatedAt DateTime?
+  erasedAt         DateTime?
+  createdById      String        @db.Uuid
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  deals      CrmDeal[]
+  activities CrmActivity[]
+  consents   ConsentEvent[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId, ownerId])
+  @@map("crm_contacts")
+}
+
+/// Append-only proof of when and how consent changed.
+model ConsentEvent {
+  id             String        @id @default(uuid(7)) @db.Uuid
+  organizationId String        @db.Uuid
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  contactId      String        @db.Uuid
+  contact        CrmContact    @relation(fields: [contactId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  status         ConsentStatus
+  /// How consent was obtained or withdrawn, for example "signed form" or "email reply".
+  source         String
+  recordedById   String        @db.Uuid
+  createdAt      DateTime      @default(now())
+
+  @@index([organizationId, contactId, createdAt])
+  @@map("consent_events")
+}
+
+model CrmDeal {
+  id              String       @id @default(uuid(7)) @db.Uuid
+  organizationId  String       @db.Uuid
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  contactId       String       @db.Uuid
+  contact         CrmContact   @relation(fields: [contactId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  title           String
+  stage           DealStage    @default(LEAD)
+  /// Minor units (cents). No payment is ever taken from this value.
+  amountMinor     Int?
+  currency        String       @default("USD")
+  ownerId         String       @db.Uuid
+  expectedCloseAt DateTime?
+  closedAt        DateTime?
+  createdById     String       @db.Uuid
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  activities CrmActivity[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId, stage])
+  @@index([organizationId, ownerId])
+  @@index([organizationId, contactId])
+  @@map("crm_deals")
+}
+
+model CrmActivity {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  contactId      String       @db.Uuid
+  contact        CrmContact   @relation(fields: [contactId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  dealId         String?      @db.Uuid
+  deal           CrmDeal?     @relation(fields: [dealId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  type           ActivityType
+  body           String
+  authorId       String       @db.Uuid
+  occurredAt     DateTime
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, contactId, occurredAt])
+  @@map("crm_activities")
 }
 
 // ---------------------------------------------------------------------------

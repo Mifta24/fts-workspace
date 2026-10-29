@@ -67,7 +67,8 @@
     "progress": "Progres",
     "files": "Berkas",
     "knowledge": "Pengetahuan",
-    "assistant": "Asisten"
+    "assistant": "Asisten",
+    "crm": "CRM"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -429,5 +430,73 @@
     "usage": "{used} dari {budget} token terpakai hari ini (UTC).",
     "budgetLabel": "Anggaran token harian (0 mematikan AI)",
     "saveBudget": "Simpan anggaran"
+  },
+  "Crm": {
+    "title": "Kontak",
+    "pipeline": "Pipeline",
+    "introAll": "Semua kontak di workspace ini. Kontak berisi data pribadi orang di luar tim Anda: kumpulkan seperlunya dan catat bagaimana persetujuan diberikan.",
+    "introOwn": "Kontak Anda. Kontak berisi data pribadi orang di luar tim Anda: kumpulkan seperlunya dan catat bagaimana persetujuan diberikan.",
+    "searchLabel": "Cari kontak",
+    "search": "Cari",
+    "noResults": "Tidak ada kontak yang cocok.",
+    "empty": "Belum ada kontak. Tambahkan yang pertama di bawah.",
+    "emptyReadOnly": "Belum ada kontak.",
+    "createTitle": "Tambah kontak",
+    "create": "Tambah kontak",
+    "name": "Nama",
+    "company": "Perusahaan",
+    "email": "Email",
+    "phone": "Telepon",
+    "consentLabel": "Persetujuan untuk dihubungi",
+    "consentSource": "Bagaimana persetujuan diberikan",
+    "consentSourceHint": "Wajib jika persetujuan diberikan, misalnya “formulir bertanda tangan” atau “formulir web”.",
+    "consent": {
+      "UNKNOWN": "Belum dicatat",
+      "GRANTED": "Diberikan",
+      "WITHDRAWN": "Dicabut"
+    },
+    "back": "Kembali",
+    "erasedNotice": "Data pribadi kontak ini telah dihapus. Deal dan riwayat persetujuan tetap disimpan.",
+    "noDetails": "Tidak ada detail kontak.",
+    "editTitle": "Detail",
+    "save": "Simpan",
+    "consentTitle": "Persetujuan",
+    "consentNow": "Status saat ini: {status}",
+    "recordConsent": "Catat keputusan",
+    "deals": "Deal",
+    "noDeals": "Belum ada deal.",
+    "stage": {
+      "LEAD": "Prospek",
+      "QUALIFIED": "Terkualifikasi",
+      "PROPOSAL": "Proposal",
+      "NEGOTIATION": "Negosiasi",
+      "WON": "Menang",
+      "LOST": "Kalah"
+    },
+    "stageLabel": "Tahap {title}",
+    "move": "Pindah",
+    "addDeal": "Tambah deal",
+    "dealTitle": "Judul deal",
+    "amount": "Jumlah",
+    "currency": "Mata uang",
+    "activity": "Aktivitas",
+    "noActivity": "Belum ada aktivitas.",
+    "activityType": {
+      "NOTE": "Catatan",
+      "CALL": "Telepon",
+      "EMAIL": "Email",
+      "MEETING": "Pertemuan"
+    },
+    "activityTypeLabel": "Jenis",
+    "activityBody": "Apa yang terjadi",
+    "addActivity": "Tambah aktivitas",
+    "formerMember": "Mantan anggota",
+    "eraseTitle": "Hapus data pribadi",
+    "eraseBody": "Menghapus nama, email, telepon, perusahaan, dan teks aktivitas kontak ini. Deal, bukti persetujuan, dan laporan tetap disimpan. Tidak dapat dibatalkan.",
+    "erase": "Hapus data pribadi",
+    "pipelineIntro": "Deal terbuka per tahap, dan deal yang ditutup dalam {days} hari terakhir. Nilai tidak pernah dijumlahkan lintas mata uang.",
+    "wonCount": "Menang",
+    "lostCount": "Kalah",
+    "winRate": "Tingkat kemenangan"
   }
 }
