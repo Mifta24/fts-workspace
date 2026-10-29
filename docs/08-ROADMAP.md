@@ -37,7 +37,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] Permission-aware AI features, audit, budgets (slice 12: knowledge assistant with ACL-filtered retrieval, token ledger and daily budgets; the model has **no tool-calling**, see `11-MCP-THREAT-MODEL.md`)
 - [x] Background ingestion (slice 11: Postgres-backed queue and `pnpm worker`) and MCP threat model (`docs/11-MCP-THREAT-MODEL.md`, analysis only)
 - [ ] Automation prototype (workflows) — not started; it needs a product decision and the tool-registry design described in the threat model
-**Exit gate:** document ACL holds across retrieval; no unauthorized tool execution.
+**Exit gate:** document ACL holds across retrieval; no unauthorized tool execution. Met for what exists: the ACL parity and retrieval tests, the file and knowledge E2E tests, and the absence of any model tool execution (`11-MCP-THREAT-MODEL.md`) pass in CI (commit `eb5ec94`, run 40836686028). **Not delivered in Phase 3:** semantic/embedding retrieval, PDF/office extraction, malware scanning, the automation prototype, a production object store (OD-04) and a chosen model provider (OD-08).
 
 ## Phase 4 — Business
 - [ ] CRM contacts and deal stages
