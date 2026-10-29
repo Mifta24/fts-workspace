@@ -32,7 +32,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 **Exit gate:** permissions tested on socket joins; load tests for message delivery. Both exist (`tests/integration/gateway.test.ts`, `pnpm test:load`); the challenge/points item is still open, so the gate is met: Vitest, the 2,000-socket load run (local: 200,000 deliveries, 0 lost, p95 37 ms in one process; CI runs a 300-socket version) and Playwright pass in CI (commit `dd08310`, run 40832283718). Not built in Phase 2: mentions, deadline reminders, presence/typing, file attachments, a Redis adapter for several gateway instances.
 
 ## Phase 3 — AI & Knowledge
-- [ ] File upload, ACL, metadata, storage lifecycle
+- [x] File upload, ACL, metadata, storage lifecycle (slice 10: local-disk storage adapter behind a port; the production store is still OD-04; no malware scanning yet)
 - [ ] Knowledge docs and semantic retrieval
 - [ ] Permission-aware AI tools, audit, budgets
 - [ ] Background ingestion, automation prototype, MCP threat model

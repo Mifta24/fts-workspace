@@ -22,6 +22,8 @@ const envSchema = z.object({
     .string()
     .min(32, "REALTIME_PUBLISH_SECRET must be at least 32 characters")
     .optional(),
+  // Directory for uploaded files (local-disk storage adapter). Private; never served statically.
+  STORAGE_DIR: z.string().min(1).default(".data/files"),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
 });
 

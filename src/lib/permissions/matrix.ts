@@ -39,6 +39,9 @@ export const PERMISSIONS = [
   "notification:read",
   "gamification:read",
   "challenge:manage",
+  "file:read",
+  "file:upload",
+  "file:delete-any",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -74,6 +77,9 @@ const MATRIX: Record<Permission, readonly OrganizationRole[]> = {
   "notification:read": ALL_ROLES,
   "gamification:read": ALL_ROLES,
   "challenge:manage": ["OWNER", "ADMIN", "MANAGER"],
+  "file:read": ALL_ROLES,
+  "file:upload": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "file:delete-any": ["OWNER", "ADMIN"],
 };
 
 export function isOrganizationRole(value: unknown): value is OrganizationRole {

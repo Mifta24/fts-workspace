@@ -46,6 +46,10 @@
 | Server action | `setLeaderboardOptInAction`, `setLeaderboardVisibilityAction` | Own opt-in; organization policy | `gamification:read` (own); `organization:update` |
 | Page | `/[locale]/w/[slug]/progress?range=week|month|all` | Own points, streak, challenges, leaderboard | `gamification:read` |
 
+| POST | `/api/files` (multipart: `file`, `visibility`, `organizationSlug`) | Upload (route handler, no 1 MB action limit; Origin check) | `file:upload` |
+| GET | `/api/files/:id/content?org=&exp=&sig=` | Download as attachment; needs session, a 5-minute signature bound to file and person, and the access rule | `file:read` |
+| Server action | `deleteFileAction`, `setVisibilityAction`, `shareFileAction`, `unshareFileAction` | File management (uploader; `file:delete-any` for deletion) | see 07-SECURITY |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

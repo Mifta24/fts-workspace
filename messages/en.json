@@ -64,7 +64,8 @@
     "chat": "Chat",
     "notifications": "Inbox",
     "unread": "{count} unread notifications",
-    "progress": "Progress"
+    "progress": "Progress",
+    "files": "Files"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -359,5 +360,35 @@
     "challengeTarget": "Tasks to complete",
     "challengeStart": "Starts",
     "challengeEnd": "Ends"
+  },
+  "Files": {
+    "title": "Files",
+    "empty": "No files yet. Upload the first one below.",
+    "emptyReadOnly": "No files have been shared with you yet.",
+    "uploadTitle": "Upload a file",
+    "fileLabel": "File",
+    "fileHint": "Text, Markdown, CSV, PDF, PNG, JPEG or WebP, up to 10 MB.",
+    "visibilityLabel": "Who can see it",
+    "visibility": {
+      "PRIVATE": "Only me",
+      "SHARED": "Me and people I choose",
+      "ORGANIZATION": "Everyone in the workspace"
+    },
+    "upload": "Upload",
+    "manage": "Manage access",
+    "delete": "Delete",
+    "save": "Save",
+    "back": "Back to files",
+    "sharedWith": "Shared with",
+    "noShares": "Not shared with anyone.",
+    "shareWith": "Share with",
+    "share": "Share",
+    "unshare": "Remove",
+    "formerMember": "Former member",
+    "errors": {
+      "INVALID_INPUT": "Choose a non-empty file and who can see it.",
+      "UNPROCESSABLE": "This file cannot be stored: wrong type, over 10 MB, or the storage quota is used up.",
+      "FORBIDDEN": "You are not allowed to upload here."
+    }
   }
 }

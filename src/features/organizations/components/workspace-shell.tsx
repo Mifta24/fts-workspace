@@ -10,7 +10,15 @@ import type { OrganizationContext } from "@/features/organizations/server/organi
 import { cn } from "@/lib/utils";
 
 type Section =
-  "overview" | "projects" | "goals" | "tasks" | "chat" | "notifications" | "progress" | "members";
+  | "overview"
+  | "projects"
+  | "goals"
+  | "tasks"
+  | "chat"
+  | "notifications"
+  | "progress"
+  | "files"
+  | "members";
 
 const SECTIONS: { key: Section; path: string }[] = [
   { key: "overview", path: "" },
@@ -20,6 +28,7 @@ const SECTIONS: { key: Section; path: string }[] = [
   { key: "chat", path: "/chat" },
   { key: "notifications", path: "/notifications" },
   { key: "progress", path: "/progress" },
+  { key: "files", path: "/files" },
   { key: "members", path: "/members" },
 ];
 

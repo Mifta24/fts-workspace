@@ -64,7 +64,8 @@
     "chat": "Obrolan",
     "notifications": "Kotak masuk",
     "unread": "{count} notifikasi belum dibaca",
-    "progress": "Progres"
+    "progress": "Progres",
+    "files": "Berkas"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -359,5 +360,35 @@
     "challengeTarget": "Tugas yang diselesaikan",
     "challengeStart": "Mulai",
     "challengeEnd": "Berakhir"
+  },
+  "Files": {
+    "title": "Berkas",
+    "empty": "Belum ada berkas. Unggah yang pertama di bawah.",
+    "emptyReadOnly": "Belum ada berkas yang dibagikan kepada Anda.",
+    "uploadTitle": "Unggah berkas",
+    "fileLabel": "Berkas",
+    "fileHint": "Teks, Markdown, CSV, PDF, PNG, JPEG atau WebP, maksimal 10 MB.",
+    "visibilityLabel": "Siapa yang dapat melihat",
+    "visibility": {
+      "PRIVATE": "Hanya saya",
+      "SHARED": "Saya dan orang yang saya pilih",
+      "ORGANIZATION": "Semua orang di workspace"
+    },
+    "upload": "Unggah",
+    "manage": "Kelola akses",
+    "delete": "Hapus",
+    "save": "Simpan",
+    "back": "Kembali ke berkas",
+    "sharedWith": "Dibagikan kepada",
+    "noShares": "Tidak dibagikan kepada siapa pun.",
+    "shareWith": "Bagikan kepada",
+    "share": "Bagikan",
+    "unshare": "Hapus",
+    "formerMember": "Mantan anggota",
+    "errors": {
+      "INVALID_INPUT": "Pilih berkas yang tidak kosong dan siapa yang dapat melihatnya.",
+      "UNPROCESSABLE": "Berkas ini tidak dapat disimpan: tipe salah, lebih dari 10 MB, atau kuota penyimpanan habis.",
+      "FORBIDDEN": "Anda tidak diizinkan mengunggah di sini."
+    }
   }
 }

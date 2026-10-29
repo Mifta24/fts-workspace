@@ -64,7 +64,8 @@
     "chat": "チャット",
     "notifications": "受信トレイ",
     "unread": "未読の通知 {count} 件",
-    "progress": "進捗"
+    "progress": "進捗",
+    "files": "ファイル"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -359,5 +360,35 @@
     "challengeTarget": "完了するタスク数",
     "challengeStart": "開始日",
     "challengeEnd": "終了日"
+  },
+  "Files": {
+    "title": "ファイル",
+    "empty": "ファイルはまだありません。下から最初のファイルをアップロードしてください。",
+    "emptyReadOnly": "共有されているファイルはまだありません。",
+    "uploadTitle": "ファイルをアップロード",
+    "fileLabel": "ファイル",
+    "fileHint": "テキスト、Markdown、CSV、PDF、PNG、JPEG、WebP（最大 10 MB）。",
+    "visibilityLabel": "閲覧できる人",
+    "visibility": {
+      "PRIVATE": "自分のみ",
+      "SHARED": "自分と選んだ人",
+      "ORGANIZATION": "ワークスペースの全員"
+    },
+    "upload": "アップロード",
+    "manage": "アクセスを管理",
+    "delete": "削除",
+    "save": "保存",
+    "back": "ファイル一覧へ戻る",
+    "sharedWith": "共有先",
+    "noShares": "誰にも共有されていません。",
+    "shareWith": "共有する相手",
+    "share": "共有",
+    "unshare": "解除",
+    "formerMember": "元メンバー",
+    "errors": {
+      "INVALID_INPUT": "空でないファイルと閲覧できる人を選んでください。",
+      "UNPROCESSABLE": "このファイルは保存できません。形式が不正、10 MB 超過、または容量の上限に達しています。",
+      "FORBIDDEN": "ここにアップロードする権限がありません。"
+    }
   }
 }
