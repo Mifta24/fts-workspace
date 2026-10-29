@@ -324,6 +324,11 @@ export async function eraseContact(
       where: { organizationId: context.organization.id, contactId: contact.id },
       data: { body: "" },
     });
+    // Answers this person gave on public forms are personal data too.
+    await tx.formSubmission.updateMany({
+      where: { organizationId: context.organization.id, contactId: contact.id },
+      data: { answers: {}, erasedAt: now },
+    });
     await recordAuditEvent(tx, {
       organizationId: context.organization.id,
       actorId: context.userId,

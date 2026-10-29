@@ -134,6 +134,8 @@ model Organization {
   consentEvents        ConsentEvent[]
   appointments         Appointment[]
   appointmentAttendees AppointmentAttendee[]
+  forms                Form[]
+  formSubmissions      FormSubmission[]
 
   @@map("organizations")
 }
@@ -727,10 +729,11 @@ model CrmContact {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  deals        CrmDeal[]
-  activities   CrmActivity[]
-  consents     ConsentEvent[]
-  appointments Appointment[]
+  deals           CrmDeal[]
+  activities      CrmActivity[]
+  consents        ConsentEvent[]
+  appointments    Appointment[]
+  formSubmissions FormSubmission[]
 
   @@unique([id, organizationId])
   @@index([organizationId, ownerId])
@@ -852,6 +855,63 @@ model AppointmentAttendee {
   @@unique([appointmentId, userId])
   @@index([organizationId, userId])
   @@map("appointment_attendees")
+}
+
+// ---------------------------------------------------------------------------
+// Forms
+// ---------------------------------------------------------------------------
+
+enum FormStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+/// A data-capture form. `fields` holds the validated field definitions (see the forms schema).
+/// A published form is reachable without signing in at /f/<publicToken>; the token is random
+/// and unrelated to any internal id. Forms that create contacts carry the consent wording the
+/// visitor must accept.
+model Form {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  title          String
+  description    String?
+  fields         Json
+  /// When set, submissions create (or match) a CRM contact owned by `ownerId` and the visitor must
+  /// accept this wording; the acceptance is stored as consent.
+  consentText    String?
+  createsContact Boolean      @default(false)
+  ownerId        String       @db.Uuid
+  status         FormStatus   @default(DRAFT)
+  publicToken    String       @unique
+  createdById    String       @db.Uuid
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  submissions FormSubmission[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId, status])
+  @@map("forms")
+}
+
+/// One submission. Answers are personal data of the visitor: managers can read them, and erasing
+/// the linked contact erases them.
+model FormSubmission {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  formId         String       @db.Uuid
+  form           Form         @relation(fields: [formId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  answers        Json
+  contactId      String?      @db.Uuid
+  contact        CrmContact?  @relation(fields: [contactId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  erasedAt       DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, formId, createdAt])
+  @@map("form_submissions")
 }
 
 // ---------------------------------------------------------------------------

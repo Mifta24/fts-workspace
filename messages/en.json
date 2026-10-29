@@ -69,7 +69,8 @@
     "knowledge": "Knowledge",
     "assistant": "Assistant",
     "crm": "CRM",
-    "schedule": "Schedule"
+    "schedule": "Schedule",
+    "forms": "Forms"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -139,7 +140,8 @@
     "notFound": "This item no longer exists or is not available.",
     "conflict": "This change conflicts with the current state.",
     "unprocessable": "This change is not allowed (for example an unavailable project, owner or parent goal).",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "rateLimited": "Too many attempts. Please wait a moment and try again."
   },
   "Tasks": {
     "title": "Tasks",
@@ -531,5 +533,51 @@
     "contactLabel": "About contact",
     "none": "None",
     "attendeesLabel": "Invite"
+  },
+  "Forms": {
+    "title": "Forms",
+    "intro": "Collect information with a form anyone can fill in through a link. Forms that create contacts ask the visitor to accept a consent statement, and that acceptance is recorded.",
+    "empty": "No forms yet. Start from a template below.",
+    "status": {
+      "DRAFT": "Draft",
+      "PUBLISHED": "Published",
+      "CLOSED": "Closed"
+    },
+    "submissions": "{count} submissions",
+    "createTitle": "New form",
+    "template": "Start from",
+    "templates": {
+      "contact_request": "Contact request",
+      "event_signup": "Event sign-up",
+      "feedback": "Anonymous feedback"
+    },
+    "titleLabel": "Title",
+    "descriptionLabel": "Description (optional)",
+    "create": "Create form",
+    "back": "Back to forms",
+    "publishing": "Publishing",
+    "publicLink": "Anyone with this link can submit the form:",
+    "publish": "Publish",
+    "close": "Close form",
+    "draftNote": "Not public yet. Publishing makes the link work.",
+    "closedNote": "Closed. The link no longer works; you can publish it again.",
+    "settings": "Settings",
+    "save": "Save",
+    "consentText": "Consent statement",
+    "consentHint": "What visitors agree to. It can only change while the form is a draft.",
+    "fields": "Fields",
+    "required": "required",
+    "fieldsFixed": "Fields come from the template and cannot be edited yet.",
+    "submissionsTitle": "Submissions",
+    "noSubmissions": "No submissions yet.",
+    "linkedContact": "linked to a CRM contact",
+    "erased": "Personal data erased."
+  },
+  "PublicForm": {
+    "privacy": "Your answers are sent to the organization that published this form.",
+    "thanks": "Thank you! Your answers were sent.",
+    "required": "required",
+    "choose": "Choose…",
+    "submit": "Submit"
   }
 }

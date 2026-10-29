@@ -64,6 +64,10 @@
 | Server action | `respondAction` | Accept / decline an invitation | attendee |
 | Page | `/[locale]/w/[slug]/schedule` | Your meetings for the next 60 days (times in UTC) | `appointment:read` |
 
+| Server action | `createFormAction`, `updateFormAction`, `setFormStatusAction` | Form management | `form:manage` |
+| Page | `/[locale]/w/[slug]/forms`, `/forms/[formId]` | List, templates, publishing, submissions | `form:manage` |
+| Page + server action (**public, no session**) | `/[locale]/f/[token]`, `submitFormAction` | Anonymous form and submission; unknown/draft/closed tokens give 404 | public (token) |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

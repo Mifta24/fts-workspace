@@ -69,7 +69,8 @@
     "knowledge": "Pengetahuan",
     "assistant": "Asisten",
     "crm": "CRM",
-    "schedule": "Jadwal"
+    "schedule": "Jadwal",
+    "forms": "Formulir"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -139,7 +140,8 @@
     "notFound": "Item ini sudah tidak ada atau tidak tersedia.",
     "conflict": "Perubahan ini bertentangan dengan kondisi saat ini.",
     "unprocessable": "Perubahan ini tidak diizinkan (misalnya proyek, pemilik, atau tujuan induk tidak tersedia).",
-    "generic": "Terjadi kesalahan. Silakan coba lagi."
+    "generic": "Terjadi kesalahan. Silakan coba lagi.",
+    "rateLimited": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi."
   },
   "Tasks": {
     "title": "Tugas",
@@ -531,5 +533,51 @@
     "contactLabel": "Tentang kontak",
     "none": "Tidak ada",
     "attendeesLabel": "Undang"
+  },
+  "Forms": {
+    "title": "Formulir",
+    "intro": "Kumpulkan informasi dengan formulir yang bisa diisi siapa pun lewat tautan. Formulir yang membuat kontak meminta pengunjung menyetujui pernyataan persetujuan, dan persetujuan itu dicatat.",
+    "empty": "Belum ada formulir. Mulai dari templat di bawah.",
+    "status": {
+      "DRAFT": "Draf",
+      "PUBLISHED": "Diterbitkan",
+      "CLOSED": "Ditutup"
+    },
+    "submissions": "{count} kiriman",
+    "createTitle": "Formulir baru",
+    "template": "Mulai dari",
+    "templates": {
+      "contact_request": "Permintaan kontak",
+      "event_signup": "Pendaftaran acara",
+      "feedback": "Umpan balik anonim"
+    },
+    "titleLabel": "Judul",
+    "descriptionLabel": "Deskripsi (opsional)",
+    "create": "Buat formulir",
+    "back": "Kembali ke formulir",
+    "publishing": "Penerbitan",
+    "publicLink": "Siapa pun dengan tautan ini dapat mengirim formulir:",
+    "publish": "Terbitkan",
+    "close": "Tutup formulir",
+    "draftNote": "Belum publik. Menerbitkan membuat tautan berfungsi.",
+    "closedNote": "Ditutup. Tautan tidak berfungsi lagi; Anda dapat menerbitkannya kembali.",
+    "settings": "Pengaturan",
+    "save": "Simpan",
+    "consentText": "Pernyataan persetujuan",
+    "consentHint": "Apa yang disetujui pengunjung. Hanya dapat diubah saat formulir masih draf.",
+    "fields": "Kolom",
+    "required": "wajib",
+    "fieldsFixed": "Kolom berasal dari templat dan belum dapat diubah.",
+    "submissionsTitle": "Kiriman",
+    "noSubmissions": "Belum ada kiriman.",
+    "linkedContact": "terhubung ke kontak CRM",
+    "erased": "Data pribadi dihapus."
+  },
+  "PublicForm": {
+    "privacy": "Jawaban Anda dikirim ke organisasi yang menerbitkan formulir ini.",
+    "thanks": "Terima kasih! Jawaban Anda telah dikirim.",
+    "required": "wajib",
+    "choose": "Pilih…",
+    "submit": "Kirim"
   }
 }

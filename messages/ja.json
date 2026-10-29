@@ -69,7 +69,8 @@
     "knowledge": "ナレッジ",
     "assistant": "アシスタント",
     "crm": "CRM",
-    "schedule": "スケジュール"
+    "schedule": "スケジュール",
+    "forms": "フォーム"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -139,7 +140,8 @@
     "notFound": "この項目は存在しないか、利用できません。",
     "conflict": "この変更は現在の状態と競合しています。",
     "unprocessable": "この変更は許可されていません（利用できないプロジェクト、担当者、親ゴールなど）。",
-    "generic": "問題が発生しました。もう一度お試しください。"
+    "generic": "問題が発生しました。もう一度お試しください。",
+    "rateLimited": "試行回数が多すぎます。しばらくしてからもう一度お試しください。"
   },
   "Tasks": {
     "title": "タスク",
@@ -531,5 +533,51 @@
     "contactLabel": "関連コンタクト",
     "none": "なし",
     "attendeesLabel": "招待する人"
+  },
+  "Forms": {
+    "title": "フォーム",
+    "intro": "リンクから誰でも入力できるフォームで情報を集めます。コンタクトを作成するフォームでは、訪問者に同意文への同意を求め、その同意を記録します。",
+    "empty": "フォームはまだありません。下のテンプレートから始めましょう。",
+    "status": {
+      "DRAFT": "下書き",
+      "PUBLISHED": "公開中",
+      "CLOSED": "終了"
+    },
+    "submissions": "回答 {count} 件",
+    "createTitle": "新しいフォーム",
+    "template": "テンプレート",
+    "templates": {
+      "contact_request": "お問い合わせ",
+      "event_signup": "イベント申込み",
+      "feedback": "匿名フィードバック"
+    },
+    "titleLabel": "タイトル",
+    "descriptionLabel": "説明（任意）",
+    "create": "フォームを作成",
+    "back": "フォーム一覧へ戻る",
+    "publishing": "公開設定",
+    "publicLink": "このリンクを知っている人は誰でも送信できます：",
+    "publish": "公開する",
+    "close": "フォームを終了",
+    "draftNote": "まだ公開されていません。公開するとリンクが有効になります。",
+    "closedNote": "終了しました。リンクは無効です。もう一度公開できます。",
+    "settings": "設定",
+    "save": "保存",
+    "consentText": "同意文",
+    "consentHint": "訪問者が同意する内容です。下書きの間のみ変更できます。",
+    "fields": "項目",
+    "required": "必須",
+    "fieldsFixed": "項目はテンプレート由来で、まだ編集できません。",
+    "submissionsTitle": "回答",
+    "noSubmissions": "回答はまだありません。",
+    "linkedContact": "CRM のコンタクトに紐付け",
+    "erased": "個人情報は消去されました。"
+  },
+  "PublicForm": {
+    "privacy": "回答は、このフォームを公開した組織に送信されます。",
+    "thanks": "ありがとうございます。回答を送信しました。",
+    "required": "必須",
+    "choose": "選択してください…",
+    "submit": "送信"
   }
 }

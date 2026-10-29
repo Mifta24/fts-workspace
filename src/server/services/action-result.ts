@@ -3,7 +3,7 @@ import { isAppError, type AppErrorCode } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 
 export type ActionError =
-  "invalid" | "forbidden" | "notFound" | "conflict" | "unprocessable" | "generic";
+  "invalid" | "forbidden" | "notFound" | "conflict" | "unprocessable" | "rateLimited" | "generic";
 export type ActionState = { error?: ActionError; ok?: boolean };
 
 const BY_CODE: Partial<Record<AppErrorCode, ActionError>> = {
@@ -12,6 +12,7 @@ const BY_CODE: Partial<Record<AppErrorCode, ActionError>> = {
   NOT_FOUND: "notFound",
   CONFLICT: "conflict",
   UNPROCESSABLE: "unprocessable",
+  RATE_LIMITED: "rateLimited",
 };
 
 /** Maps a thrown error to a client-safe state; unexpected errors are logged, not leaked. */

@@ -42,7 +42,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 ## Phase 4 — Business
 - [x] CRM contacts and deal stages (slice 13: contacts, consent history, erasure, deals, activity timeline, pipeline report)
 - [~] Scheduling (slice 14: meetings with attendees, conflict protection, responses, notifications; **no reminders, no external calendar sync, no public booking pages, no time zones beyond UTC**) — customer journeys not started
-- [ ] Analytics, reports, templates/forms
+- [~] Templates/forms (slice 15: template-based forms, public submission links, consent capture, submissions; **fields are not editable after creation, labels are English, no CAPTCHA, no file uploads**) and the pipeline report; broader analytics not started
 **Exit gate:** privacy controls, consent pathways, and reliable reporting.
 
 ## Phase 5 — SaaS & Production

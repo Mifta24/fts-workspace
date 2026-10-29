@@ -78,7 +78,12 @@ describe("crm contacts", () => {
     const audit = await db().auditLog.findFirstOrThrow({
       where: { action: "crm.contact_created" },
     });
-    expect(JSON.stringify(audit)).not.toMatch(/dana|customer|555/i);
+    // Only the descriptive fields are inspected: ids and timestamps are digits and hex that could
+    // contain any short number by chance.
+    expect(audit.metadata).toBeNull();
+    expect(JSON.stringify([audit.action, audit.resourceType, audit.metadata])).not.toMatch(
+      /dana|customer|555/i,
+    );
   });
 
   it("validates input and rejects duplicate emails within the organization", async () => {
