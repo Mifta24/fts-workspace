@@ -40,6 +40,7 @@ describe("permission matrix", () => {
       "member:read",
       "project:read",
       "goal:read",
+      "task:read",
     ]);
     expect(permissionsForRole("OWNER")).toEqual([...PERMISSIONS]);
   });
@@ -53,7 +54,7 @@ describe("permission matrix", () => {
 
   it("lets viewers read but never write projects and goals", () => {
     for (const permission of PERMISSIONS.filter((p) =>
-      /^(project|goal):(create|update|archive)$/.test(p),
+      /^(project|goal|task):(create|update|archive|comment)$/.test(p),
     )) {
       expect(roleHasPermission("VIEWER", permission)).toBe(false);
     }

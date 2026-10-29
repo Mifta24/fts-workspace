@@ -5,12 +5,13 @@ import { Link } from "@/i18n/navigation";
 import type { OrganizationContext } from "@/features/organizations/server/organization-service";
 import { cn } from "@/lib/utils";
 
-type Section = "overview" | "projects" | "goals";
+type Section = "overview" | "projects" | "goals" | "tasks";
 
 const SECTIONS: { key: Section; path: string }[] = [
   { key: "overview", path: "" },
   { key: "projects", path: "/projects" },
   { key: "goals", path: "/goals" },
+  { key: "tasks", path: "/tasks" },
 ];
 
 export async function WorkspaceShell({

@@ -55,10 +55,11 @@
     "overview": "Ringkasan",
     "role": "Peran Anda: {role}",
     "switch": "Ganti workspace",
-    "placeholder": "Tugas dan dasbor hadir pada tahap Phase 1 berikutnya.",
+    "placeholder": "Dasbor hadir pada tahap Phase 1 berikutnya.",
     "navLabel": "Utama",
     "projects": "Proyek",
-    "goals": "Tujuan"
+    "goals": "Tujuan",
+    "tasks": "Tugas"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -100,7 +101,7 @@
     "createSubmit": "Buat tujuan",
     "archive": "Arsipkan",
     "due": "Tenggat {date}",
-    "progressPending": "Progres dihitung dari tugas (segera hadir).",
+    "progressPending": "Belum ada progres. Dihitung setelah ada tugas atau tonggak terkait.",
     "progressLabel": "Progres {title}",
     "mode": {
       "TASK_BASED": "Dari tugas",
@@ -121,5 +122,51 @@
     "conflict": "Perubahan ini bertentangan dengan kondisi saat ini.",
     "unprocessable": "Perubahan ini tidak diizinkan (misalnya proyek, pemilik, atau tujuan induk tidak tersedia).",
     "generic": "Terjadi kesalahan. Silakan coba lagi."
+  },
+  "Tasks": {
+    "title": "Tugas",
+    "filters": "Filter tugas",
+    "view": {
+      "all": "Semua",
+      "mine": "Untuk saya",
+      "overdue": "Terlambat"
+    },
+    "empty": "Belum ada tugas. Buat yang pertama di bawah.",
+    "emptyReadOnly": "Belum ada tugas.",
+    "emptyFiltered": "Tidak ada tugas yang cocok dengan filter ini.",
+    "createTitle": "Buat tugas",
+    "titleLabel": "Judul tugas",
+    "descriptionLabel": "Deskripsi (opsional)",
+    "assigneeLabel": "Penanggung jawab",
+    "goalLabel": "Tujuan",
+    "projectLabel": "Proyek",
+    "priorityLabel": "Prioritas",
+    "dueLabel": "Tenggat",
+    "statusLabel": "Status",
+    "none": "Tidak ada",
+    "unassigned": "Belum ditugaskan",
+    "due": "Tenggat {date}",
+    "createSubmit": "Buat tugas",
+    "save": "Simpan",
+    "back": "Kembali ke tugas",
+    "comments": "Komentar",
+    "noComments": "Belum ada komentar.",
+    "commentLabel": "Tambah komentar",
+    "commentSubmit": "Kirim komentar",
+    "formerMember": "Mantan anggota",
+    "status": {
+      "BACKLOG": "Backlog",
+      "TODO": "Akan dikerjakan",
+      "IN_PROGRESS": "Sedang dikerjakan",
+      "IN_REVIEW": "Ditinjau",
+      "COMPLETED": "Selesai",
+      "CANCELLED": "Dibatalkan"
+    },
+    "priority": {
+      "LOW": "Rendah",
+      "MEDIUM": "Sedang",
+      "HIGH": "Tinggi",
+      "URGENT": "Mendesak"
+    }
   }
 }

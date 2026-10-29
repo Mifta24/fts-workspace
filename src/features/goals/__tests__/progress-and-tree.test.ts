@@ -26,8 +26,15 @@ describe("computeGoalProgress", () => {
     expect(computeGoalProgress({ ...kpi, targetValue: 0 })).toBeNull();
   });
 
-  it("reports null for modes that depend on not-yet-built entities", () => {
-    expect(computeGoalProgress({ ...base, progressMode: "TASK_BASED" })).toBeNull();
+  it("derives task-based progress from completed / total tasks", () => {
+    const task = { ...base, progressMode: "TASK_BASED" as const };
+    expect(computeGoalProgress({ ...task, tasks: { total: 4, completed: 1 } })).toBe(25);
+    expect(computeGoalProgress({ ...task, tasks: { total: 3, completed: 3 } })).toBe(100);
+    expect(computeGoalProgress({ ...task, tasks: { total: 0, completed: 0 } })).toBeNull();
+    expect(computeGoalProgress(task)).toBeNull();
+  });
+
+  it("reports null for milestone-based goals until milestones exist", () => {
     expect(computeGoalProgress({ ...base, progressMode: "MILESTONE_BASED" })).toBeNull();
   });
 });

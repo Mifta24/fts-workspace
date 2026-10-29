@@ -2,7 +2,7 @@
  * Organization role → permission matrix (default deny).
  *
  * Phase 0 defined organization, membership and audit permissions; Phase 1
- * adds project:* and goal:*. Later phases extend `PERMISSIONS` (task:*,
+ * adds project:*, goal:* and task:*. Later phases extend `PERMISSIONS` (task:*,
  * ai:use, ...) and update docs/07-SECURITY.md.
  */
 
@@ -26,6 +26,10 @@ export const PERMISSIONS = [
   "goal:create",
   "goal:update",
   "goal:archive",
+  "task:read",
+  "task:create",
+  "task:update",
+  "task:comment",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -48,6 +52,10 @@ const MATRIX: Record<Permission, readonly OrganizationRole[]> = {
   "goal:create": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
   "goal:update": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
   "goal:archive": ["OWNER", "ADMIN", "MANAGER"],
+  "task:read": ALL_ROLES,
+  "task:create": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "task:update": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "task:comment": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
 };
 
 export function isOrganizationRole(value: unknown): value is OrganizationRole {

@@ -103,10 +103,12 @@ model Organization {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  members   Member[]
-  auditLogs AuditLog[]
-  projects  Project[]
-  goals     Goal[]
+  members      Member[]
+  auditLogs    AuditLog[]
+  projects     Project[]
+  goals        Goal[]
+  tasks        Task[]
+  taskComments TaskComment[]
 
   @@map("organizations")
 }
@@ -161,6 +163,7 @@ model Project {
   updatedAt      DateTime      @updatedAt
 
   goals Goal[]
+  tasks Task[]
 
   /// Target of composite foreign keys so children must share the organization.
   @@unique([id, organizationId])
@@ -177,6 +180,7 @@ model Goal {
   parentGoalId   String?      @db.Uuid
   parentGoal     Goal?        @relation("GoalTree", fields: [parentGoalId, organizationId], references: [id, organizationId], onDelete: Restrict)
   children       Goal[]       @relation("GoalTree")
+  tasks          Task[]
   title          String
   description    String?
   status         GoalStatus   @default(ACTIVE)
@@ -196,6 +200,69 @@ model Goal {
   @@index([organizationId, projectId])
   @@index([organizationId, ownerId, status])
   @@map("goals")
+}
+
+enum TaskStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Task {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  projectId      String?      @db.Uuid
+  project        Project?     @relation(fields: [projectId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  goalId         String?      @db.Uuid
+  goal           Goal?        @relation(fields: [goalId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  parentTaskId   String?      @db.Uuid
+  parentTask     Task?        @relation("SubTasks", fields: [parentTaskId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  subTasks       Task[]       @relation("SubTasks")
+  title          String
+  description    String?
+  status         TaskStatus   @default(TODO)
+  priority       TaskPriority @default(MEDIUM)
+  assigneeId     String?      @db.Uuid
+  createdById    String       @db.Uuid
+  startsAt       DateTime?
+  dueAt          DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  comments TaskComment[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId, status, dueAt])
+  @@index([organizationId, assigneeId, status])
+  @@index([organizationId, goalId])
+  @@index([organizationId, parentTaskId])
+  @@map("tasks")
+}
+
+model TaskComment {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  taskId         String       @db.Uuid
+  task           Task         @relation(fields: [taskId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  authorId       String       @db.Uuid
+  body           String
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, taskId, createdAt])
+  @@map("task_comments")
 }
 
 // ---------------------------------------------------------------------------

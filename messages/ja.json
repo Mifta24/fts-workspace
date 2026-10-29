@@ -55,10 +55,11 @@
     "overview": "概要",
     "role": "あなたのロール：{role}",
     "switch": "ワークスペースを切り替え",
-    "placeholder": "タスクとダッシュボードは Phase 1 の次のスライスで追加されます。",
+    "placeholder": "ダッシュボードは Phase 1 の次のスライスで追加されます。",
     "navLabel": "メイン",
     "projects": "プロジェクト",
-    "goals": "ゴール"
+    "goals": "ゴール",
+    "tasks": "タスク"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -100,7 +101,7 @@
     "createSubmit": "ゴールを作成",
     "archive": "アーカイブ",
     "due": "期限 {date}",
-    "progressPending": "進捗はタスクから計算されます（近日公開）。",
+    "progressPending": "進捗はまだありません。関連するタスクまたはマイルストーンができると計算されます。",
     "progressLabel": "{title} の進捗",
     "mode": {
       "TASK_BASED": "タスクから",
@@ -121,5 +122,51 @@
     "conflict": "この変更は現在の状態と競合しています。",
     "unprocessable": "この変更は許可されていません（利用できないプロジェクト、担当者、親ゴールなど）。",
     "generic": "問題が発生しました。もう一度お試しください。"
+  },
+  "Tasks": {
+    "title": "タスク",
+    "filters": "タスクの絞り込み",
+    "view": {
+      "all": "すべて",
+      "mine": "自分の担当",
+      "overdue": "期限超過"
+    },
+    "empty": "タスクはまだありません。下から最初のタスクを作成してください。",
+    "emptyReadOnly": "タスクはまだありません。",
+    "emptyFiltered": "この条件に一致するタスクはありません。",
+    "createTitle": "タスクを作成",
+    "titleLabel": "タスク名",
+    "descriptionLabel": "説明（任意）",
+    "assigneeLabel": "担当者",
+    "goalLabel": "ゴール",
+    "projectLabel": "プロジェクト",
+    "priorityLabel": "優先度",
+    "dueLabel": "期限",
+    "statusLabel": "ステータス",
+    "none": "なし",
+    "unassigned": "未割り当て",
+    "due": "期限 {date}",
+    "createSubmit": "タスクを作成",
+    "save": "保存",
+    "back": "タスク一覧へ戻る",
+    "comments": "コメント",
+    "noComments": "コメントはまだありません。",
+    "commentLabel": "コメントを追加",
+    "commentSubmit": "コメントを投稿",
+    "formerMember": "元メンバー",
+    "status": {
+      "BACKLOG": "バックログ",
+      "TODO": "未着手",
+      "IN_PROGRESS": "進行中",
+      "IN_REVIEW": "レビュー中",
+      "COMPLETED": "完了",
+      "CANCELLED": "キャンセル"
+    },
+    "priority": {
+      "LOW": "低",
+      "MEDIUM": "中",
+      "HIGH": "高",
+      "URGENT": "緊急"
+    }
   }
 }

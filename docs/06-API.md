@@ -17,6 +17,8 @@
 | Server action | `createProjectAction`, `archiveProjectAction` | Project create/archive | `project:create`, `project:archive` |
 | Server action | `createGoalAction`, `archiveGoalAction` | Goal create/archive | `goal:create`, `goal:archive` |
 
+| Server action | `createTaskAction`, `updateTaskAction`, `addCommentAction` | Task create, status/priority update, comment | `task:create`, `task:update`, `task:comment` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

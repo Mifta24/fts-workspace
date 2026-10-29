@@ -13,6 +13,7 @@ import {
 } from "@/features/goals/schemas/goal";
 import { computeGoalProgress } from "@/features/goals/server/progress";
 import { recordAuditEvent } from "@/server/services/audit";
+import { assertActiveMember, assertActiveProject, lockTree } from "@/server/services/tenant-refs";
 
 type Deps = { prisma: PrismaClient; correlationId?: string };
 
@@ -52,7 +53,9 @@ const select = {
 
 type GoalRow = Prisma.GoalGetPayload<{ select: typeof select }>;
 
-function toView(row: GoalRow): GoalView {
+type TaskStats = ReadonlyMap<string, { total: number; completed: number }>;
+
+function toView(row: GoalRow, stats?: TaskStats): GoalView {
   const targetValue = row.targetValue === null ? null : Number(row.targetValue);
   const currentValue = row.currentValue === null ? null : Number(row.currentValue);
   return {
@@ -64,8 +67,32 @@ function toView(row: GoalRow): GoalView {
       manualProgress: row.manualProgress,
       targetValue,
       currentValue,
+      tasks: stats?.get(row.id),
     }),
   };
+}
+
+/** Non-cancelled task counts per goal, for task-based progress. */
+async function loadTaskStats(
+  client: Pick<PrismaClient, "task">,
+  organizationId: string,
+  goalIds: string[],
+): Promise<TaskStats> {
+  if (goalIds.length === 0) return new Map();
+  const groups = await client.task.groupBy({
+    by: ["goalId", "status"],
+    where: { organizationId, goalId: { in: goalIds }, status: { not: "CANCELLED" } },
+    _count: { _all: true },
+  });
+  const stats = new Map<string, { total: number; completed: number }>();
+  for (const group of groups) {
+    if (!group.goalId) continue;
+    const entry = stats.get(group.goalId) ?? { total: 0, completed: 0 };
+    entry.total += group._count._all;
+    if (group.status === "COMPLETED") entry.completed += group._count._all;
+    stats.set(group.goalId, entry);
+  }
+  return stats;
 }
 
 const goalNotFound = () => new AppError("NOT_FOUND", "Goal not found.");
@@ -85,7 +112,12 @@ export async function listGoals(
     select,
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
   });
-  return rows.map(toView);
+  const stats = await loadTaskStats(
+    prisma,
+    context.organization.id,
+    rows.map((row) => row.id),
+  );
+  return rows.map((row) => toView(row, stats));
 }
 
 export async function getGoal(
@@ -101,7 +133,7 @@ export async function getGoal(
     select,
   });
   if (!row) throw goalNotFound();
-  return toView(row);
+  return toView(row, await loadTaskStats(prisma, context.organization.id, [row.id]));
 }
 
 export async function createGoal(
@@ -116,10 +148,15 @@ export async function createGoal(
 
   return prisma.$transaction(async (tx) => {
     const ownerId = input.ownerId ?? context.userId;
-    await assertActiveMember(tx, context.organization.id, ownerId);
+    await assertActiveMember(
+      tx,
+      context.organization.id,
+      ownerId,
+      "The owner must be an active member.",
+    );
     if (input.projectId) await assertActiveProject(tx, context.organization.id, input.projectId);
     if (input.parentGoalId) {
-      await lockGoalTree(tx, context.organization.id);
+      await lockTree(tx, "goal", context.organization.id);
       await assertValidParent(tx, context.organization.id, input.parentGoalId, null);
     }
 
@@ -167,7 +204,7 @@ export async function updateGoal(
 
   return prisma.$transaction(async (tx) => {
     // Serialize tree edits per organization so concurrent moves cannot form a cycle.
-    await lockGoalTree(tx, context.organization.id);
+    await lockTree(tx, "goal", context.organization.id);
     const existing = await tx.goal.findFirst({
       where: { id: id.data, organizationId: context.organization.id },
       select,
@@ -185,7 +222,13 @@ export async function updateGoal(
       throw new AppError("INVALID_INPUT", "A KPI goal needs a target.");
     }
 
-    if (input.ownerId) await assertActiveMember(tx, context.organization.id, input.ownerId);
+    if (input.ownerId)
+      await assertActiveMember(
+        tx,
+        context.organization.id,
+        input.ownerId,
+        "The owner must be an active member.",
+      );
     if (input.projectId) await assertActiveProject(tx, context.organization.id, input.projectId);
     if (input.parentGoalId) {
       await assertValidParent(tx, context.organization.id, input.parentGoalId, existing.id);
@@ -208,6 +251,7 @@ export async function updateGoal(
       },
       select,
     });
+    const stats = await loadTaskStats(tx, context.organization.id, [row.id]);
     await recordAuditEvent(tx, {
       organizationId: context.organization.id,
       actorId: context.userId,
@@ -219,7 +263,7 @@ export async function updateGoal(
       },
       correlationId,
     });
-    return toView(row);
+    return toView(row, stats);
   });
 }
 
@@ -234,7 +278,7 @@ export async function archiveGoal(
   if (!id.success) throw goalNotFound();
 
   await prisma.$transaction(async (tx) => {
-    await lockGoalTree(tx, context.organization.id);
+    await lockTree(tx, "goal", context.organization.id);
     const activeChildren = await tx.goal.count({
       where: {
         organizationId: context.organization.id,
@@ -262,26 +306,6 @@ export async function archiveGoal(
 }
 
 type Tx = Prisma.TransactionClient;
-
-async function lockGoalTree(tx: Tx, organizationId: string): Promise<void> {
-  await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"goal-tree:" + organizationId}, 0))`;
-}
-
-async function assertActiveMember(tx: Tx, organizationId: string, userId: string) {
-  const member = await tx.member.findFirst({
-    where: { organizationId, userId, status: "ACTIVE" },
-    select: { id: true },
-  });
-  if (!member) throw new AppError("UNPROCESSABLE", "The owner must be an active member.");
-}
-
-async function assertActiveProject(tx: Tx, organizationId: string, projectId: string) {
-  const project = await tx.project.findFirst({
-    where: { id: projectId, organizationId, status: "ACTIVE" },
-    select: { id: true },
-  });
-  if (!project) throw new AppError("UNPROCESSABLE", "The project is not available.");
-}
 
 /**
  * The parent must exist in the same organization, must not be archived, must not

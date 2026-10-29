@@ -15,7 +15,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 ## Phase 1 — Productivity MVP
 - [x] Project and goal CRUD with nested tree (slice 1; edit UI for goals/projects not built yet, service `updateGoal`/`updateProject` are)
 - [x] Goal cycle prevention and progress calculation (manual and numeric KPI; task/milestone modes report null until tasks exist)
-- [ ] Task CRUD, assignments, status, deadlines, comments
+- [x] Task CRUD, assignments, status, deadlines, comments (slice 2; full task edit form and milestones still open; subtasks supported in the service, not yet in the UI)
 - [ ] Dashboard KPIs and filterable views
 - [ ] AI task planner with review/approval
 - [ ] Responsive UI and E2E paths

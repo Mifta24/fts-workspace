@@ -55,10 +55,11 @@
     "overview": "Overview",
     "role": "Your role: {role}",
     "switch": "Switch workspace",
-    "placeholder": "Tasks and the dashboard arrive in the next Phase 1 slices.",
+    "placeholder": "The dashboard arrives in the next Phase 1 slice.",
     "navLabel": "Primary",
     "projects": "Projects",
-    "goals": "Goals"
+    "goals": "Goals",
+    "tasks": "Tasks"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -100,7 +101,7 @@
     "createSubmit": "Create goal",
     "archive": "Archive",
     "due": "Due {date}",
-    "progressPending": "Progress is calculated from tasks (coming soon).",
+    "progressPending": "No progress yet. It is calculated once linked tasks or milestones exist.",
     "progressLabel": "Progress of {title}",
     "mode": {
       "TASK_BASED": "From tasks",
@@ -121,5 +122,51 @@
     "conflict": "This change conflicts with the current state.",
     "unprocessable": "This change is not allowed (for example an unavailable project, owner or parent goal).",
     "generic": "Something went wrong. Please try again."
+  },
+  "Tasks": {
+    "title": "Tasks",
+    "filters": "Filter tasks",
+    "view": {
+      "all": "All",
+      "mine": "Assigned to me",
+      "overdue": "Overdue"
+    },
+    "empty": "No tasks yet. Create the first one below.",
+    "emptyReadOnly": "No tasks yet.",
+    "emptyFiltered": "No tasks match this filter.",
+    "createTitle": "Create a task",
+    "titleLabel": "Task title",
+    "descriptionLabel": "Description (optional)",
+    "assigneeLabel": "Assignee",
+    "goalLabel": "Goal",
+    "projectLabel": "Project",
+    "priorityLabel": "Priority",
+    "dueLabel": "Due date",
+    "statusLabel": "Status",
+    "none": "None",
+    "unassigned": "Unassigned",
+    "due": "Due {date}",
+    "createSubmit": "Create task",
+    "save": "Save",
+    "back": "Back to tasks",
+    "comments": "Comments",
+    "noComments": "No comments yet.",
+    "commentLabel": "Add a comment",
+    "commentSubmit": "Post comment",
+    "formerMember": "Former member",
+    "status": {
+      "BACKLOG": "Backlog",
+      "TODO": "To do",
+      "IN_PROGRESS": "In progress",
+      "IN_REVIEW": "In review",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "priority": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "URGENT": "Urgent"
+    }
   }
 }

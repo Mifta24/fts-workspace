@@ -134,3 +134,19 @@ export function requirePermission(context: OrganizationContext, permission: Perm
     throw new AppError("FORBIDDEN", "You do not have access to this resource.");
   }
 }
+
+export type MemberOption = { userId: string; name: string };
+
+/** Active members of the caller's organization, for assignee/owner pickers. */
+export async function listActiveMembers(
+  { prisma }: Deps,
+  context: OrganizationContext,
+): Promise<MemberOption[]> {
+  requirePermission(context, "member:read");
+  const members = await prisma.member.findMany({
+    where: { organizationId: context.organization.id, status: "ACTIVE" },
+    select: { userId: true, user: { select: { name: true } } },
+    orderBy: { user: { name: "asc" } },
+  });
+  return members.map((member) => ({ userId: member.userId, name: member.user.name }));
+}
