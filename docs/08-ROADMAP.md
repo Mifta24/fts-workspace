@@ -29,7 +29,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] Dedicated realtime service and authenticated channels (slice 8: Socket.IO gateway, ADR-012)
 - [x] DM, channels, pagination, notifications (slice 7, database-backed; realtime delivery is the next slice; mentions and deadline reminders are not built)
 - [x] Audit-backed point events, challenges, streaks, leaderboard visibility (slice 9: task-completion points only)
-**Exit gate:** permissions tested on socket joins; load tests for message delivery. Both exist (`tests/integration/gateway.test.ts`, `pnpm test:load`); the challenge/points item is still open, so the gate is met pending CI confirmation of the latest commits.
+**Exit gate:** permissions tested on socket joins; load tests for message delivery. Both exist (`tests/integration/gateway.test.ts`, `pnpm test:load`); the challenge/points item is still open, so the gate is met: Vitest, the 2,000-socket load run (local: 200,000 deliveries, 0 lost, p95 37 ms in one process; CI runs a 300-socket version) and Playwright pass in CI (commit `dd08310`, run 40832283718). Not built in Phase 2: mentions, deadline reminders, presence/typing, file attachments, a Redis adapter for several gateway instances.
 
 ## Phase 3 — AI & Knowledge
 - [ ] File upload, ACL, metadata, storage lifecycle
