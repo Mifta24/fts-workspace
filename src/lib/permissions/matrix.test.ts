@@ -55,7 +55,7 @@ describe("permission matrix", () => {
 
   it("lets viewers read but never write projects and goals", () => {
     for (const permission of PERMISSIONS.filter((p) =>
-      /^(project|goal|task):(create|update|archive|comment)$/.test(p),
+      /^(project|goal|task):(create|update|archive|comment)$|^ai:use$/.test(p),
     )) {
       expect(roleHasPermission("VIEWER", permission)).toBe(false);
     }

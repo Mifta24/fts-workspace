@@ -105,6 +105,7 @@ export default async function TasksPage({
             goals={goals.map((goal) => ({ id: goal.id, label: goal.title }))}
             projects={projects.map((project) => ({ id: project.id, label: project.name }))}
             members={members.map((member) => ({ id: member.userId, label: member.name }))}
+            tasks={tasks.map((task) => ({ id: task.id, label: task.title }))}
           />
         </Card>
       )}

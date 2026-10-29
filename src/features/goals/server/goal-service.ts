@@ -55,7 +55,9 @@ type GoalRow = Prisma.GoalGetPayload<{ select: typeof select }>;
 
 type TaskStats = ReadonlyMap<string, { total: number; completed: number }>;
 
-function toView(row: GoalRow, stats?: TaskStats): GoalView {
+type Stats = { tasks: TaskStats; milestones: TaskStats };
+
+function toView(row: GoalRow, stats?: Stats): GoalView {
   const targetValue = row.targetValue === null ? null : Number(row.targetValue);
   const currentValue = row.currentValue === null ? null : Number(row.currentValue);
   return {
@@ -67,12 +69,52 @@ function toView(row: GoalRow, stats?: TaskStats): GoalView {
       manualProgress: row.manualProgress,
       targetValue,
       currentValue,
-      tasks: stats?.get(row.id),
+      tasks: stats?.tasks.get(row.id),
+      milestones: stats?.milestones.get(row.id),
     }),
   };
 }
 
-/** Non-cancelled task counts per goal, for task-based progress. */
+/** Task and milestone counts per goal, for task- and milestone-based progress. */
+async function loadStats(
+  client: Pick<PrismaClient, "task" | "milestone">,
+  organizationId: string,
+  goalIds: string[],
+): Promise<Stats> {
+  const [tasks, milestones] = await Promise.all([
+    loadTaskStats(client, organizationId, goalIds),
+    loadMilestoneStats(client, organizationId, goalIds),
+  ]);
+  return { tasks, milestones };
+}
+
+async function loadMilestoneStats(
+  client: Pick<PrismaClient, "milestone">,
+  organizationId: string,
+  goalIds: string[],
+): Promise<TaskStats> {
+  if (goalIds.length === 0) return new Map();
+  const [totals, done] = await Promise.all([
+    client.milestone.groupBy({
+      by: ["goalId"],
+      where: { organizationId, goalId: { in: goalIds } },
+      _count: { _all: true },
+    }),
+    client.milestone.groupBy({
+      by: ["goalId"],
+      where: { organizationId, goalId: { in: goalIds }, completedAt: { not: null } },
+      _count: { _all: true },
+    }),
+  ]);
+  const completed = new Map(done.map((row) => [row.goalId, row._count._all]));
+  return new Map(
+    totals.map((row) => [
+      row.goalId,
+      { total: row._count._all, completed: completed.get(row.goalId) ?? 0 },
+    ]),
+  );
+}
+
 async function loadTaskStats(
   client: Pick<PrismaClient, "task">,
   organizationId: string,
@@ -112,7 +154,7 @@ export async function listGoals(
     select,
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
   });
-  const stats = await loadTaskStats(
+  const stats = await loadStats(
     prisma,
     context.organization.id,
     rows.map((row) => row.id),
@@ -133,7 +175,7 @@ export async function getGoal(
     select,
   });
   if (!row) throw goalNotFound();
-  return toView(row, await loadTaskStats(prisma, context.organization.id, [row.id]));
+  return toView(row, await loadStats(prisma, context.organization.id, [row.id]));
 }
 
 export async function createGoal(
@@ -251,7 +293,7 @@ export async function updateGoal(
       },
       select,
     });
-    const stats = await loadTaskStats(tx, context.organization.id, [row.id]);
+    const stats = await loadStats(tx, context.organization.id, [row.id]);
     await recordAuditEvent(tx, {
       organizationId: context.organization.id,
       actorId: context.userId,

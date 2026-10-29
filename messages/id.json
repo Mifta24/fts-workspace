@@ -175,7 +175,10 @@
       "MEDIUM": "Sedang",
       "HIGH": "Tinggi",
       "URGENT": "Mendesak"
-    }
+    },
+    "parentLabel": "Tugas induk",
+    "subtasks": "Subtugas",
+    "subtaskOf": "Subtugas dari"
   },
   "Dashboard": {
     "filters": "Filter dasbor",
@@ -200,5 +203,40 @@
     "emptyCanCreate": "Belum ada apa-apa. Mulai dengan membuat tujuan pertama Anda.",
     "empty": "Belum ada apa-apa. Tujuan dan tugas akan muncul setelah tim Anda membuatnya.",
     "createFirstGoal": "Buat tujuan pertama"
+  },
+  "Milestones": {
+    "title": "Tonggak",
+    "empty": "Belum ada tonggak.",
+    "done": "Selesai",
+    "open": "Terbuka",
+    "due": "Tenggat {date}",
+    "complete": "Tandai selesai",
+    "reopen": "Buka kembali",
+    "delete": "Hapus",
+    "titleLabel": "Judul tonggak",
+    "dueLabel": "Tenggat",
+    "add": "Tambah tonggak"
+  },
+  "AiPlanner": {
+    "planWithAi": "Rencanakan tugas dengan AI",
+    "title": "Rencanakan “{goal}” dengan AI",
+    "intro": "Jelaskan apa yang ingin dicapai. AI menyusun draf tugas untuk Anda tinjau; tidak ada yang dibuat sebelum Anda menerapkannya.",
+    "objectiveLabel": "Sasaran",
+    "objectiveHint": "Hanya judul tujuan, deskripsinya, dan teks ini yang dikirim ke layanan AI.",
+    "generate": "Buat draf",
+    "notConfigured": "Perencanaan AI belum dikonfigurasi pada deployment ini. Minta administrator untuk mengaturnya.",
+    "backToGoal": "Kembali ke tujuan",
+    "reviewTitle": "Tinjau draf",
+    "reviewIntro": "Ubah judul dan prioritas, hapus centang yang tidak diinginkan, lalu terapkan. Ini hanya saran, bukan komitmen.",
+    "include": "Sertakan tugas {index}",
+    "taskTitle": "Judul tugas {index}",
+    "taskPriority": "Prioritas tugas {index}",
+    "days": "Hari",
+    "estimateNote": "Estimasi adalah saran model, bukan jadwal yang dijamin.",
+    "apply": "Buat tugas terpilih",
+    "discard": "Buang draf",
+    "alreadyApplied": "Rencana ini sudah diterapkan.",
+    "alreadyDiscarded": "Rencana ini sudah dibuang.",
+    "emptyDraft": "Draf ini tidak memiliki tugas yang bisa dipakai."
   }
 }

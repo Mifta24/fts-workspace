@@ -13,14 +13,15 @@ No durations are commitments; estimate after technical discovery and staffing as
 **Phase 0 notes:** a production email provider, error monitoring/tracing vendor, and rate-limit storage are not chosen yet; the Better Auth rate limiter uses its default (in-memory, production only).
 
 ## Phase 1 — Productivity MVP
-- [x] Project and goal CRUD with nested tree (slices 1 and 5: create, edit and archive in the UI)
+- [x] Project and goal CRUD with nested tree (slices 1 and 5: create, edit and archive in the UI; milestones in slice 6)
 - [x] Goal cycle prevention and progress calculation (manual and numeric KPI; task/milestone modes report null until tasks exist)
-- [x] Task CRUD, assignments, status, deadlines, comments (slice 2; slice 5 added the full task edit form; milestones still open; subtasks supported in the service, not yet in the UI)
+- [x] Task CRUD, assignments, status, deadlines, comments (slice 2; slice 5 added the full task edit form, slice 6 subtask UI and milestones)
 - [x] Dashboard KPIs and filterable views (slice 3: overview page with project/assignee/time-range filters)
-- [ ] AI task planner with review/approval
+- [x] AI task planner with review/approval (slice 6: provider adapter, draft → review → apply; disabled until `AI_BASE_URL` and `AI_MODEL` are set)
 - [x] E2E paths (slice 4: Playwright owner flow, cross-tenant 404s, viewer read-only; run in CI)
-- [ ] Responsive UI verified at phone width (layout is mobile-aware but not yet tested)
-**Exit gate:** key persona flows run end-to-end; cross-tenant tests pass.
+- [x] Responsive UI checked at 375px width (no horizontal page scroll, usable navigation); no visual design review yet
+**Exit gate:** key persona flows run end-to-end; cross-tenant tests pass. Met locally on 2026-10-29 (Vitest + Playwright); CI result to be confirmed after push.
+**Phase 1 notes:** member invitations (`invitations`, `role_grants`) were not on the Phase 1 checklist and remain deferred; there is no real model connected yet (OD-08), so AI planning is verified with a fake provider and a seeded draft; AI plan dependencies between tasks (`task_dependencies`) are not built.
 
 ## Phase 2 — Collaboration & Engagement
 - [ ] Dedicated realtime service and authenticated channels

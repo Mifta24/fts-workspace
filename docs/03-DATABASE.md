@@ -81,7 +81,10 @@ The Better Auth organization plugin tables (`invitation`, `session.activeOrganiz
 | `tasks` | composite FKs to `projects`, `goals` and parent `tasks`; CHECKs: no self-parent, `completedAt` set exactly when `status = COMPLETED`, `startsAt <= dueAt`. Subtask cycles and depth (max 5) are checked in `task-service` under a per-organization advisory lock, which also serializes completion. Assignee must be an ACTIVE member (service). Cancel instead of delete. |
 | `task_comments` | composite FK `(taskId, organizationId)`; append-only; body never copied into audit logs |
 
-Migrations `20261029030000_projects_goals` and `20261029040000_tasks`. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
+| `milestones` | composite FK `(goalId, organizationId)`; `completedAt` set when done; drives `MILESTONE_BASED` progress; hard-deleted with its goal |
+| `ai_task_plans` | composite FK to the goal; `draft` JSON holds validated suggestions only; `status` DRAFT/APPLIED/DISCARDED (applied exactly once via a conditional update); private to `requestedById`; objective text is stored, never copied to audit logs |
+
+Migrations `20261029030000_projects_goals`, `20261029040000_tasks` and `20261029050000_milestones_ai_plans`. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
 
 ### Seed strategy
 - `pnpm db:seed` runs `prisma/seed.ts`; it refuses to run with `NODE_ENV=production`.

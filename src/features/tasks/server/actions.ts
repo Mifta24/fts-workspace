@@ -22,6 +22,7 @@ export async function createTaskAction(
       description: formData.get("description"),
       goalId: formData.get("goalId"),
       projectId: formData.get("projectId"),
+      parentTaskId: formData.get("parentTaskId"),
       assigneeId: formData.get("assigneeId"),
       priority: formData.get("priority") ?? undefined,
       dueAt: formData.get("dueAt"),
@@ -50,6 +51,7 @@ export async function updateTaskAction(
     "assigneeId",
     "goalId",
     "projectId",
+    "parentTaskId",
     "dueAt",
   ]) {
     const value = formData.get(key);

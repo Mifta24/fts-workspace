@@ -8,6 +8,11 @@ const envSchema = z.object({
   BETTER_AUTH_URL: z.url(),
   EMAIL_TRANSPORT: z.enum(["log"]).default("log"),
   EMAIL_FROM: z.string().min(1).default("FTS Workspace <no-reply@localhost>"),
+  // Optional OpenAI-compatible chat endpoint (OpenRouter or a local LM Studio).
+  // AI planning is disabled unless AI_BASE_URL and AI_MODEL are both set.
+  AI_BASE_URL: z.url().optional(),
+  AI_API_KEY: z.string().min(1).optional(),
+  AI_MODEL: z.string().min(1).optional(),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
 });
 

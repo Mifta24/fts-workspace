@@ -63,6 +63,13 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Decision:** `@playwright/test` 1.64.1 (latest stable at implementation time), Chromium only, specs in `e2e/`, run with `pnpm test:e2e`. The suite starts its own `next dev` on port 3100 with a separate build directory (`NEXT_DIST_DIR=.next-e2e`) so it can run beside a developer's dev server. It uses `next dev` rather than `next start` because the production server rejects `EMAIL_TRANSPORT=log` by design. `e2e/global-setup.ts` migrates and truncates the database, then seeds verified users (tenants `acme`, `globex`); locally it starts an embedded PostgreSQL on port 54330, in CI it reuses the service container (`TEST_DATABASE_URL`, after the Vitest run).  
 **Consequence:** sign-up and email verification are covered by the Vitest auth flow tests, not E2E, because E2E users are seeded. Add Firefox/WebKit and phone-width projects when responsive work starts.
 
+## ADR-011 — AI task planner behind a provider port (Phase 1)
+**Status:** Accepted (2026-10-29).  
+**Context:** the roadmap requires an AI task planner with review and approval, while OD-08 (provider and residency) is open.  
+**Decision:** depend on a small `TaskPlanProvider` port with one OpenAI-compatible adapter, configured only through environment variables and off by default. Drafts are persisted as `ai_task_plans`, are private to the requester and become tasks only through an explicit, idempotent apply step. Tests use a fake provider; E2E seeds a draft.  
+**Alternatives:** a vendor SDK (ties us to one provider and its streaming types), or streaming output (no benefit for a short structured plan).  
+**Consequence:** no data leaves the deployment until an operator sets `AI_BASE_URL`; choosing the real provider is a configuration step after OD-08, plus the usage ledger and budgets listed in `07-SECURITY.md`.
+
 ## Open decisions
 - **OD-01:** Which deploy environment/hosting region and target scale?
 - **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?

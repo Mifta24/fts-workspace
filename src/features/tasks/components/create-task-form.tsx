@@ -20,11 +20,13 @@ export function CreateTaskForm({
   goals,
   projects,
   members,
+  tasks,
 }: {
   organizationSlug: string;
   goals: Option[];
   projects: Option[];
   members: Option[];
+  tasks: Option[];
 }) {
   const t = useTranslations("Tasks");
   const common = useTranslations("Common");
@@ -67,6 +69,7 @@ export function CreateTaskForm({
         {picker("task-assignee", "assigneeId", t("assigneeLabel"), members)}
         {picker("task-goal", "goalId", t("goalLabel"), goals)}
         {picker("task-project", "projectId", t("projectLabel"), projects)}
+        {picker("task-parent", "parentTaskId", t("parentLabel"), tasks)}
         <div className="space-y-2">
           <Label htmlFor="task-priority">{t("priorityLabel")}</Label>
           <select id="task-priority" name="priority" defaultValue="MEDIUM" className={selectClass}>

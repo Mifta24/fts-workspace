@@ -23,6 +23,7 @@ export type EditableTask = {
   assigneeId: string | null;
   goalId: string | null;
   projectId: string | null;
+  parentTaskId: string | null;
   dueDate: string;
 };
 
@@ -32,12 +33,14 @@ export function EditTaskForm({
   goals,
   projects,
   members,
+  tasks,
 }: {
   organizationSlug: string;
   task: EditableTask;
   goals: Option[];
   projects: Option[];
   members: Option[];
+  tasks: Option[];
 }) {
   const t = useTranslations("Tasks");
   const common = useTranslations("Common");
@@ -105,6 +108,7 @@ export function EditTaskForm({
         {picker("task-assignee", "assigneeId", t("assigneeLabel"), members, task.assigneeId ?? "")}
         {picker("task-goal", "goalId", t("goalLabel"), goals, task.goalId ?? "")}
         {picker("task-project", "projectId", t("projectLabel"), projects, task.projectId ?? "")}
+        {picker("task-parent", "parentTaskId", t("parentLabel"), tasks, task.parentTaskId ?? "")}
         <div className="space-y-2">
           <Label htmlFor="task-due">{t("dueLabel")}</Label>
           <Input id="task-due" name="dueAt" type="date" defaultValue={task.dueDate} />

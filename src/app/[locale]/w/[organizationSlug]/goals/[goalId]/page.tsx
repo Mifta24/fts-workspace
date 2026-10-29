@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Card } from "@/components/ui/card";
+import { MilestonePanel } from "@/features/milestones/components/milestone-panel";
+import { listMilestones } from "@/features/milestones/server/milestone-service";
 import { EditGoalForm } from "@/features/goals/components/edit-goal-form";
 import { getGoal, listGoals } from "@/features/goals/server/goal-service";
 import { WorkspaceShell } from "@/features/organizations/components/workspace-shell";
@@ -9,6 +11,7 @@ import { requireWorkspace } from "@/features/organizations/server/require-worksp
 import { listProjects } from "@/features/projects/server/project-service";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
+import { roleHasPermission } from "@/lib/permissions/matrix";
 import { isAppError } from "@/lib/errors";
 
 export default async function EditGoalPage({
@@ -24,11 +27,14 @@ export default async function EditGoalPage({
   // Archived goals are read-only; treat them like missing ones here.
   if (goal.status === "ARCHIVED") notFound();
 
-  const [t, goals, projects, members] = await Promise.all([
+  const [t, tm, tp, goals, projects, members, milestones] = await Promise.all([
     getTranslations("Goals"),
+    getTranslations("Milestones"),
+    getTranslations("AiPlanner"),
     listGoals(deps, context),
     listProjects(deps, context),
     listActiveMembers(deps, context),
+    listMilestones(deps, context, goal.id),
   ]);
 
   return (
@@ -53,6 +59,29 @@ export default async function EditGoalPage({
           members={members.map((member) => ({ id: member.userId, label: member.name }))}
         />
       </Card>
+      {roleHasPermission(context.role, "ai:use") && (
+        <Link
+          href={`/w/${organizationSlug}/goals/${goal.id}/plan`}
+          className="inline-flex text-sm font-medium text-primary hover:underline"
+        >
+          {tp("planWithAi")}
+        </Link>
+      )}
+      <section aria-labelledby="milestones-title" className="space-y-3">
+        <h2 id="milestones-title" className="text-lg font-semibold tracking-tight">
+          {tm("title")}
+        </h2>
+        <MilestonePanel
+          organizationSlug={organizationSlug}
+          goalId={goal.id}
+          milestones={milestones.map((milestone) => ({
+            id: milestone.id,
+            title: milestone.title,
+            dueDate: milestone.dueAt ? milestone.dueAt.toISOString().slice(0, 10) : "",
+            completed: milestone.completedAt !== null,
+          }))}
+        />
+      </section>
     </WorkspaceShell>
   );
 }

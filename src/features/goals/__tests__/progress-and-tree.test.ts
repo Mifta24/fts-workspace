@@ -34,8 +34,13 @@ describe("computeGoalProgress", () => {
     expect(computeGoalProgress(task)).toBeNull();
   });
 
-  it("reports null for milestone-based goals until milestones exist", () => {
-    expect(computeGoalProgress({ ...base, progressMode: "MILESTONE_BASED" })).toBeNull();
+  it("derives milestone-based progress from completed / total milestones", () => {
+    const milestone = { ...base, progressMode: "MILESTONE_BASED" as const };
+    expect(computeGoalProgress({ ...milestone, milestones: { total: 4, completed: 3 } })).toBe(75);
+    expect(
+      computeGoalProgress({ ...milestone, milestones: { total: 0, completed: 0 } }),
+    ).toBeNull();
+    expect(computeGoalProgress(milestone)).toBeNull();
   });
 });
 

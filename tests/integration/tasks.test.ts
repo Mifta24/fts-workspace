@@ -337,3 +337,20 @@ describe("task editing", () => {
     await expectCode(updateTask(deps(), owner, task.id, { dueAt: "2026-12-01" }), "INVALID_INPUT");
   });
 });
+
+describe("subtask listing", () => {
+  beforeEach(resetDatabase);
+
+  it("lists only direct subtasks of the given parent within the organization", async () => {
+    const { owner, globexOwner } = await setup();
+    const parent = await createTask(deps(), owner, { title: "Parent" });
+    const child = await createTask(deps(), owner, { title: "Child", parentTaskId: parent.id });
+    await createTask(deps(), owner, { title: "Grandchild", parentTaskId: child.id });
+    await createTask(deps(), owner, { title: "Unrelated" });
+
+    expect(
+      (await listTasks(deps(), owner, { parentTaskId: parent.id })).map((t) => t.title),
+    ).toEqual(["Child"]);
+    expect(await listTasks(deps(), globexOwner, { parentTaskId: parent.id })).toEqual([]);
+  });
+});

@@ -109,6 +109,8 @@ model Organization {
   goals        Goal[]
   tasks        Task[]
   taskComments TaskComment[]
+  milestones   Milestone[]
+  aiTaskPlans  AiTaskPlan[]
 
   @@map("organizations")
 }
@@ -181,6 +183,8 @@ model Goal {
   parentGoal     Goal?        @relation("GoalTree", fields: [parentGoalId, organizationId], references: [id, organizationId], onDelete: Restrict)
   children       Goal[]       @relation("GoalTree")
   tasks          Task[]
+  milestones     Milestone[]
+  aiTaskPlans    AiTaskPlan[]
   title          String
   description    String?
   status         GoalStatus   @default(ACTIVE)
@@ -263,6 +267,53 @@ model TaskComment {
 
   @@index([organizationId, taskId, createdAt])
   @@map("task_comments")
+}
+
+model Milestone {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  goalId         String       @db.Uuid
+  goal           Goal         @relation(fields: [goalId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  title          String
+  dueAt          DateTime?
+  completedAt    DateTime?
+  createdById    String       @db.Uuid
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId, goalId])
+  @@map("milestones")
+}
+
+enum AiPlanStatus {
+  DRAFT
+  APPLIED
+  DISCARDED
+}
+
+/// A model-generated task plan. It is only a proposal: nothing becomes a task until
+/// the requester reviews and applies it. `draft` holds validated suggestions only.
+model AiTaskPlan {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  goalId         String       @db.Uuid
+  goal           Goal         @relation(fields: [goalId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  requestedById  String       @db.Uuid
+  objective      String
+  draft          Json
+  status         AiPlanStatus @default(DRAFT)
+  provider       String
+  model          String
+  appliedAt      DateTime?
+  appliedCount   Int?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId, goalId])
+  @@index([organizationId, requestedById, createdAt])
+  @@map("ai_task_plans")
 }
 
 // ---------------------------------------------------------------------------

@@ -24,6 +24,10 @@
 | Server action | `updateProjectAction`, `updateGoalAction` | Edit project / goal (empty description or due date clears it) | `project:update`, `goal:update` |
 | Page | `/[locale]/w/[slug]/projects/[id]`, `/goals/[id]` | Edit forms; `NOT_FOUND`/`FORBIDDEN` render 404 | `project:update`, `goal:update` |
 
+| Server action | `addMilestoneAction`, `toggleMilestoneAction`, `deleteMilestoneAction` | Milestones of a goal | `goal:update` |
+| Server action | `generatePlanAction`, `applyPlanAction`, `discardPlanAction` | AI task plan: generate draft, apply reviewed selection, discard | `ai:use` (+ `task:create` to apply) |
+| Page | `/[locale]/w/[slug]/goals/[id]/plan`, `.../plan/[planId]` | Objective form and draft review | `ai:use` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

@@ -68,6 +68,7 @@ export const taskFilterSchema = z.object({
   assigneeId: z.uuid().optional(),
   goalId: z.uuid().optional(),
   projectId: z.uuid().optional(),
+  parentTaskId: z.uuid().optional(),
   overdue: z.boolean().optional(),
 });
 export type TaskFilter = z.infer<typeof taskFilterSchema>;

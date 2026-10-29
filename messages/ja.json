@@ -175,7 +175,10 @@
       "MEDIUM": "中",
       "HIGH": "高",
       "URGENT": "緊急"
-    }
+    },
+    "parentLabel": "親タスク",
+    "subtasks": "サブタスク",
+    "subtaskOf": "親タスク:"
   },
   "Dashboard": {
     "filters": "ダッシュボードの絞り込み",
@@ -200,5 +203,40 @@
     "emptyCanCreate": "まだ何もありません。最初のゴールを作成しましょう。",
     "empty": "まだ何もありません。チームが作成するとゴールとタスクが表示されます。",
     "createFirstGoal": "最初のゴールを作成"
+  },
+  "Milestones": {
+    "title": "マイルストーン",
+    "empty": "マイルストーンはまだありません。",
+    "done": "完了",
+    "open": "未完了",
+    "due": "期限 {date}",
+    "complete": "完了にする",
+    "reopen": "再開",
+    "delete": "削除",
+    "titleLabel": "マイルストーン名",
+    "dueLabel": "期限",
+    "add": "マイルストーンを追加"
+  },
+  "AiPlanner": {
+    "planWithAi": "AI でタスクを計画",
+    "title": "「{goal}」を AI で計画",
+    "intro": "達成したいことを入力してください。AI がタスクの下書きを作成します。適用するまで何も作成されません。",
+    "objectiveLabel": "目的",
+    "objectiveHint": "AI サービスに送信されるのは、ゴールのタイトルと説明、およびこのテキストのみです。",
+    "generate": "下書きを生成",
+    "notConfigured": "このデプロイでは AI 計画が設定されていません。管理者に設定を依頼してください。",
+    "backToGoal": "ゴールへ戻る",
+    "reviewTitle": "下書きを確認",
+    "reviewIntro": "タイトルと優先度を編集し、不要なものはチェックを外して適用してください。これは提案であり、確約ではありません。",
+    "include": "タスク {index} を含める",
+    "taskTitle": "タスク {index} のタイトル",
+    "taskPriority": "タスク {index} の優先度",
+    "days": "日数",
+    "estimateNote": "見積りはモデルの提案であり、期日を保証するものではありません。",
+    "apply": "選択したタスクを作成",
+    "discard": "下書きを破棄",
+    "alreadyApplied": "この計画はすでに適用されています。",
+    "alreadyDiscarded": "この計画は破棄されました。",
+    "emptyDraft": "この下書きには使えるタスクがありません。"
   }
 }

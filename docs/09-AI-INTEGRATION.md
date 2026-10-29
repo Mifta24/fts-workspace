@@ -32,6 +32,12 @@ Enable users to brainstorm, plan goals, draft tasks, summarize authorized knowle
 ```
 Estimates are model suggestions, not guaranteed timelines.
 
+## Implemented in Phase 1 (slice 6)
+- Port and adapter: `src/server/ai/provider.ts` (`TaskPlanProvider`; OpenAI-compatible `/chat/completions`, 30 s timeout, 1,500 output tokens, JSON mode). Configure with `AI_BASE_URL`, `AI_MODEL` and optional `AI_API_KEY`; with either of the first two unset the feature is disabled and no request is ever made. Works with OpenRouter or a private LM Studio endpoint.
+- Service: `src/features/ai-planner/server/plan-service.ts`; persistence in `ai_task_plans`; audit events `ai.plan.generated|applied|discarded`.
+- Flow as in "MVP: goal decomposition", except that task dependencies are not generated yet (`task_dependencies` does not exist) and no usage ledger exists yet.
+- Model choice and data residency (OD-08) are still open; do not point `AI_BASE_URL` at a provider before that is decided.
+
 ## Proposed tools
 | Tool | Authorization | Mutation? |
 | --- | --- | --- |

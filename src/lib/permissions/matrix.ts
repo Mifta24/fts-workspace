@@ -31,6 +31,7 @@ export const PERMISSIONS = [
   "task:update",
   "task:comment",
   "dashboard:read",
+  "ai:use",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -58,6 +59,7 @@ const MATRIX: Record<Permission, readonly OrganizationRole[]> = {
   "task:update": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
   "task:comment": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
   "dashboard:read": ALL_ROLES,
+  "ai:use": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
 };
 
 export function isOrganizationRole(value: unknown): value is OrganizationRole {

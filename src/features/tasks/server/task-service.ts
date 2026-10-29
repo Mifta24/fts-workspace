@@ -64,6 +64,7 @@ export async function listTasks(
       assigneeId: filter.assigneeId,
       goalId: filter.goalId,
       projectId: filter.projectId,
+      parentTaskId: filter.parentTaskId,
       ...(filter.overdue ? { dueAt: { lt: now } } : {}),
     },
     select,

@@ -175,7 +175,10 @@
       "MEDIUM": "Medium",
       "HIGH": "High",
       "URGENT": "Urgent"
-    }
+    },
+    "parentLabel": "Parent task",
+    "subtasks": "Subtasks",
+    "subtaskOf": "Subtask of"
   },
   "Dashboard": {
     "filters": "Dashboard filters",
@@ -200,5 +203,40 @@
     "emptyCanCreate": "Nothing here yet. Start by creating your first goal.",
     "empty": "Nothing here yet. Goals and tasks will show up once your team creates them.",
     "createFirstGoal": "Create your first goal"
+  },
+  "Milestones": {
+    "title": "Milestones",
+    "empty": "No milestones yet.",
+    "done": "Done",
+    "open": "Open",
+    "due": "Due {date}",
+    "complete": "Mark done",
+    "reopen": "Reopen",
+    "delete": "Delete",
+    "titleLabel": "Milestone title",
+    "dueLabel": "Due date",
+    "add": "Add milestone"
+  },
+  "AiPlanner": {
+    "planWithAi": "Plan tasks with AI",
+    "title": "Plan “{goal}” with AI",
+    "intro": "Describe what you want to achieve. The AI drafts tasks for you to review; nothing is created until you apply them.",
+    "objectiveLabel": "Objective",
+    "objectiveHint": "Only the goal title, its description and this text are sent to the AI service.",
+    "generate": "Generate draft",
+    "notConfigured": "AI planning is not configured for this deployment. Ask an administrator to set it up.",
+    "backToGoal": "Back to goal",
+    "reviewTitle": "Review the draft",
+    "reviewIntro": "Edit titles and priorities, untick what you do not want, then apply. These are suggestions, not commitments.",
+    "include": "Include task {index}",
+    "taskTitle": "Title of task {index}",
+    "taskPriority": "Priority of task {index}",
+    "days": "Days",
+    "estimateNote": "Estimates are model suggestions, not guaranteed timelines.",
+    "apply": "Create selected tasks",
+    "discard": "Discard draft",
+    "alreadyApplied": "This plan was already applied.",
+    "alreadyDiscarded": "This plan was discarded.",
+    "emptyDraft": "This draft has no usable tasks."
   }
 }
