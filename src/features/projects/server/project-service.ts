@@ -42,6 +42,22 @@ export async function listProjects(
   });
 }
 
+export async function getProject(
+  { prisma }: Deps,
+  context: OrganizationContext,
+  projectId: string,
+): Promise<ProjectView> {
+  requirePermission(context, "project:read");
+  const id = projectIdSchema.safeParse(projectId);
+  if (!id.success) throw notFound();
+  const project = await prisma.project.findFirst({
+    where: { id: id.data, organizationId: context.organization.id },
+    select,
+  });
+  if (!project) throw notFound();
+  return project;
+}
+
 export async function createProject(
   { prisma, correlationId }: Deps,
   context: OrganizationContext,

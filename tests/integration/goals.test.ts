@@ -14,7 +14,9 @@ import {
 import {
   archiveProject,
   createProject,
+  getProject,
   listProjects,
+  updateProject,
 } from "@/features/projects/server/project-service";
 import { db } from "@/lib/db";
 import { AppError } from "@/lib/errors";
@@ -256,5 +258,58 @@ describe("goals", () => {
       expect(await listProjects(deps(), owner)).toEqual([]);
       await expectCode(archiveProject(deps(), owner, foreign.id), "NOT_FOUND");
     });
+  });
+});
+
+describe("editing", () => {
+  beforeEach(resetDatabase);
+
+  it("clears optional goal fields and cannot archive through update", async () => {
+    const { owner, member } = await setup();
+    const goal = await createGoal(deps(), owner, {
+      title: "Editable",
+      description: "Old text",
+      dueAt: "2026-12-01",
+    });
+    const cleared = await updateGoal(deps(), owner, goal.id, { description: "", dueAt: "" });
+    expect(cleared).toMatchObject({ description: null, dueAt: null, title: "Editable" });
+
+    // MEMBER has goal:update but not goal:archive, so ARCHIVED must be unreachable here.
+    await expectCode(updateGoal(deps(), member, goal.id, { status: "ARCHIVED" }), "INVALID_INPUT");
+    expect((await getGoal(deps(), owner, goal.id)).status).toBe("ACTIVE");
+  });
+
+  it("switches a goal to KPI using the stored target and rejects it without one", async () => {
+    const { owner } = await setup();
+    const goal = await createGoal(deps(), owner, { title: "Mode switch" });
+    await expectCode(
+      updateGoal(deps(), owner, goal.id, { progressMode: "NUMERIC_KPI" }),
+      "INVALID_INPUT",
+    );
+    const kpi = await updateGoal(deps(), owner, goal.id, {
+      progressMode: "NUMERIC_KPI",
+      targetValue: "40",
+      currentValue: "10",
+    });
+    expect(kpi.progress).toBe(25);
+    expect((await updateGoal(deps(), owner, goal.id, { currentValue: "20" })).progress).toBe(50);
+  });
+
+  it("edits and clears project descriptions, scoped to the organization", async () => {
+    const { owner, globexOwner } = await setup();
+    const project = await createProject(deps(), owner, { name: "Alpha", description: "Pilot" });
+    const renamed = await updateProject(deps(), owner, project.id, {
+      name: "Alpha 2",
+      description: "",
+    });
+    expect(renamed).toMatchObject({ name: "Alpha 2", description: null });
+    expect(await getProject(deps(), owner, project.id)).toMatchObject({ name: "Alpha 2" });
+
+    await expectCode(
+      updateProject(deps(), globexOwner, project.id, { name: "Hijack" }),
+      "NOT_FOUND",
+    );
+    await expectCode(getProject(deps(), globexOwner, project.id), "NOT_FOUND");
+    await expectCode(updateProject(deps(), owner, project.id, { name: "x" }), "INVALID_INPUT");
   });
 });

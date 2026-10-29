@@ -13,9 +13,9 @@ No durations are commitments; estimate after technical discovery and staffing as
 **Phase 0 notes:** a production email provider, error monitoring/tracing vendor, and rate-limit storage are not chosen yet; the Better Auth rate limiter uses its default (in-memory, production only).
 
 ## Phase 1 — Productivity MVP
-- [x] Project and goal CRUD with nested tree (slice 1; edit UI for goals/projects not built yet, service `updateGoal`/`updateProject` are)
+- [x] Project and goal CRUD with nested tree (slices 1 and 5: create, edit and archive in the UI)
 - [x] Goal cycle prevention and progress calculation (manual and numeric KPI; task/milestone modes report null until tasks exist)
-- [x] Task CRUD, assignments, status, deadlines, comments (slice 2; full task edit form and milestones still open; subtasks supported in the service, not yet in the UI)
+- [x] Task CRUD, assignments, status, deadlines, comments (slice 2; slice 5 added the full task edit form; milestones still open; subtasks supported in the service, not yet in the UI)
 - [x] Dashboard KPIs and filterable views (slice 3: overview page with project/assignee/time-range filters)
 - [ ] AI task planner with review/approval
 - [x] E2E paths (slice 4: Playwright owner flow, cross-tenant 404s, viewer read-only; run in CI)

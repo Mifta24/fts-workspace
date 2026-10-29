@@ -6,6 +6,7 @@ import { requireWorkspace } from "@/features/organizations/server/require-worksp
 import { CreateProjectForm } from "@/features/projects/components/create-project-form";
 import { archiveProjectAction } from "@/features/projects/server/actions";
 import { listProjects } from "@/features/projects/server/project-service";
+import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { roleHasPermission } from "@/lib/permissions/matrix";
 
@@ -19,6 +20,7 @@ export default async function ProjectsPage({
     listProjects({ prisma: db() }, context),
   ]);
   const canCreate = roleHasPermission(context.role, "project:create");
+  const canEdit = roleHasPermission(context.role, "project:update");
   const canArchive = roleHasPermission(context.role, "project:archive");
 
   return (
@@ -36,7 +38,18 @@ export default async function ProjectsPage({
               className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-card p-3"
             >
               <div className="min-w-0">
-                <p className="font-medium">{project.name}</p>
+                <p className="font-medium">
+                  {canEdit ? (
+                    <Link
+                      href={`/w/${organizationSlug}/projects/${project.id}`}
+                      className="text-primary hover:underline"
+                    >
+                      {project.name}
+                    </Link>
+                  ) : (
+                    project.name
+                  )}
+                </p>
                 {project.description && (
                   <p className="text-sm text-muted-foreground">{project.description}</p>
                 )}

@@ -6,7 +6,8 @@
     "genericError": "Something went wrong. Please try again.",
     "errorTitle": "Something went wrong",
     "errorBody": "An unexpected error occurred. Please try again.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "saved": "Saved."
   },
   "Home": {
     "title": "Plan goals, run work, keep teams aligned.",
@@ -80,7 +81,10 @@
     "nameLabel": "Project name",
     "descriptionLabel": "Description (optional)",
     "createSubmit": "Create project",
-    "archive": "Archive"
+    "archive": "Archive",
+    "editTitle": "Edit project",
+    "save": "Save changes",
+    "back": "Back to projects"
   },
   "Goals": {
     "title": "Goals",
@@ -112,7 +116,12 @@
       "ACTIVE": "Active",
       "COMPLETED": "Completed",
       "ARCHIVED": "Archived"
-    }
+    },
+    "editTitle": "Edit goal",
+    "save": "Save changes",
+    "back": "Back to goals",
+    "ownerLabel": "Owner",
+    "statusLabel": "Status"
   },
   "ActionErrors": {
     "invalid": "Check the details and try again.",

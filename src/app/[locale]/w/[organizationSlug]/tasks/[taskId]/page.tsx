@@ -3,9 +3,11 @@ import { getTranslations } from "next-intl/server";
 import { Card, CardTitle } from "@/components/ui/card";
 import { WorkspaceShell } from "@/features/organizations/components/workspace-shell";
 import { listActiveMembers } from "@/features/organizations/server/organization-service";
+import { listGoals } from "@/features/goals/server/goal-service";
+import { listProjects } from "@/features/projects/server/project-service";
 import { requireWorkspace } from "@/features/organizations/server/require-workspace";
 import { CommentForm } from "@/features/tasks/components/comment-form";
-import { TaskStatusForm } from "@/features/tasks/components/task-status-form";
+import { EditTaskForm } from "@/features/tasks/components/edit-task-form";
 import { getTask, listComments } from "@/features/tasks/server/task-service";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
@@ -23,10 +25,12 @@ export default async function TaskPage({
     if (isAppError(error) && error.code === "NOT_FOUND") notFound();
     throw error;
   });
-  const [t, comments, members] = await Promise.all([
+  const [t, comments, members, goals, projects] = await Promise.all([
     getTranslations("Tasks"),
     listComments(deps, context, task.id),
     listActiveMembers(deps, context),
+    listGoals(deps, context),
+    listProjects(deps, context),
   ]);
   const names = new Map(members.map((member) => [member.userId, member.name]));
   const canUpdate = roleHasPermission(context.role, "task:update");
@@ -51,11 +55,15 @@ export default async function TaskPage({
       {task.description && <p className="whitespace-pre-wrap">{task.description}</p>}
       {canUpdate && (
         <Card>
-          <TaskStatusForm
+          <EditTaskForm
             organizationSlug={organizationSlug}
-            taskId={task.id}
-            status={task.status}
-            priority={task.priority}
+            task={{
+              ...task,
+              dueDate: task.dueAt ? task.dueAt.toISOString().slice(0, 10) : "",
+            }}
+            goals={goals.map((goal) => ({ id: goal.id, label: goal.title }))}
+            projects={projects.map((project) => ({ id: project.id, label: project.name }))}
+            members={members.map((member) => ({ id: member.userId, label: member.name }))}
           />
         </Card>
       )}

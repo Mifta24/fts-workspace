@@ -37,6 +37,14 @@ describe("createGoalSchema", () => {
 });
 
 describe("updateGoalSchema", () => {
+  it("clears description and due date with empty values but never accepts ARCHIVED", () => {
+    const result = updateGoalSchema.parse({ description: "", dueAt: "" });
+    expect(result.description).toBeNull();
+    expect(result.dueAt).toBeNull();
+    expect(updateGoalSchema.safeParse({ status: "ARCHIVED" }).success).toBe(false);
+    expect(updateGoalSchema.safeParse({ status: "COMPLETED" }).success).toBe(true);
+  });
+
   it("maps an empty parent to null (detach) and leaves omitted fields undefined", () => {
     const result = updateGoalSchema.parse({ parentGoalId: "" });
     expect(result.parentGoalId).toBeNull();

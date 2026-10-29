@@ -33,7 +33,7 @@ export async function createTaskAction(
   return { ok: true };
 }
 
-/** Updates status/priority/assignee from the detail page; only submitted fields change. */
+/** Updates the task from the detail page; only submitted fields change ("" clears nullable ones). */
 export async function updateTaskAction(
   _previous: ActionState,
   formData: FormData,
@@ -42,7 +42,16 @@ export async function updateTaskAction(
   const context = await requireWorkspace(slug, "task:update");
   const correlationId = await getCorrelationId();
   const input: Record<string, FormDataEntryValue> = {};
-  for (const key of ["status", "priority", "assigneeId", "dueAt"]) {
+  for (const key of [
+    "title",
+    "description",
+    "status",
+    "priority",
+    "assigneeId",
+    "goalId",
+    "projectId",
+    "dueAt",
+  ]) {
     const value = formData.get(key);
     if (value !== null) input[key] = value;
   }

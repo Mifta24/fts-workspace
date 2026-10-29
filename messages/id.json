@@ -6,7 +6,8 @@
     "genericError": "Terjadi kesalahan. Silakan coba lagi.",
     "errorTitle": "Terjadi kesalahan",
     "errorBody": "Terjadi kesalahan tak terduga. Silakan coba lagi.",
-    "retry": "Coba lagi"
+    "retry": "Coba lagi",
+    "saved": "Tersimpan."
   },
   "Home": {
     "title": "Rencanakan tujuan, jalankan pekerjaan, selaraskan tim.",
@@ -80,7 +81,10 @@
     "nameLabel": "Nama proyek",
     "descriptionLabel": "Deskripsi (opsional)",
     "createSubmit": "Buat proyek",
-    "archive": "Arsipkan"
+    "archive": "Arsipkan",
+    "editTitle": "Ubah proyek",
+    "save": "Simpan perubahan",
+    "back": "Kembali ke proyek"
   },
   "Goals": {
     "title": "Tujuan",
@@ -112,7 +116,12 @@
       "ACTIVE": "Aktif",
       "COMPLETED": "Selesai",
       "ARCHIVED": "Diarsipkan"
-    }
+    },
+    "editTitle": "Ubah tujuan",
+    "save": "Simpan perubahan",
+    "back": "Kembali ke tujuan",
+    "ownerLabel": "Pemilik",
+    "statusLabel": "Status"
   },
   "ActionErrors": {
     "invalid": "Periksa data lalu coba lagi.",

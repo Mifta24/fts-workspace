@@ -1,16 +1,24 @@
 import { getTranslations } from "next-intl/server";
 import { ArchiveButton } from "@/components/archive-button";
 import { archiveGoalAction } from "@/features/goals/server/actions";
+import { Link } from "@/i18n/navigation";
 import type { GoalNode } from "@/features/goals/server/tree";
 
 type Props = {
   nodes: GoalNode[];
   organizationSlug: string;
   canArchive: boolean;
+  canEdit: boolean;
   projectNames: ReadonlyMap<string, string>;
 };
 
-export async function GoalTree({ nodes, organizationSlug, canArchive, projectNames }: Props) {
+export async function GoalTree({
+  nodes,
+  organizationSlug,
+  canArchive,
+  canEdit,
+  projectNames,
+}: Props) {
   const t = await getTranslations("Goals");
   if (nodes.length === 0) return null;
 
@@ -20,7 +28,18 @@ export async function GoalTree({ nodes, organizationSlug, canArchive, projectNam
         <li key={goal.id}>
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-card p-3">
             <div className="min-w-0 space-y-1">
-              <p className="font-medium">{goal.title}</p>
+              <p className="font-medium">
+                {canEdit ? (
+                  <Link
+                    href={`/w/${organizationSlug}/goals/${goal.id}`}
+                    className="text-primary hover:underline"
+                  >
+                    {goal.title}
+                  </Link>
+                ) : (
+                  goal.title
+                )}
+              </p>
               <p className="text-xs text-muted-foreground">
                 {[
                   goal.projectId ? projectNames.get(goal.projectId) : undefined,
@@ -61,6 +80,7 @@ export async function GoalTree({ nodes, organizationSlug, canArchive, projectNam
                 nodes={goal.children}
                 organizationSlug={organizationSlug}
                 canArchive={canArchive}
+                canEdit={canEdit}
                 projectNames={projectNames}
               />
             </div>

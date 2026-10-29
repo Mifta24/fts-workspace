@@ -298,3 +298,42 @@ describe("tasks", () => {
     });
   });
 });
+
+describe("task editing", () => {
+  beforeEach(resetDatabase);
+
+  it("edits every field, clears nullable ones and keeps unrelated fields", async () => {
+    const { owner, acme } = await setup();
+    const goal = await createGoal(deps(), owner, { title: "Parent goal" });
+    const task = await createTask(deps(), owner, {
+      title: "Original",
+      description: "Details",
+      goalId: goal.id,
+      assigneeId: acme.users.member!.id,
+      dueAt: "2026-12-01",
+    });
+    const edited = await updateTask(deps(), owner, task.id, {
+      title: "Renamed",
+      priority: "URGENT",
+      description: "",
+      goalId: "",
+      assigneeId: "",
+      dueAt: "",
+    });
+    expect(edited).toMatchObject({
+      title: "Renamed",
+      priority: "URGENT",
+      description: null,
+      goalId: null,
+      assigneeId: null,
+      dueAt: null,
+      status: "TODO",
+    });
+  });
+
+  it("rejects inverted dates against the stored value", async () => {
+    const { owner } = await setup();
+    const task = await createTask(deps(), owner, { title: "Dated", startsAt: "2026-12-10" });
+    await expectCode(updateTask(deps(), owner, task.id, { dueAt: "2026-12-01" }), "INVALID_INPUT");
+  });
+});

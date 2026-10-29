@@ -21,6 +21,9 @@
 
 | Page (server-rendered) | `/[locale]/w/[slug]` | Dashboard KPIs; filters via query string `projectId`, `assigneeId`, `range` (7/30/90/all) | `dashboard:read` |
 
+| Server action | `updateProjectAction`, `updateGoalAction` | Edit project / goal (empty description or due date clears it) | `project:update`, `goal:update` |
+| Page | `/[locale]/w/[slug]/projects/[id]`, `/goals/[id]` | Edit forms; `NOT_FOUND`/`FORBIDDEN` render 404 | `project:update`, `goal:update` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

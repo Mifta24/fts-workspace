@@ -6,7 +6,8 @@
     "genericError": "問題が発生しました。もう一度お試しください。",
     "errorTitle": "エラーが発生しました",
     "errorBody": "予期しないエラーが発生しました。もう一度お試しください。",
-    "retry": "再試行"
+    "retry": "再試行",
+    "saved": "保存しました。"
   },
   "Home": {
     "title": "目標を計画し、仕事を進め、チームの足並みをそろえる。",
@@ -80,7 +81,10 @@
     "nameLabel": "プロジェクト名",
     "descriptionLabel": "説明（任意）",
     "createSubmit": "プロジェクトを作成",
-    "archive": "アーカイブ"
+    "archive": "アーカイブ",
+    "editTitle": "プロジェクトを編集",
+    "save": "変更を保存",
+    "back": "プロジェクト一覧へ戻る"
   },
   "Goals": {
     "title": "ゴール",
@@ -112,7 +116,12 @@
       "ACTIVE": "進行中",
       "COMPLETED": "完了",
       "ARCHIVED": "アーカイブ済み"
-    }
+    },
+    "editTitle": "ゴールを編集",
+    "save": "変更を保存",
+    "back": "ゴール一覧へ戻る",
+    "ownerLabel": "オーナー",
+    "statusLabel": "ステータス"
   },
   "ActionErrors": {
     "invalid": "入力内容を確認してもう一度お試しください。",

@@ -37,6 +37,7 @@ export default async function GoalsPage({
           nodes={buildGoalTree(goals)}
           organizationSlug={organizationSlug}
           canArchive={canArchive}
+          canEdit={roleHasPermission(context.role, "goal:update")}
           projectNames={projectNames}
         />
       )}
