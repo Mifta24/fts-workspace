@@ -65,7 +65,8 @@
     "notifications": "Kotak masuk",
     "unread": "{count} notifikasi belum dibaca",
     "progress": "Progres",
-    "files": "Berkas"
+    "files": "Berkas",
+    "knowledge": "Pengetahuan"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -389,6 +390,27 @@
       "INVALID_INPUT": "Pilih berkas yang tidak kosong dan siapa yang dapat melihatnya.",
       "UNPROCESSABLE": "Berkas ini tidak dapat disimpan: tipe salah, lebih dari 10 MB, atau kuota penyimpanan habis.",
       "FORBIDDEN": "Anda tidak diizinkan mengunggah di sini."
-    }
+    },
+    "addToKnowledge": "Tambahkan ke pengetahuan",
+    "inKnowledge": "Ada di basis pengetahuan"
+  },
+  "Knowledge": {
+    "title": "Pengetahuan",
+    "intro": "Cari berkas teks yang ditambahkan orang ke basis pengetahuan. Anda hanya melihat kutipan dari berkas yang boleh Anda baca.",
+    "searchLabel": "Cari",
+    "search": "Cari",
+    "results": "Hasil",
+    "tooShort": "Ketik minimal dua karakter.",
+    "noResults": "Tidak ada yang ditemukan di berkas yang dapat Anda baca.",
+    "documents": "Berkas terindeks",
+    "empty": "Belum ada berkas yang ditambahkan ke basis pengetahuan.",
+    "emptyCanManage": "Belum ada yang diindeks. Tambahkan berkas teks dari halaman Berkas.",
+    "status": {
+      "PENDING": "Menunggu pekerja latar belakang",
+      "INDEXED": "Terindeks",
+      "FAILED": "Pengindeksan gagal"
+    },
+    "passages": "{count} kutipan",
+    "remove": "Hapus"
   }
 }

@@ -65,7 +65,8 @@
     "notifications": "Inbox",
     "unread": "{count} unread notifications",
     "progress": "Progress",
-    "files": "Files"
+    "files": "Files",
+    "knowledge": "Knowledge"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -389,6 +390,27 @@
       "INVALID_INPUT": "Choose a non-empty file and who can see it.",
       "UNPROCESSABLE": "This file cannot be stored: wrong type, over 10 MB, or the storage quota is used up.",
       "FORBIDDEN": "You are not allowed to upload here."
-    }
+    },
+    "addToKnowledge": "Add to knowledge",
+    "inKnowledge": "In knowledge base"
+  },
+  "Knowledge": {
+    "title": "Knowledge",
+    "intro": "Search the text files that people added to the knowledge base. You only ever see passages from files you are allowed to read.",
+    "searchLabel": "Search",
+    "search": "Search",
+    "results": "Results",
+    "tooShort": "Type at least two characters.",
+    "noResults": "Nothing found in the files you can read.",
+    "documents": "Indexed files",
+    "empty": "No files have been added to the knowledge base yet.",
+    "emptyCanManage": "Nothing indexed yet. Add a text file from the Files page.",
+    "status": {
+      "PENDING": "Waiting for the background worker",
+      "INDEXED": "Indexed",
+      "FAILED": "Indexing failed"
+    },
+    "passages": "{count} passages",
+    "remove": "Remove"
   }
 }

@@ -61,7 +61,7 @@ export function EditTaskForm({
   );
 
   return (
-    <form action={action} className="space-y-4">
+    <form key={JSON.stringify(task)} action={action} className="space-y-4">
       <input type="hidden" name="organizationSlug" value={organizationSlug} />
       <input type="hidden" name="id" value={task.id} />
       <div className="space-y-2">

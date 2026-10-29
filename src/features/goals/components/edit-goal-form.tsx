@@ -69,7 +69,7 @@ export function EditGoalForm({
   );
 
   return (
-    <form action={action} className="space-y-4">
+    <form key={JSON.stringify(goal)} action={action} className="space-y-4">
       <input type="hidden" name="organizationSlug" value={organizationSlug} />
       <input type="hidden" name="id" value={goal.id} />
       <div className="space-y-2">

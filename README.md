@@ -61,6 +61,7 @@ Open http://localhost:3000. Sign-up sends a verification email; in development t
 | `pnpm lint` / `pnpm format:check` / `pnpm typecheck` | Static checks |
 | `pnpm test` | Unit + integration tests (uses `TEST_DATABASE_URL`, or starts an embedded PostgreSQL) |
 | `pnpm test:e2e` | Playwright end-to-end tests (starts its own app, gateway and database) |
+| `pnpm worker` | Background worker (document indexing); needs the same `STORAGE_DIR` as the app |
 | `pnpm gateway` | Realtime gateway (Socket.IO) on port 4000; see `docs/02-ARCHITECTURE.md` |
 | `pnpm test:load` | Gateway load test (default 500 sockets; `CLIENTS`, `EVENTS`, `RATE` override) |
 | `pnpm build` | Production build |

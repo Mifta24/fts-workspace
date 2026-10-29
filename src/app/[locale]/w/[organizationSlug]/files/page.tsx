@@ -4,6 +4,8 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { UploadForm } from "@/features/files/components/upload-form";
 import { deleteFileAction } from "@/features/files/server/actions";
 import { listFiles } from "@/features/files/server/file-service";
+import { requestIndexingAction } from "@/features/knowledge/server/actions";
+import { listDocuments } from "@/features/knowledge/server/knowledge-service";
 import { signDownloadPath } from "@/features/files/server/signed-url";
 import { WorkspaceShell } from "@/features/organizations/components/workspace-shell";
 import { requireWorkspace } from "@/features/organizations/server/require-workspace";
@@ -23,10 +25,12 @@ export default async function FilesPage({
 }: PageProps<"/[locale]/w/[organizationSlug]/files">) {
   const { organizationSlug } = await params;
   const context = await requireWorkspace(organizationSlug, "file:read");
-  const [t, files] = await Promise.all([
+  const [t, files, documents] = await Promise.all([
     getTranslations("Files"),
     listFiles({ prisma: db() }, context),
+    listDocuments({ prisma: db() }, context),
   ]);
+  const indexed = new Map(documents.map((document) => [document.fileId, document.status]));
   const canUpload = roleHasPermission(context.role, "file:upload");
   const canModerate = roleHasPermission(context.role, "file:delete-any");
 
@@ -69,6 +73,16 @@ export default async function FilesPage({
                   >
                     {t("manage")}
                   </Link>
+                )}
+                {file.mine && file.mimeType.startsWith("text/") && !indexed.has(file.id) && (
+                  <ActionButton
+                    action={requestIndexingAction}
+                    fields={{ organizationSlug, id: file.id }}
+                    label={t("addToKnowledge")}
+                  />
+                )}
+                {indexed.has(file.id) && (
+                  <span className="text-xs text-muted-foreground">{t("inKnowledge")}</span>
                 )}
                 {(file.mine || canModerate) && (
                   <ActionButton

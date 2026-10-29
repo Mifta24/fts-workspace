@@ -57,6 +57,9 @@ tests/
 docs/
 ```
 
+## Background worker (Phase 3)
+`worker/main.ts` (`pnpm worker`, started with `--conditions=react-server` so shared server modules that import `server-only` load outside Next.js) polls the `jobs` table every 2 s and runs handlers from a registry (`knowledge.ingest` today). It needs `DATABASE_URL` and the same `STORAGE_DIR` as the app. The queue is Postgres-based (ADR-013), not Redis/BullMQ.
+
 ## Realtime gateway (Phase 2)
 `gateway/server.ts` is a plain Node HTTP + Socket.IO server (`pnpm gateway`, default port 4000). Flow: the browser connects with its session cookie → the gateway asks the app `/api/realtime/session` who the user is → `subscribe {organizationSlug}` joins the user's notification room → `join {organizationSlug, channelId}` joins a channel room only if the database shows an active member who belongs to the channel (`src/server/realtime/authorize.ts`). The app publishes events to `POST /internal/publish` (header `x-realtime-secret`); the gateway emits identifiers to the matching room; the page refreshes its data. Details and decision: ADR-012.
 

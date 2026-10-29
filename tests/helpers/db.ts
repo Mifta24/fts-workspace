@@ -6,7 +6,7 @@ export async function resetDatabase(): Promise<void> {
     throw new Error("Refusing to reset a database whose name does not contain '_test'.");
   }
   await db().$executeRawUnsafe(
-    'TRUNCATE TABLE "file_shares", "files", "challenges", "point_events", "notifications", "messages", "channel_members", "channels", "invitations", "ai_task_plans", "milestones", "task_comments", "tasks", "goals", "projects", "audit_logs", "members", "organizations", "verifications", "accounts", "sessions", "users" RESTART IDENTITY CASCADE',
+    'TRUNCATE TABLE "jobs", "document_chunks", "knowledge_documents", "file_shares", "files", "challenges", "point_events", "notifications", "messages", "channel_members", "channels", "invitations", "ai_task_plans", "milestones", "task_comments", "tasks", "goals", "projects", "audit_logs", "members", "organizations", "verifications", "accounts", "sessions", "users" RESTART IDENTITY CASCADE',
   );
 }
 

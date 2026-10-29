@@ -33,9 +33,9 @@ No durations are commitments; estimate after technical discovery and staffing as
 
 ## Phase 3 — AI & Knowledge
 - [x] File upload, ACL, metadata, storage lifecycle (slice 10: local-disk storage adapter behind a port; the production store is still OD-04; no malware scanning yet)
-- [ ] Knowledge docs and semantic retrieval
+- [x] Knowledge docs and retrieval (slice 11: keyword full-text search with the file ACL applied inside the query; **semantic/embedding retrieval is not built**, see ADR-013)
 - [ ] Permission-aware AI tools, audit, budgets
-- [ ] Background ingestion, automation prototype, MCP threat model
+- [~] Background ingestion (slice 11: Postgres-backed queue and `pnpm worker`) — automation prototype and MCP threat model still open
 **Exit gate:** document ACL holds across retrieval; no unauthorized tool execution.
 
 ## Phase 4 — Business

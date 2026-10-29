@@ -77,6 +77,13 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Alternatives:** SSE from Next.js (simpler, no extra process, one-way and weaker at fan-out; kept as the fallback shape if the gateway is not wanted), a managed pub/sub vendor (token-based authorization, per-message cost, data leaves the deployment).  
 **Consequences:** one more service to run, monitor and patch. If the gateway is down or unconfigured the app keeps working: messages are saved and appear on the next load. Scaling past one instance needs the Socket.IO Redis adapter (not added yet). Browser and gateway must share a cookie domain (same host name; production: reverse proxy `/socket.io`).
 
+## ADR-013 — Postgres job queue and full-text knowledge search (Phase 3)
+**Status:** Accepted (2026-10-29).  
+**Context:** Phase 3 needs background ingestion and retrieval, while OD-04 (storage), OD-08 (AI provider and residency) and Redis operations are open.  
+**Decision:** (1) background jobs use a table-backed queue with `SKIP LOCKED` instead of Redis/BullMQ, so a pilot has no extra service to run and jobs commit atomically with the change that caused them; (2) knowledge retrieval is PostgreSQL full-text search over chunks, with the access rule inside the SQL; (3) files sit behind a storage port with a local-disk adapter; (4) PDF and office extraction are out until a reviewed extractor exists.  
+**Alternatives:** BullMQ (richer scheduling, needs Redis), pgvector or an external vector store (needs a provider decision and a different database image).  
+**Consequences:** polling latency (≤ 2 s), no cron-style scheduling, and the `simple` text configuration matches whole words without stemming, which is weak for Japanese. Moving to Redis or adding embeddings later changes the queue/search adapters, not the access model.
+
 ## Open decisions
 - **OD-01:** Which deploy environment/hosting region and target scale?
 - **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?

@@ -353,6 +353,8 @@ export async function deleteFile(
       where: { id: file.id },
       data: { status: "DELETED", deletedAt: now },
     });
+    // Derived search data goes with the file (it could not match anyway: the file is no longer READY).
+    await tx.knowledgeDocument.deleteMany({ where: { fileId: file.id, organizationId } });
     await recordAuditEvent(tx, {
       organizationId,
       actorId: context.userId,

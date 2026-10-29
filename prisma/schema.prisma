@@ -105,23 +105,26 @@ model Organization {
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 
-  members        Member[]
-  auditLogs      AuditLog[]
-  projects       Project[]
-  goals          Goal[]
-  tasks          Task[]
-  taskComments   TaskComment[]
-  milestones     Milestone[]
-  aiTaskPlans    AiTaskPlan[]
-  invitations    Invitation[]
-  channels       Channel[]
-  channelMembers ChannelMember[]
-  messages       Message[]
-  notifications  Notification[]
-  pointEvents    PointEvent[]
-  challenges     Challenge[]
-  fileObjects    FileObject[]
-  fileShares     FileShare[]
+  members            Member[]
+  auditLogs          AuditLog[]
+  projects           Project[]
+  goals              Goal[]
+  tasks              Task[]
+  taskComments       TaskComment[]
+  milestones         Milestone[]
+  aiTaskPlans        AiTaskPlan[]
+  invitations        Invitation[]
+  channels           Channel[]
+  channelMembers     ChannelMember[]
+  messages           Message[]
+  notifications      Notification[]
+  pointEvents        PointEvent[]
+  challenges         Challenge[]
+  fileObjects        FileObject[]
+  fileShares         FileShare[]
+  knowledgeDocuments KnowledgeDocument[]
+  documentChunks     DocumentChunk[]
+  jobs               Job[]
 
   @@map("organizations")
 }
@@ -531,7 +534,8 @@ model FileObject {
   deletedAt      DateTime?
   createdAt      DateTime       @default(now())
 
-  shares FileShare[]
+  shares    FileShare[]
+  documents KnowledgeDocument[]
 
   @@unique([id, organizationId])
   @@index([organizationId, status, createdAt])
@@ -551,6 +555,86 @@ model FileShare {
   @@unique([fileId, userId])
   @@index([organizationId, userId])
   @@map("file_shares")
+}
+
+// ---------------------------------------------------------------------------
+// Knowledge and background jobs
+// ---------------------------------------------------------------------------
+
+enum DocumentStatus {
+  PENDING
+  INDEXED
+  FAILED
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  DONE
+  FAILED
+}
+
+/// A file that has been added to the knowledge base. It has **no access rules of its own**: who
+/// may find it is decided by the file's rule at query time, so changing a file's sharing or
+/// deleting it takes effect on the next search with nothing to synchronize.
+model KnowledgeDocument {
+  id             String         @id @default(uuid(7)) @db.Uuid
+  organizationId String         @db.Uuid
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  fileId         String         @db.Uuid
+  file           FileObject     @relation(fields: [fileId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  status         DocumentStatus @default(PENDING)
+  chunkCount     Int            @default(0)
+  error          String?
+  indexedAt      DateTime?
+  createdById    String         @db.Uuid
+  createdAt      DateTime       @default(now())
+
+  chunks DocumentChunk[]
+
+  @@unique([id, organizationId])
+  @@unique([fileId])
+  @@index([organizationId, status])
+  @@map("knowledge_documents")
+}
+
+model DocumentChunk {
+  id             String                   @id @default(uuid(7)) @db.Uuid
+  organizationId String                   @db.Uuid
+  organization   Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  documentId     String                   @db.Uuid
+  document       KnowledgeDocument        @relation(fields: [documentId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  ordinal        Int
+  content        String
+  /// Generated column (see migration): to_tsvector('simple', content), GIN-indexed.
+  tsv            Unsupported("tsvector")?
+
+  @@unique([documentId, ordinal])
+  @@index([organizationId, documentId])
+  @@map("document_chunks")
+}
+
+/// Database-backed job queue (claimed with FOR UPDATE SKIP LOCKED). `dedupeKey` makes enqueueing
+/// idempotent per organization.
+model Job {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type           String
+  payload        Json
+  status         JobStatus    @default(QUEUED)
+  attempts       Int          @default(0)
+  maxAttempts    Int          @default(3)
+  runAt          DateTime     @default(now())
+  lockedAt       DateTime?
+  lastError      String?
+  dedupeKey      String?
+  createdAt      DateTime     @default(now())
+  finishedAt     DateTime?
+
+  @@unique([organizationId, dedupeKey])
+  @@index([status, runAt])
+  @@map("jobs")
 }
 
 // ---------------------------------------------------------------------------

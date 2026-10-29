@@ -21,7 +21,11 @@ export function EditProjectForm({
   const common = useTranslations("Common");
   const [state, action, pending] = useActionState<ActionState, FormData>(updateProjectAction, {});
   return (
-    <form action={action} className="space-y-4">
+    <form
+      key={JSON.stringify([project.name, project.description])}
+      action={action}
+      className="space-y-4"
+    >
       <input type="hidden" name="organizationSlug" value={organizationSlug} />
       <input type="hidden" name="id" value={project.id} />
       <div className="space-y-2">

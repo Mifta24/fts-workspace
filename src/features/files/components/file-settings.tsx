@@ -37,7 +37,8 @@ export function FileSettings({ organizationSlug, fileId, visibility, shares, can
 
   return (
     <div className="space-y-6">
-      <form action={visAction} className="flex flex-wrap items-end gap-4">
+      {/* Keyed by the saved value so the select shows what the server now holds after a save. */}
+      <form key={visibility} action={visAction} className="flex flex-wrap items-end gap-4">
         <input type="hidden" name="organizationSlug" value={organizationSlug} />
         <input type="hidden" name="id" value={fileId} />
         <div className="space-y-2">

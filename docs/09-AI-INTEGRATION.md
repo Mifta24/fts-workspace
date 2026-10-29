@@ -38,6 +38,9 @@ Estimates are model suggestions, not guaranteed timelines.
 - Flow as in "MVP: goal decomposition", except that task dependencies are not generated yet (`task_dependencies` does not exist) and no usage ledger exists yet.
 - Model choice and data residency (OD-08) are still open; do not point `AI_BASE_URL` at a provider before that is decided.
 
+## Retrieval implemented in Phase 3 (slice 11)
+Keyword retrieval only: text/Markdown/CSV files are chunked by the worker and searched with PostgreSQL full-text search (`simple` configuration), with the file access rule applied in the query (see 07-SECURITY). Embeddings and pgvector are **not** implemented: they depend on OD-08 (embedding provider) and on a database image with pgvector, which neither the CI service container nor the embedded test database provides yet.
+
 ## Proposed tools
 | Tool | Authorization | Mutation? |
 | --- | --- | --- |

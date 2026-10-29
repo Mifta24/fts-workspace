@@ -43,6 +43,7 @@ export default defineConfig({
         REALTIME_URL: `http://127.0.0.1:${GATEWAY_PORT}`,
         REALTIME_PUBLIC_URL: `http://localhost:${GATEWAY_PORT}`,
         REALTIME_PUBLISH_SECRET: GATEWAY_SECRET,
+        STORAGE_DIR: ".data/files-e2e",
       },
     },
     {
@@ -57,6 +58,17 @@ export default defineConfig({
         GATEWAY_PORT: String(GATEWAY_PORT),
         GATEWAY_HOST: "127.0.0.1",
         REALTIME_PUBLISH_SECRET: GATEWAY_SECRET,
+      },
+    },
+    {
+      command: "pnpm worker",
+      // The worker has no HTTP port; wait for its readiness line instead.
+      wait: { stdout: /worker ready/ },
+      reuseExistingServer: false,
+      timeout: 60_000,
+      env: {
+        DATABASE_URL: E2E_DATABASE_URL,
+        STORAGE_DIR: ".data/files-e2e",
       },
     },
   ],

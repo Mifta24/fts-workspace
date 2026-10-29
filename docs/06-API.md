@@ -50,6 +50,9 @@
 | GET | `/api/files/:id/content?org=&exp=&sig=` | Download as attachment; needs session, a 5-minute signature bound to file and person, and the access rule | `file:read` |
 | Server action | `deleteFileAction`, `setVisibilityAction`, `shareFileAction`, `unshareFileAction` | File management (uploader; `file:delete-any` for deletion) | see 07-SECURITY |
 
+| Server action | `requestIndexingAction`, `removeFromKnowledgeAction` | Add / remove one of your own text files | `knowledge:manage` |
+| Page | `/[locale]/w/[slug]/knowledge?q=` | Search (min. 2 chars) and indexed files | `knowledge:read` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints
