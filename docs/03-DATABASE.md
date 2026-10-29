@@ -72,6 +72,14 @@ Executable schema: `prisma/schema.prisma`; migrations in `prisma/migrations/`.
 
 The Better Auth organization plugin tables (`invitation`, `session.activeOrganizationId`) are intentionally absent (ADR-008). Invitations arrive in Phase 1.
 
+### Added in Phase 1, slice 1
+| Table | Notes |
+| --- | --- |
+| `projects` | `status` ACTIVE/ARCHIVED; unique `(id, organizationId)` is the target of composite FKs |
+| `goals` | composite FKs `(projectId, organizationId)` and `(parentGoalId, organizationId)` make cross-tenant references impossible in the database; CHECKs for progress 0-100, positive target, no self-parent. Parent-cycle and depth (max 10) checks run in `goal-service` under a per-organization advisory lock. Archive-only, no hard delete. |
+
+Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
+
 ### Seed strategy
 - `pnpm db:seed` runs `prisma/seed.ts`; it refuses to run with `NODE_ENV=production`.
 - The seed creates two demo tenants (`acme`, `globex`) and three verified demo users for manually checking tenant isolation. Passwords are hashed with Better Auth's `hashPassword`. The dev-only password comes from `SEED_PASSWORD` or a default in `prisma/seed.ts`.

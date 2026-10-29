@@ -55,7 +55,10 @@
     "overview": "概要",
     "role": "あなたのロール：{role}",
     "switch": "ワークスペースを切り替え",
-    "placeholder": "目標、タスク、ダッシュボードはフェーズ1で追加されます。"
+    "placeholder": "タスクとダッシュボードは Phase 1 の次のスライスで追加されます。",
+    "navLabel": "メイン",
+    "projects": "プロジェクト",
+    "goals": "ゴール"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -68,5 +71,55 @@
     "title": "ページが見つかりません",
     "body": "ページが存在しないか、アクセス権がありません。",
     "back": "ワークスペース一覧へ"
+  },
+  "Projects": {
+    "title": "プロジェクト",
+    "empty": "プロジェクトはまだありません。下から最初のプロジェクトを作成してください。",
+    "emptyReadOnly": "プロジェクトはまだありません。",
+    "createTitle": "プロジェクトを作成",
+    "nameLabel": "プロジェクト名",
+    "descriptionLabel": "説明（任意）",
+    "createSubmit": "プロジェクトを作成",
+    "archive": "アーカイブ"
+  },
+  "Goals": {
+    "title": "ゴール",
+    "empty": "ゴールはまだありません。下から最初のゴールを作成してください。",
+    "emptyReadOnly": "ゴールはまだありません。",
+    "createTitle": "ゴールを作成",
+    "titleLabel": "ゴール名",
+    "descriptionLabel": "説明（任意）",
+    "projectLabel": "プロジェクト",
+    "parentLabel": "親ゴール",
+    "none": "なし",
+    "modeLabel": "進捗の計測方法",
+    "dueLabel": "期限",
+    "manualLabel": "進捗（%）",
+    "targetLabel": "目標値",
+    "currentLabel": "現在値",
+    "createSubmit": "ゴールを作成",
+    "archive": "アーカイブ",
+    "due": "期限 {date}",
+    "progressPending": "進捗はタスクから計算されます（近日公開）。",
+    "progressLabel": "{title} の進捗",
+    "mode": {
+      "TASK_BASED": "タスクから",
+      "MILESTONE_BASED": "マイルストーンから",
+      "NUMERIC_KPI": "数値 KPI",
+      "MANUAL": "手動"
+    },
+    "status": {
+      "ACTIVE": "進行中",
+      "COMPLETED": "完了",
+      "ARCHIVED": "アーカイブ済み"
+    }
+  },
+  "ActionErrors": {
+    "invalid": "入力内容を確認してもう一度お試しください。",
+    "forbidden": "この操作を行う権限がありません。",
+    "notFound": "この項目は存在しないか、利用できません。",
+    "conflict": "この変更は現在の状態と競合しています。",
+    "unprocessable": "この変更は許可されていません（利用できないプロジェクト、担当者、親ゴールなど）。",
+    "generic": "問題が発生しました。もう一度お試しください。"
   }
 }

@@ -61,6 +61,7 @@ Auth tests + RBAC matrix tests + cross-tenant E2E + secret scan + dependency aud
 | `member:remove` | ✓ | ✓ | | | |
 | `audit:read` | ✓ | ✓ | | | |
 
+- Phase 1 slice 1 adds `project:read|create|update|archive` and `goal:read|create|update|archive`: everyone reads; `goal:create/update` for OWNER, ADMIN, MANAGER, MEMBER; `goal:archive` and all project writes for OWNER, ADMIN, MANAGER; VIEWER is read-only. Services take the server-resolved `OrganizationContext`, query by `organizationId` + id, and answer foreign ids with `NOT_FOUND`. Actions resolve the tenant from the slug via `requireWorkspace()`.
 - Tenant scope comes only from `getAuthorizedOrganization()` (`src/features/organizations/server/organization-service.ts`), which looks up an **ACTIVE** membership. Nonexistent, foreign and disabled-membership organizations all return `NOT_FOUND` (pages render 404).
 - `src/proxy.ts` only negotiates locale; it is not an authorization layer.
 - Better Auth: email verification required before sign-in, 12–128 character passwords, sessions revoked on password reset, 30-minute reset tokens, 24-hour verification tokens, 7-day sessions, httpOnly cookies (secure in production). Rate limiting is Better Auth's default: on in production only, in-memory.

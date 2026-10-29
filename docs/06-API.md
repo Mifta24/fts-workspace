@@ -14,6 +14,9 @@
 | GET | `/api/health` | Liveness + database readiness (`200` ok, `503` degraded) | public, no internals exposed |
 | Server action | `createOrganizationAction` | Create organization; creator becomes `OWNER` | authenticated |
 
+| Server action | `createProjectAction`, `archiveProjectAction` | Project create/archive | `project:create`, `project:archive` |
+| Server action | `createGoalAction`, `archiveGoalAction` | Goal create/archive | `goal:create`, `goal:archive` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

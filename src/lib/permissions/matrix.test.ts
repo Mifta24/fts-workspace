@@ -35,7 +35,12 @@ describe("permission matrix", () => {
   });
 
   it("lists only granted permissions", () => {
-    expect(permissionsForRole("VIEWER")).toEqual(["organization:read", "member:read"]);
+    expect(permissionsForRole("VIEWER")).toEqual([
+      "organization:read",
+      "member:read",
+      "project:read",
+      "goal:read",
+    ]);
     expect(permissionsForRole("OWNER")).toEqual([...PERMISSIONS]);
   });
 
@@ -44,5 +49,20 @@ describe("permission matrix", () => {
     expect(isOrganizationRole("admin")).toBe(false);
     expect(isOrganizationRole("SUPERUSER")).toBe(false);
     expect(isOrganizationRole(undefined)).toBe(false);
+  });
+
+  it("lets viewers read but never write projects and goals", () => {
+    for (const permission of PERMISSIONS.filter((p) =>
+      /^(project|goal):(create|update|archive)$/.test(p),
+    )) {
+      expect(roleHasPermission("VIEWER", permission)).toBe(false);
+    }
+  });
+
+  it("keeps archiving and project management above the MEMBER role", () => {
+    expect(roleHasPermission("MEMBER", "goal:create")).toBe(true);
+    expect(roleHasPermission("MEMBER", "goal:archive")).toBe(false);
+    expect(roleHasPermission("MEMBER", "project:create")).toBe(false);
+    expect(roleHasPermission("MANAGER", "project:create")).toBe(true);
   });
 });

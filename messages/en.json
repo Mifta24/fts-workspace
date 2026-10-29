@@ -55,7 +55,10 @@
     "overview": "Overview",
     "role": "Your role: {role}",
     "switch": "Switch workspace",
-    "placeholder": "Goals, tasks and the dashboard arrive in Phase 1."
+    "placeholder": "Tasks and the dashboard arrive in the next Phase 1 slices.",
+    "navLabel": "Primary",
+    "projects": "Projects",
+    "goals": "Goals"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -68,5 +71,55 @@
     "title": "Page not found",
     "body": "The page does not exist or you do not have access to it.",
     "back": "Go to your workspaces"
+  },
+  "Projects": {
+    "title": "Projects",
+    "empty": "No projects yet. Create the first one below.",
+    "emptyReadOnly": "No projects yet.",
+    "createTitle": "Create a project",
+    "nameLabel": "Project name",
+    "descriptionLabel": "Description (optional)",
+    "createSubmit": "Create project",
+    "archive": "Archive"
+  },
+  "Goals": {
+    "title": "Goals",
+    "empty": "No goals yet. Create your first goal below.",
+    "emptyReadOnly": "No goals yet.",
+    "createTitle": "Create a goal",
+    "titleLabel": "Goal title",
+    "descriptionLabel": "Description (optional)",
+    "projectLabel": "Project",
+    "parentLabel": "Parent goal",
+    "none": "None",
+    "modeLabel": "Progress tracking",
+    "dueLabel": "Due date",
+    "manualLabel": "Progress (%)",
+    "targetLabel": "Target value",
+    "currentLabel": "Current value",
+    "createSubmit": "Create goal",
+    "archive": "Archive",
+    "due": "Due {date}",
+    "progressPending": "Progress is calculated from tasks (coming soon).",
+    "progressLabel": "Progress of {title}",
+    "mode": {
+      "TASK_BASED": "From tasks",
+      "MILESTONE_BASED": "From milestones",
+      "NUMERIC_KPI": "Numeric KPI",
+      "MANUAL": "Manual"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "COMPLETED": "Completed",
+      "ARCHIVED": "Archived"
+    }
+  },
+  "ActionErrors": {
+    "invalid": "Check the details and try again.",
+    "forbidden": "You do not have permission to do that.",
+    "notFound": "This item no longer exists or is not available.",
+    "conflict": "This change conflicts with the current state.",
+    "unprocessable": "This change is not allowed (for example an unavailable project, owner or parent goal).",
+    "generic": "Something went wrong. Please try again."
   }
 }

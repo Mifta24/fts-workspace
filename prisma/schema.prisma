@@ -105,6 +105,8 @@ model Organization {
 
   members   Member[]
   auditLogs AuditLog[]
+  projects  Project[]
+  goals     Goal[]
 
   @@map("organizations")
 }
@@ -123,6 +125,77 @@ model Member {
   @@unique([organizationId, userId])
   @@index([userId, status])
   @@map("members")
+}
+
+// ---------------------------------------------------------------------------
+// Productivity
+// ---------------------------------------------------------------------------
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum ProgressMode {
+  TASK_BASED
+  MILESTONE_BASED
+  NUMERIC_KPI
+  MANUAL
+}
+
+model Project {
+  id             String        @id @default(uuid(7)) @db.Uuid
+  organizationId String        @db.Uuid
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  description    String?
+  status         ProjectStatus @default(ACTIVE)
+  createdById    String        @db.Uuid
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  goals Goal[]
+
+  /// Target of composite foreign keys so children must share the organization.
+  @@unique([id, organizationId])
+  @@index([organizationId, status])
+  @@map("projects")
+}
+
+model Goal {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  projectId      String?      @db.Uuid
+  project        Project?     @relation(fields: [projectId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  parentGoalId   String?      @db.Uuid
+  parentGoal     Goal?        @relation("GoalTree", fields: [parentGoalId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  children       Goal[]       @relation("GoalTree")
+  title          String
+  description    String?
+  status         GoalStatus   @default(ACTIVE)
+  progressMode   ProgressMode @default(MANUAL)
+  /// Manual progress, 0-100. Only meaningful for `MANUAL` mode.
+  manualProgress Int?
+  targetValue    Decimal?     @db.Decimal(18, 4)
+  currentValue   Decimal?     @db.Decimal(18, 4)
+  ownerId        String       @db.Uuid
+  dueAt          DateTime?
+  createdById    String       @db.Uuid
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([id, organizationId])
+  @@index([organizationId, parentGoalId])
+  @@index([organizationId, projectId])
+  @@index([organizationId, ownerId, status])
+  @@map("goals")
 }
 
 // ---------------------------------------------------------------------------

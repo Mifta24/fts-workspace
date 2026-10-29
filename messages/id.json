@@ -55,7 +55,10 @@
     "overview": "Ringkasan",
     "role": "Peran Anda: {role}",
     "switch": "Ganti workspace",
-    "placeholder": "Tujuan, tugas, dan dasbor hadir di Fase 1."
+    "placeholder": "Tugas dan dasbor hadir pada tahap Phase 1 berikutnya.",
+    "navLabel": "Utama",
+    "projects": "Proyek",
+    "goals": "Tujuan"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -68,5 +71,55 @@
     "title": "Halaman tidak ditemukan",
     "body": "Halaman tidak ada atau Anda tidak memiliki akses.",
     "back": "Ke daftar workspace"
+  },
+  "Projects": {
+    "title": "Proyek",
+    "empty": "Belum ada proyek. Buat yang pertama di bawah.",
+    "emptyReadOnly": "Belum ada proyek.",
+    "createTitle": "Buat proyek",
+    "nameLabel": "Nama proyek",
+    "descriptionLabel": "Deskripsi (opsional)",
+    "createSubmit": "Buat proyek",
+    "archive": "Arsipkan"
+  },
+  "Goals": {
+    "title": "Tujuan",
+    "empty": "Belum ada tujuan. Buat tujuan pertama di bawah.",
+    "emptyReadOnly": "Belum ada tujuan.",
+    "createTitle": "Buat tujuan",
+    "titleLabel": "Judul tujuan",
+    "descriptionLabel": "Deskripsi (opsional)",
+    "projectLabel": "Proyek",
+    "parentLabel": "Tujuan induk",
+    "none": "Tidak ada",
+    "modeLabel": "Pelacakan progres",
+    "dueLabel": "Tenggat",
+    "manualLabel": "Progres (%)",
+    "targetLabel": "Nilai target",
+    "currentLabel": "Nilai saat ini",
+    "createSubmit": "Buat tujuan",
+    "archive": "Arsipkan",
+    "due": "Tenggat {date}",
+    "progressPending": "Progres dihitung dari tugas (segera hadir).",
+    "progressLabel": "Progres {title}",
+    "mode": {
+      "TASK_BASED": "Dari tugas",
+      "MILESTONE_BASED": "Dari tonggak",
+      "NUMERIC_KPI": "KPI numerik",
+      "MANUAL": "Manual"
+    },
+    "status": {
+      "ACTIVE": "Aktif",
+      "COMPLETED": "Selesai",
+      "ARCHIVED": "Diarsipkan"
+    }
+  },
+  "ActionErrors": {
+    "invalid": "Periksa data lalu coba lagi.",
+    "forbidden": "Anda tidak memiliki izin untuk melakukan itu.",
+    "notFound": "Item ini sudah tidak ada atau tidak tersedia.",
+    "conflict": "Perubahan ini bertentangan dengan kondisi saat ini.",
+    "unprocessable": "Perubahan ini tidak diizinkan (misalnya proyek, pemilik, atau tujuan induk tidak tersedia).",
+    "generic": "Terjadi kesalahan. Silakan coba lagi."
   }
 }
