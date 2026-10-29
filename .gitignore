@@ -53,3 +53,8 @@ next-env.d.ts
 /test-results
 /playwright-report
 .claude/launch.json
+
+# playwright
+/test-results/
+/playwright-report/
+/.next-e2e/

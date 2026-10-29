@@ -18,7 +18,8 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] Task CRUD, assignments, status, deadlines, comments (slice 2; full task edit form and milestones still open; subtasks supported in the service, not yet in the UI)
 - [x] Dashboard KPIs and filterable views (slice 3: overview page with project/assignee/time-range filters)
 - [ ] AI task planner with review/approval
-- [ ] Responsive UI and E2E paths
+- [x] E2E paths (slice 4: Playwright owner flow, cross-tenant 404s, viewer read-only; run in CI)
+- [ ] Responsive UI verified at phone width (layout is mobile-aware but not yet tested)
 **Exit gate:** key persona flows run end-to-end; cross-tenant tests pass.
 
 ## Phase 2 — Collaboration & Engagement

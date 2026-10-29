@@ -15,6 +15,9 @@ const eslintConfig = defineConfig([
     // Generated and local data
     "src/generated/**",
     ".data/**",
+    ".next-e2e/**",
+    "playwright-report/**",
+    "test-results/**",
   ]),
 ]);
 
