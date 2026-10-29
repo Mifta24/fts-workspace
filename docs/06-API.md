@@ -33,6 +33,10 @@
 | Page | `/[locale]/invite/[token]` | Public preview (masked email), accept or sign-in prompt | public |
 | Page | `/[locale]/w/[slug]/members` | Member list; invitations for admins | `member:read` (`member:invite` for invitations and emails) |
 
+| Server action | `createChannelAction`, `joinChannelAction`, `startDirectMessageAction`, `postMessageAction`, `editMessageAction`, `deleteMessageAction`, `markChannelReadAction` | Chat | `chat:manage`, `chat:read`, `chat:post` (+ channel membership) |
+| Server action | `markNotificationReadAction`, `markAllNotificationsReadAction` | Inbox | `notification:read` (own notifications only) |
+| Page | `/[locale]/w/[slug]/chat`, `/chat/[channelId]?before=<messageId>`, `/notifications` | Chat (cursor pagination, 30 per page), inbox | `chat:read`, `notification:read` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

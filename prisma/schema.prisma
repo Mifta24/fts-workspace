@@ -103,15 +103,19 @@ model Organization {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  members      Member[]
-  auditLogs    AuditLog[]
-  projects     Project[]
-  goals        Goal[]
-  tasks        Task[]
-  taskComments TaskComment[]
-  milestones   Milestone[]
-  aiTaskPlans  AiTaskPlan[]
-  invitations  Invitation[]
+  members        Member[]
+  auditLogs      AuditLog[]
+  projects       Project[]
+  goals          Goal[]
+  tasks          Task[]
+  taskComments   TaskComment[]
+  milestones     Milestone[]
+  aiTaskPlans    AiTaskPlan[]
+  invitations    Invitation[]
+  channels       Channel[]
+  channelMembers ChannelMember[]
+  messages       Message[]
+  notifications  Notification[]
 
   @@map("organizations")
 }
@@ -336,6 +340,95 @@ model AiTaskPlan {
   @@index([organizationId, goalId])
   @@index([organizationId, requestedById, createdAt])
   @@map("ai_task_plans")
+}
+
+// ---------------------------------------------------------------------------
+// Collaboration
+// ---------------------------------------------------------------------------
+
+enum ChannelType {
+  CHANNEL
+  DM
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_COMMENTED
+  DIRECT_MESSAGE
+}
+
+/// A chat room. Every channel, public or private, has explicit `ChannelMember` rows; membership
+/// (not the organization alone) decides who can read or post. A DM is a two-member channel whose
+/// `dmKey` ("<smaller user id>:<larger user id>") makes it unique per pair.
+model Channel {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type           ChannelType  @default(CHANNEL)
+  name           String?
+  isPrivate      Boolean      @default(false)
+  dmKey          String?
+  createdById    String       @db.Uuid
+  createdAt      DateTime     @default(now())
+
+  members  ChannelMember[]
+  messages Message[]
+
+  @@unique([id, organizationId])
+  @@unique([organizationId, name])
+  @@unique([organizationId, dmKey])
+  @@map("channels")
+}
+
+model ChannelMember {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  channelId      String       @db.Uuid
+  channel        Channel      @relation(fields: [channelId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  userId         String       @db.Uuid
+  lastReadAt     DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@unique([channelId, userId])
+  @@index([organizationId, userId])
+  @@map("channel_members")
+}
+
+/// Chat message. Deleting is soft: the body is blanked and `deletedAt` set so history stays consistent.
+model Message {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  channelId      String       @db.Uuid
+  channel        Channel      @relation(fields: [channelId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  authorId       String       @db.Uuid
+  body           String
+  editedAt       DateTime?
+  deletedAt      DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, channelId, createdAt, id])
+  @@index([organizationId, authorId, createdAt])
+  @@map("messages")
+}
+
+/// In-app notification. It references what happened but carries no content, so the text is
+/// rendered from the current (authorized) data and the user's locale.
+model Notification {
+  id             String           @id @default(uuid(7)) @db.Uuid
+  organizationId String           @db.Uuid
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String           @db.Uuid
+  type           NotificationType
+  actorId        String?          @db.Uuid
+  resourceType   String
+  resourceId     String           @db.Uuid
+  readAt         DateTime?
+  createdAt      DateTime         @default(now())
+
+  @@index([organizationId, userId, readAt, createdAt])
+  @@map("notifications")
 }
 
 // ---------------------------------------------------------------------------

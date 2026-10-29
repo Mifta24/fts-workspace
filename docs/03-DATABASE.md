@@ -86,7 +86,12 @@ The Better Auth organization plugin tables (`invitation`, `session.activeOrganiz
 
 | `invitations` | `email` stored lowercase; `tokenHash` = SHA-256 of a 32-byte random token (the token only exists in the email); `expiresAt` 7 days; `acceptedAt`/`revokedAt`; CHECKs: role is never OWNER, email lowercase, not both accepted and revoked; a **partial unique index** allows one pending invitation per `(organizationId, email)` |
 
-Migrations `20261029030000_projects_goals`, `20261029040000_tasks`, `20261029050000_milestones_ai_plans` and `20261029060000_invitations`. The partial unique index on `invitations` is written in SQL only (Prisma cannot express it), so `prisma migrate dev` may report it as drift; `migrate deploy` is unaffected. Do not drop it when regenerating migrations. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
+| `channels` | `type` CHANNEL/DM; CHECK ties name/`dmKey`/privacy to the type; DMs are private and unique per user pair via `dmKey`; `(organizationId, name)` unique |
+| `channel_members` | composite FK `(channelId, organizationId)`; membership decides read/post for **every** channel (public channels are self-joined); `lastReadAt` drives unread counts |
+| `messages` | composite FK to the channel; cursor pagination index `(organizationId, channelId, createdAt, id)`; soft delete (body blanked, CHECK) |
+| `notifications` | references what happened (`type`, `resourceType`, `resourceId`, `actorId`) with no content; coalesced to one unread per recipient/type/resource |
+
+Migrations `20261029030000_projects_goals`, `20261029040000_tasks`, `20261029050000_milestones_ai_plans`, `20261029060000_invitations` and `20261029070000_chat_notifications`. The partial unique index on `invitations` is written in SQL only (Prisma cannot express it), so `prisma migrate dev` may report it as drift; `migrate deploy` is unaffected. Do not drop it when regenerating migrations. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
 
 ### Seed strategy
 - `pnpm db:seed` runs `prisma/seed.ts`; it refuses to run with `NODE_ENV=production`.

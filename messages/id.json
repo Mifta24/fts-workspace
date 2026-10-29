@@ -60,7 +60,9 @@
     "projects": "Proyek",
     "goals": "Tujuan",
     "tasks": "Tugas",
-    "members": "Anggota"
+    "members": "Anggota",
+    "chat": "Obrolan",
+    "notifications": "Kotak masuk"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -263,5 +265,51 @@
     "invalidTitle": "Undangan tidak tersedia",
     "invalidBody": "Undangan ini tidak ada, sudah dipakai, dicabut, atau sudah kedaluwarsa. Minta undangan baru.",
     "toWorkspaces": "Ke workspace Anda"
+  },
+  "Chat": {
+    "title": "Obrolan",
+    "sidebarLabel": "Kanal dan pesan langsung",
+    "channels": "Kanal",
+    "directMessages": "Pesan langsung",
+    "browse": "Kanal lainnya",
+    "noChannels": "Belum ada kanal.",
+    "noDms": "Belum ada percakapan.",
+    "join": "Gabung",
+    "unread": "{count} belum dibaca",
+    "pickChannel": "Pilih kanal atau percakapan.",
+    "createTitle": "Buat kanal",
+    "channelName": "Nama kanal",
+    "channelNameHint": "Huruf kecil, angka, dan tanda hubung.",
+    "private": "Kanal privat (hanya undangan)",
+    "createChannel": "Buat kanal",
+    "messages": "Pesan",
+    "loadOlder": "Muat pesan lebih lama",
+    "noMessages": "Belum ada pesan. Sapa dulu!",
+    "messageLabel": "Pesan",
+    "send": "Kirim",
+    "readOnly": "Anda dapat membaca percakapan ini tetapi tidak dapat mengirim pesan.",
+    "formerMember": "Mantan anggota",
+    "edited": "diedit",
+    "deleted": "Pesan ini telah dihapus.",
+    "edit": "Ubah",
+    "editLabel": "Ubah pesan",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "message": "Kirim pesan"
+  },
+  "Notifications": {
+    "title": "Kotak masuk",
+    "empty": "Semua sudah terbaca.",
+    "markAll": "Tandai semua dibaca",
+    "markRead": "Tandai dibaca",
+    "unread": "belum dibaca",
+    "someone": "Seseorang",
+    "aTask": "sebuah tugas",
+    "text": {
+      "TASK_ASSIGNED": "{actor} menugaskan “{title}” kepada Anda",
+      "TASK_COMMENTED": "{actor} mengomentari “{title}”",
+      "DIRECT_MESSAGE": "{actor} mengirim pesan kepada Anda"
+    }
   }
 }

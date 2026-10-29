@@ -5,13 +5,15 @@ import { Link } from "@/i18n/navigation";
 import type { OrganizationContext } from "@/features/organizations/server/organization-service";
 import { cn } from "@/lib/utils";
 
-type Section = "overview" | "projects" | "goals" | "tasks" | "members";
+type Section = "overview" | "projects" | "goals" | "tasks" | "chat" | "notifications" | "members";
 
 const SECTIONS: { key: Section; path: string }[] = [
   { key: "overview", path: "" },
   { key: "projects", path: "/projects" },
   { key: "goals", path: "/goals" },
   { key: "tasks", path: "/tasks" },
+  { key: "chat", path: "/chat" },
+  { key: "notifications", path: "/notifications" },
   { key: "members", path: "/members" },
 ];
 

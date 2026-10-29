@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
+import { ActionButton } from "@/components/action-button";
 import { ArchiveButton } from "@/components/archive-button";
+import { startDirectMessageAction } from "@/features/chat/server/actions";
 import { Card, CardTitle } from "@/components/ui/card";
 import { InviteMemberForm } from "@/features/organizations/components/invite-member-form";
 import { WorkspaceShell } from "@/features/organizations/components/workspace-shell";
@@ -17,8 +19,10 @@ export default async function MembersPage({
   const context = await requireWorkspace(organizationSlug, "member:read");
   const deps = { prisma: db() };
   const canInvite = roleHasPermission(context.role, "member:invite");
-  const [t, roles, members, invitations] = await Promise.all([
+  const canMessage = roleHasPermission(context.role, "chat:post");
+  const [t, tc, roles, members, invitations] = await Promise.all([
     getTranslations("Members"),
+    getTranslations("Chat"),
     getTranslations("Roles"),
     listMembers(deps, context),
     canInvite ? listPendingInvitations(deps, context) : Promise.resolve([]),
@@ -37,7 +41,16 @@ export default async function MembersPage({
               <p className="font-medium">{member.name}</p>
               {member.email && <p className="text-xs text-muted-foreground">{member.email}</p>}
             </div>
-            <span className="text-sm text-muted-foreground">{roles(member.role)}</span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-sm text-muted-foreground">{roles(member.role)}</span>
+              {canMessage && member.userId !== context.userId && (
+                <ActionButton
+                  action={startDirectMessageAction}
+                  fields={{ organizationSlug, userId: member.userId }}
+                  label={tc("message")}
+                />
+              )}
+            </div>
           </li>
         ))}
       </ul>

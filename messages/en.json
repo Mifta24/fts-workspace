@@ -60,7 +60,9 @@
     "projects": "Projects",
     "goals": "Goals",
     "tasks": "Tasks",
-    "members": "Members"
+    "members": "Members",
+    "chat": "Chat",
+    "notifications": "Inbox"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -263,5 +265,51 @@
     "invalidTitle": "Invitation unavailable",
     "invalidBody": "This invitation does not exist, was already used, was revoked, or has expired. Ask for a new one.",
     "toWorkspaces": "Go to your workspaces"
+  },
+  "Chat": {
+    "title": "Chat",
+    "sidebarLabel": "Channels and direct messages",
+    "channels": "Channels",
+    "directMessages": "Direct messages",
+    "browse": "More channels",
+    "noChannels": "No channels yet.",
+    "noDms": "No conversations yet.",
+    "join": "Join",
+    "unread": "{count} unread",
+    "pickChannel": "Pick a channel or a conversation.",
+    "createTitle": "Create a channel",
+    "channelName": "Channel name",
+    "channelNameHint": "Lowercase letters, numbers and hyphens.",
+    "private": "Private channel (invite only)",
+    "createChannel": "Create channel",
+    "messages": "Messages",
+    "loadOlder": "Load older messages",
+    "noMessages": "No messages yet. Say hello!",
+    "messageLabel": "Message",
+    "send": "Send",
+    "readOnly": "You can read this conversation but not post.",
+    "formerMember": "Former member",
+    "edited": "edited",
+    "deleted": "This message was deleted.",
+    "edit": "Edit",
+    "editLabel": "Edit message",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "message": "Message"
+  },
+  "Notifications": {
+    "title": "Inbox",
+    "empty": "You are all caught up.",
+    "markAll": "Mark all as read",
+    "markRead": "Mark as read",
+    "unread": "unread",
+    "someone": "Someone",
+    "aTask": "a task",
+    "text": {
+      "TASK_ASSIGNED": "{actor} assigned you “{title}”",
+      "TASK_COMMENTED": "{actor} commented on “{title}”",
+      "DIRECT_MESSAGE": "{actor} sent you a message"
+    }
   }
 }

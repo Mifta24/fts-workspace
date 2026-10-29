@@ -13,6 +13,10 @@ import {
   updateTaskSchema,
   type TaskFilter,
 } from "@/features/tasks/schemas/task";
+import {
+  createNotifications,
+  publishNotifications,
+} from "@/features/notifications/server/notification-service";
 import { recordAuditEvent } from "@/server/services/audit";
 import { assertActiveMember, assertActiveProject, lockTree } from "@/server/services/tenant-refs";
 
@@ -100,7 +104,7 @@ export async function createTask(
   const input = parsed.data;
   const organizationId = context.organization.id;
 
-  return prisma.$transaction(async (tx) => {
+  const { task: created, notified } = await prisma.$transaction(async (tx) => {
     await assertReferences(tx, organizationId, input);
     if (input.parentTaskId) {
       await lockTree(tx, "task", organizationId);
@@ -133,8 +137,22 @@ export async function createTask(
       metadata: task.assigneeId ? { assigneeId: task.assigneeId } : undefined,
       correlationId,
     });
-    return task;
+    const notified = task.assigneeId
+      ? await createNotifications(tx, [
+          {
+            organizationId,
+            userId: task.assigneeId,
+            type: "TASK_ASSIGNED",
+            actorId: context.userId,
+            resourceType: "task",
+            resourceId: task.id,
+          },
+        ])
+      : [];
+    return { task, notified };
   });
+  await publishNotifications(notified);
+  return created;
 }
 
 export async function updateTask(
@@ -151,7 +169,7 @@ export async function updateTask(
   const input = parsed.data;
   const organizationId = context.organization.id;
 
-  return prisma.$transaction(async (tx) => {
+  const { task: updated, notified } = await prisma.$transaction(async (tx) => {
     await lockTree(tx, "task", organizationId);
     const existing = await tx.task.findFirst({
       where: { id: id.data, organizationId },
@@ -207,8 +225,23 @@ export async function updateTask(
       },
       correlationId,
     });
-    return task;
+    const notified =
+      task.assigneeId && task.assigneeId !== existing.assigneeId
+        ? await createNotifications(tx, [
+            {
+              organizationId,
+              userId: task.assigneeId,
+              type: "TASK_ASSIGNED",
+              actorId: context.userId,
+              resourceType: "task",
+              resourceId: task.id,
+            },
+          ])
+        : [];
+    return { task, notified };
   });
+  await publishNotifications(notified);
+  return updated;
 }
 
 export async function addComment(
@@ -223,10 +256,10 @@ export async function addComment(
   const parsed = commentSchema.safeParse(rawInput);
   if (!parsed.success) throw new AppError("INVALID_INPUT", "Comment is invalid.");
 
-  return prisma.$transaction(async (tx) => {
+  const { comment: posted, notified } = await prisma.$transaction(async (tx) => {
     const task = await tx.task.findFirst({
       where: { id: id.data, organizationId: context.organization.id },
-      select: { id: true },
+      select: { id: true, assigneeId: true, createdById: true },
     });
     if (!task) throw taskNotFound();
     const comment = await tx.taskComment.create({
@@ -248,8 +281,25 @@ export async function addComment(
       metadata: { commentId: comment.id },
       correlationId,
     });
-    return comment;
+    // The assignee and the creator hear about new comments; createNotifications skips the author.
+    const recipients = [...new Set([task.assigneeId, task.createdById])].flatMap((userId) =>
+      userId ? [userId] : [],
+    );
+    const notified = await createNotifications(
+      tx,
+      recipients.map((userId) => ({
+        organizationId: context.organization.id,
+        userId,
+        type: "TASK_COMMENTED" as const,
+        actorId: context.userId,
+        resourceType: "task",
+        resourceId: task.id,
+      })),
+    );
+    return { comment, notified };
   });
+  await publishNotifications(notified);
+  return posted;
 }
 
 export async function listComments(

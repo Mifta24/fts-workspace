@@ -60,7 +60,9 @@
     "projects": "プロジェクト",
     "goals": "ゴール",
     "tasks": "タスク",
-    "members": "メンバー"
+    "members": "メンバー",
+    "chat": "チャット",
+    "notifications": "受信トレイ"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -263,5 +265,51 @@
     "invalidTitle": "招待は利用できません",
     "invalidBody": "この招待は存在しないか、使用済み、取り消し済み、または期限切れです。新しい招待を依頼してください。",
     "toWorkspaces": "ワークスペースへ"
+  },
+  "Chat": {
+    "title": "チャット",
+    "sidebarLabel": "チャンネルとダイレクトメッセージ",
+    "channels": "チャンネル",
+    "directMessages": "ダイレクトメッセージ",
+    "browse": "他のチャンネル",
+    "noChannels": "チャンネルはまだありません。",
+    "noDms": "会話はまだありません。",
+    "join": "参加",
+    "unread": "未読 {count} 件",
+    "pickChannel": "チャンネルまたは会話を選んでください。",
+    "createTitle": "チャンネルを作成",
+    "channelName": "チャンネル名",
+    "channelNameHint": "小文字の英数字とハイフンが使えます。",
+    "private": "非公開チャンネル（招待のみ）",
+    "createChannel": "チャンネルを作成",
+    "messages": "メッセージ",
+    "loadOlder": "古いメッセージを読み込む",
+    "noMessages": "メッセージはまだありません。挨拶してみましょう。",
+    "messageLabel": "メッセージ",
+    "send": "送信",
+    "readOnly": "この会話は閲覧のみで、投稿できません。",
+    "formerMember": "元メンバー",
+    "edited": "編集済み",
+    "deleted": "このメッセージは削除されました。",
+    "edit": "編集",
+    "editLabel": "メッセージを編集",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "message": "メッセージを送る"
+  },
+  "Notifications": {
+    "title": "受信トレイ",
+    "empty": "すべて確認済みです。",
+    "markAll": "すべて既読にする",
+    "markRead": "既読にする",
+    "unread": "未読",
+    "someone": "誰か",
+    "aTask": "タスク",
+    "text": {
+      "TASK_ASSIGNED": "{actor} さんが「{title}」をあなたに割り当てました",
+      "TASK_COMMENTED": "{actor} さんが「{title}」にコメントしました",
+      "DIRECT_MESSAGE": "{actor} さんからメッセージが届きました"
+    }
   }
 }

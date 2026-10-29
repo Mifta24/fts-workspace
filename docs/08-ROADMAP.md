@@ -27,7 +27,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 
 ## Phase 2 — Collaboration & Engagement
 - [ ] Dedicated realtime service and authenticated channels
-- [ ] DM, channels, pagination, notifications
+- [x] DM, channels, pagination, notifications (slice 7, database-backed; realtime delivery is the next slice; mentions and deadline reminders are not built)
 - [ ] Audit-backed point events, challenges, streaks, leaderboard visibility
 **Exit gate:** permissions tested on socket joins; load tests for message delivery.
 

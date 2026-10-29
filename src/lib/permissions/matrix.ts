@@ -32,6 +32,11 @@ export const PERMISSIONS = [
   "task:comment",
   "dashboard:read",
   "ai:use",
+  "chat:read",
+  "chat:post",
+  "chat:manage",
+  "chat:moderate",
+  "notification:read",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -60,6 +65,11 @@ const MATRIX: Record<Permission, readonly OrganizationRole[]> = {
   "task:comment": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
   "dashboard:read": ALL_ROLES,
   "ai:use": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "chat:read": ALL_ROLES,
+  "chat:post": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "chat:manage": ["OWNER", "ADMIN", "MANAGER"],
+  "chat:moderate": ["OWNER", "ADMIN"],
+  "notification:read": ALL_ROLES,
 };
 
 export function isOrganizationRole(value: unknown): value is OrganizationRole {
