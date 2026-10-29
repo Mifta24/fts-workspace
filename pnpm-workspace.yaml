@@ -7,5 +7,5 @@ allowBuilds:
   "@embedded-postgres/darwin-arm64": true
   "@embedded-postgres/linux-x64": true
   esbuild: true
-  '@parcel/watcher': false
-  '@swc/core': false
+  "@parcel/watcher": false
+  "@swc/core": false
