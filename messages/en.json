@@ -55,7 +55,6 @@
     "overview": "Overview",
     "role": "Your role: {role}",
     "switch": "Switch workspace",
-    "placeholder": "The dashboard arrives in the next Phase 1 slice.",
     "navLabel": "Primary",
     "projects": "Projects",
     "goals": "Goals",
@@ -168,5 +167,29 @@
       "HIGH": "High",
       "URGENT": "Urgent"
     }
+  },
+  "Dashboard": {
+    "filters": "Dashboard filters",
+    "project": "Project",
+    "assignee": "Assignee",
+    "range": "Completed in",
+    "all": "All",
+    "apply": "Apply",
+    "ranges": {
+      "7": "Last 7 days",
+      "30": "Last 30 days",
+      "90": "Last 90 days",
+      "all": "All time"
+    },
+    "cards": {
+      "activeGoals": "Active goals",
+      "myOpenTasks": "My open tasks",
+      "completedTasks": "Completed tasks",
+      "overdueTasks": "Overdue tasks",
+      "progress": "Task progress"
+    },
+    "emptyCanCreate": "Nothing here yet. Start by creating your first goal.",
+    "empty": "Nothing here yet. Goals and tasks will show up once your team creates them.",
+    "createFirstGoal": "Create your first goal"
   }
 }

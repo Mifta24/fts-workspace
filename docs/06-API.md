@@ -19,6 +19,8 @@
 
 | Server action | `createTaskAction`, `updateTaskAction`, `addCommentAction` | Task create, status/priority update, comment | `task:create`, `task:update`, `task:comment` |
 
+| Page (server-rendered) | `/[locale]/w/[slug]` | Dashboard KPIs; filters via query string `projectId`, `assigneeId`, `range` (7/30/90/all) | `dashboard:read` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

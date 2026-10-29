@@ -16,7 +16,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] Project and goal CRUD with nested tree (slice 1; edit UI for goals/projects not built yet, service `updateGoal`/`updateProject` are)
 - [x] Goal cycle prevention and progress calculation (manual and numeric KPI; task/milestone modes report null until tasks exist)
 - [x] Task CRUD, assignments, status, deadlines, comments (slice 2; full task edit form and milestones still open; subtasks supported in the service, not yet in the UI)
-- [ ] Dashboard KPIs and filterable views
+- [x] Dashboard KPIs and filterable views (slice 3: overview page with project/assignee/time-range filters)
 - [ ] AI task planner with review/approval
 - [ ] Responsive UI and E2E paths
 **Exit gate:** key persona flows run end-to-end; cross-tenant tests pass.

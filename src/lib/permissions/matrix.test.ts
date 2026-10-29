@@ -41,6 +41,7 @@ describe("permission matrix", () => {
       "project:read",
       "goal:read",
       "task:read",
+      "dashboard:read",
     ]);
     expect(permissionsForRole("OWNER")).toEqual([...PERMISSIONS]);
   });

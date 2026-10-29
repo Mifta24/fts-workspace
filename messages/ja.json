@@ -55,7 +55,6 @@
     "overview": "概要",
     "role": "あなたのロール：{role}",
     "switch": "ワークスペースを切り替え",
-    "placeholder": "ダッシュボードは Phase 1 の次のスライスで追加されます。",
     "navLabel": "メイン",
     "projects": "プロジェクト",
     "goals": "ゴール",
@@ -168,5 +167,29 @@
       "HIGH": "高",
       "URGENT": "緊急"
     }
+  },
+  "Dashboard": {
+    "filters": "ダッシュボードの絞り込み",
+    "project": "プロジェクト",
+    "assignee": "担当者",
+    "range": "完了期間",
+    "all": "すべて",
+    "apply": "適用",
+    "ranges": {
+      "7": "過去 7 日間",
+      "30": "過去 30 日間",
+      "90": "過去 90 日間",
+      "all": "全期間"
+    },
+    "cards": {
+      "activeGoals": "進行中のゴール",
+      "myOpenTasks": "自分の未完了タスク",
+      "completedTasks": "完了したタスク",
+      "overdueTasks": "期限超過のタスク",
+      "progress": "タスクの進捗"
+    },
+    "emptyCanCreate": "まだ何もありません。最初のゴールを作成しましょう。",
+    "empty": "まだ何もありません。チームが作成するとゴールとタスクが表示されます。",
+    "createFirstGoal": "最初のゴールを作成"
   }
 }

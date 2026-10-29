@@ -55,7 +55,6 @@
     "overview": "Ringkasan",
     "role": "Peran Anda: {role}",
     "switch": "Ganti workspace",
-    "placeholder": "Dasbor hadir pada tahap Phase 1 berikutnya.",
     "navLabel": "Utama",
     "projects": "Proyek",
     "goals": "Tujuan",
@@ -168,5 +167,29 @@
       "HIGH": "Tinggi",
       "URGENT": "Mendesak"
     }
+  },
+  "Dashboard": {
+    "filters": "Filter dasbor",
+    "project": "Proyek",
+    "assignee": "Penanggung jawab",
+    "range": "Selesai dalam",
+    "all": "Semua",
+    "apply": "Terapkan",
+    "ranges": {
+      "7": "7 hari terakhir",
+      "30": "30 hari terakhir",
+      "90": "90 hari terakhir",
+      "all": "Sepanjang waktu"
+    },
+    "cards": {
+      "activeGoals": "Tujuan aktif",
+      "myOpenTasks": "Tugas saya yang terbuka",
+      "completedTasks": "Tugas selesai",
+      "overdueTasks": "Tugas terlambat",
+      "progress": "Progres tugas"
+    },
+    "emptyCanCreate": "Belum ada apa-apa. Mulai dengan membuat tujuan pertama Anda.",
+    "empty": "Belum ada apa-apa. Tujuan dan tugas akan muncul setelah tim Anda membuatnya.",
+    "createFirstGoal": "Buat tujuan pertama"
   }
 }
