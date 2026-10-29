@@ -59,7 +59,8 @@
     "navLabel": "Primary",
     "projects": "Projects",
     "goals": "Goals",
-    "tasks": "Tasks"
+    "tasks": "Tasks",
+    "members": "Members"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -238,5 +239,29 @@
     "alreadyApplied": "This plan was already applied.",
     "alreadyDiscarded": "This plan was discarded.",
     "emptyDraft": "This draft has no usable tasks."
+  },
+  "Members": {
+    "title": "Members",
+    "pending": "Pending invitations",
+    "noPending": "No pending invitations.",
+    "expired": "Expired",
+    "expires": "Expires {date}",
+    "revoke": "Revoke",
+    "inviteTitle": "Invite someone",
+    "emailLabel": "Email",
+    "roleLabel": "Role",
+    "invite": "Send invitation",
+    "invited": "Invitation sent."
+  },
+  "Invitation": {
+    "title": "Join {organization}",
+    "body": "You were invited as {role}. This invitation is for {email}.",
+    "signInFirst": "Sign in (or create an account) with the invited email address, then open this link again.",
+    "signIn": "Sign in",
+    "signUp": "Create an account",
+    "accept": "Accept invitation",
+    "invalidTitle": "Invitation unavailable",
+    "invalidBody": "This invitation does not exist, was already used, was revoked, or has expired. Ask for a new one.",
+    "toWorkspaces": "Go to your workspaces"
   }
 }

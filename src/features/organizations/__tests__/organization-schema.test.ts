@@ -33,3 +33,18 @@ describe("organization schemas", () => {
     expect(createOrganizationSchema.safeParse({ slug: "acme" }).success).toBe(false);
   });
 });
+
+describe("createInvitationSchema", () => {
+  it("normalizes the email and only allows invitable roles", async () => {
+    const { createInvitationSchema } =
+      await import("@/features/organizations/schemas/organization");
+    expect(createInvitationSchema.parse({ email: "  Bob@Example.TEST ", role: "ADMIN" })).toEqual({
+      email: "bob@example.test",
+      role: "ADMIN",
+    });
+    expect(
+      createInvitationSchema.safeParse({ email: "bob@example.test", role: "OWNER" }).success,
+    ).toBe(false);
+    expect(createInvitationSchema.safeParse({ email: "nope", role: "VIEWER" }).success).toBe(false);
+  });
+});

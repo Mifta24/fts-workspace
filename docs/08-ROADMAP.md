@@ -21,7 +21,9 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] E2E paths (slice 4: Playwright owner flow, cross-tenant 404s, viewer read-only; run in CI)
 - [x] Responsive UI checked at 375px width (no horizontal page scroll, usable navigation); no visual design review yet
 **Exit gate:** key persona flows run end-to-end; cross-tenant tests pass. Met on 2026-10-29: Vitest and Playwright pass locally and in CI (commit `538e25f`, GitHub Actions run 40822659332).
-**Phase 1 notes:** member invitations (`invitations`, `role_grants`) were not on the Phase 1 checklist and remain deferred; there is no real model connected yet (OD-08), so AI planning is verified with a fake provider and a seeded draft; AI plan dependencies between tasks (`task_dependencies`) are not built.
+**Phase 1 notes:** member invitations were not on the Phase 1 checklist and were added afterwards (see below); `role_grants` remain deferred; there is no real model connected yet (OD-08), so AI planning is verified with a fake provider and a seeded draft; AI plan dependencies between tasks (`task_dependencies`) are not built.
+
+**Post-gate addition (2026-10-29):** member invitations (create, list, revoke, accept; members page).
 
 ## Phase 2 — Collaboration & Engagement
 - [ ] Dedicated realtime service and authenticated channels

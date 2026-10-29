@@ -84,7 +84,9 @@ The Better Auth organization plugin tables (`invitation`, `session.activeOrganiz
 | `milestones` | composite FK `(goalId, organizationId)`; `completedAt` set when done; drives `MILESTONE_BASED` progress; hard-deleted with its goal |
 | `ai_task_plans` | composite FK to the goal; `draft` JSON holds validated suggestions only; `status` DRAFT/APPLIED/DISCARDED (applied exactly once via a conditional update); private to `requestedById`; objective text is stored, never copied to audit logs |
 
-Migrations `20261029030000_projects_goals`, `20261029040000_tasks` and `20261029050000_milestones_ai_plans`. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
+| `invitations` | `email` stored lowercase; `tokenHash` = SHA-256 of a 32-byte random token (the token only exists in the email); `expiresAt` 7 days; `acceptedAt`/`revokedAt`; CHECKs: role is never OWNER, email lowercase, not both accepted and revoked; a **partial unique index** allows one pending invitation per `(organizationId, email)` |
+
+Migrations `20261029030000_projects_goals`, `20261029040000_tasks`, `20261029050000_milestones_ai_plans` and `20261029060000_invitations`. The partial unique index on `invitations` is written in SQL only (Prisma cannot express it), so `prisma migrate dev` may report it as drift; `migrate deploy` is unaffected. Do not drop it when regenerating migrations. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
 
 ### Seed strategy
 - `pnpm db:seed` runs `prisma/seed.ts`; it refuses to run with `NODE_ENV=production`.

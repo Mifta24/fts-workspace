@@ -59,7 +59,8 @@
     "navLabel": "Utama",
     "projects": "Proyek",
     "goals": "Tujuan",
-    "tasks": "Tugas"
+    "tasks": "Tugas",
+    "members": "Anggota"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -238,5 +239,29 @@
     "alreadyApplied": "Rencana ini sudah diterapkan.",
     "alreadyDiscarded": "Rencana ini sudah dibuang.",
     "emptyDraft": "Draf ini tidak memiliki tugas yang bisa dipakai."
+  },
+  "Members": {
+    "title": "Anggota",
+    "pending": "Undangan tertunda",
+    "noPending": "Tidak ada undangan tertunda.",
+    "expired": "Kedaluwarsa",
+    "expires": "Berakhir {date}",
+    "revoke": "Cabut",
+    "inviteTitle": "Undang seseorang",
+    "emailLabel": "Email",
+    "roleLabel": "Peran",
+    "invite": "Kirim undangan",
+    "invited": "Undangan terkirim."
+  },
+  "Invitation": {
+    "title": "Bergabung dengan {organization}",
+    "body": "Anda diundang sebagai {role}. Undangan ini untuk {email}.",
+    "signInFirst": "Masuk (atau buat akun) dengan alamat email yang diundang, lalu buka tautan ini lagi.",
+    "signIn": "Masuk",
+    "signUp": "Buat akun",
+    "accept": "Terima undangan",
+    "invalidTitle": "Undangan tidak tersedia",
+    "invalidBody": "Undangan ini tidak ada, sudah dipakai, dicabut, atau sudah kedaluwarsa. Minta undangan baru.",
+    "toWorkspaces": "Ke workspace Anda"
   }
 }

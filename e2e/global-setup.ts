@@ -29,7 +29,7 @@ export default async function globalSetup() {
   });
   try {
     await prisma.$executeRawUnsafe(
-      'TRUNCATE TABLE "ai_task_plans", "milestones", "task_comments", "tasks", "goals", "projects", "audit_logs", "members", "organizations", "verifications", "accounts", "sessions", "users" RESTART IDENTITY CASCADE',
+      'TRUNCATE TABLE "invitations", "ai_task_plans", "milestones", "task_comments", "tasks", "goals", "projects", "audit_logs", "members", "organizations", "verifications", "accounts", "sessions", "users" RESTART IDENTITY CASCADE',
     );
     const passwordHash = await hashPassword(E2E_PASSWORD);
     const user = async (email: string, name: string) => {
@@ -60,6 +60,8 @@ export default async function globalSetup() {
     const acmeOwner = await user("owner@acme.test", "Acme Owner");
     const acmeViewer = await user("viewer@acme.test", "Acme Viewer");
     const globexOwner = await user("owner@globex.test", "Globex Owner");
+    // Has an account but no membership yet; joins acme through an invitation in E2E.
+    await user("invitee@acme.test", "Invited Person");
     await organization("acme", [
       [acmeOwner.id, "OWNER"],
       [acmeViewer.id, "VIEWER"],

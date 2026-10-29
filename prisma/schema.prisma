@@ -111,6 +111,7 @@ model Organization {
   taskComments TaskComment[]
   milestones   Milestone[]
   aiTaskPlans  AiTaskPlan[]
+  invitations  Invitation[]
 
   @@map("organizations")
 }
@@ -129,6 +130,27 @@ model Member {
   @@unique([organizationId, userId])
   @@index([userId, status])
   @@map("members")
+}
+
+/// Single-use, expiring invitation. Only a SHA-256 hash of the token is stored; the token itself
+/// exists only in the invitation email. A partial unique index (see migration) allows one pending
+/// invitation per (organization, email).
+model Invitation {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           MemberRole
+  tokenHash      String       @unique
+  invitedById    String       @db.Uuid
+  expiresAt      DateTime
+  acceptedAt     DateTime?
+  acceptedById   String?      @db.Uuid
+  revokedAt      DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, email])
+  @@map("invitations")
 }
 
 // ---------------------------------------------------------------------------

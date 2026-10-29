@@ -39,7 +39,7 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Consequence:** original UX and business rules, with assumptions documented.
 
 ## ADR-008 — Organization membership owned by the application (Phase 0)
-**Status:** Accepted for Phase 0 (2026-10-28); review before Phase 1 invitations.  
+**Status:** Accepted for Phase 0 (2026-10-28); invitations built as app services on 2026-10-29 (reviewed: the plugin was still not adopted).  
 **Context:** ADR-004 required a compatibility review of the Better Auth organization plugin. The plugin exposes its own HTTP endpoints for creating organizations, inviting members, and changing roles, with its own access-control checks. It has no membership status (needed for "disabled membership" tests in `07-SECURITY.md`) and its mutations would bypass the application audit trail and permission matrix.  
 **Decision:** Better Auth handles identity only (email/password, email verification, password reset, sessions). `organizations`, `members` and `audit_logs` are application tables. All organization access is resolved by `getAuthorizedOrganization()` / `requirePermission()` in `src/features/organizations/server/organization-service.ts`, using the single matrix in `src/lib/permissions/matrix.ts`. The organization plugin is **not** enabled, so no `/api/auth/organization/*` endpoints exist. The active workspace is the URL slug, re-checked against membership on every request.  
 **Consequences:** one authorization and audit path; invitations, role changes and member removal must be built as feature services in Phase 1. Revisit if the plugin later supports membership status and hooks that fit the audit model.

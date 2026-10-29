@@ -59,7 +59,8 @@
     "navLabel": "メイン",
     "projects": "プロジェクト",
     "goals": "ゴール",
-    "tasks": "タスク"
+    "tasks": "タスク",
+    "members": "メンバー"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -238,5 +239,29 @@
     "alreadyApplied": "この計画はすでに適用されています。",
     "alreadyDiscarded": "この計画は破棄されました。",
     "emptyDraft": "この下書きには使えるタスクがありません。"
+  },
+  "Members": {
+    "title": "メンバー",
+    "pending": "保留中の招待",
+    "noPending": "保留中の招待はありません。",
+    "expired": "期限切れ",
+    "expires": "有効期限 {date}",
+    "revoke": "取り消す",
+    "inviteTitle": "メンバーを招待",
+    "emailLabel": "メールアドレス",
+    "roleLabel": "ロール",
+    "invite": "招待を送信",
+    "invited": "招待を送信しました。"
+  },
+  "Invitation": {
+    "title": "{organization} に参加",
+    "body": "{role} として招待されました。この招待は {email} 宛てです。",
+    "signInFirst": "招待されたメールアドレスでサインイン（またはアカウント作成）し、このリンクをもう一度開いてください。",
+    "signIn": "サインイン",
+    "signUp": "アカウントを作成",
+    "accept": "招待を承諾",
+    "invalidTitle": "招待は利用できません",
+    "invalidBody": "この招待は存在しないか、使用済み、取り消し済み、または期限切れです。新しい招待を依頼してください。",
+    "toWorkspaces": "ワークスペースへ"
   }
 }

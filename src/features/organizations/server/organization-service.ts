@@ -150,3 +150,36 @@ export async function listActiveMembers(
   });
   return members.map((member) => ({ userId: member.userId, name: member.user.name }));
 }
+
+export type MemberView = {
+  userId: string;
+  name: string;
+  email: string | null;
+  role: OrganizationRole;
+};
+
+/** Active members. Email addresses are only shown to roles that can invite (admins). */
+export async function listMembers(
+  { prisma }: Deps,
+  context: OrganizationContext,
+): Promise<MemberView[]> {
+  requirePermission(context, "member:read");
+  const showEmail = roleHasPermission(context.role, "member:invite");
+  const members = await prisma.member.findMany({
+    where: { organizationId: context.organization.id, status: "ACTIVE" },
+    select: { role: true, userId: true, user: { select: { name: true, email: true } } },
+    orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+  });
+  return members.flatMap((member) =>
+    isOrganizationRole(member.role)
+      ? [
+          {
+            userId: member.userId,
+            name: member.user.name,
+            email: showEmail ? member.user.email : null,
+            role: member.role,
+          },
+        ]
+      : [],
+  );
+}

@@ -16,4 +16,16 @@ export const createOrganizationSchema = z.object({
   slug: organizationSlugSchema,
 });
 
+/** Roles that can be granted by invitation. OWNER is never invitable. */
+export const INVITABLE_ROLES = ["ADMIN", "MANAGER", "MEMBER", "VIEWER"] as const;
+
+export const createInvitationSchema = z.object({
+  email: z.string().trim().toLowerCase().max(254).pipe(z.email()),
+  role: z.enum(INVITABLE_ROLES),
+});
+
+export const invitationIdSchema = z.uuid();
+/** 32 random bytes, base64url. */
+export const invitationTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
+
 export type CreateOrganizationInput = z.infer<typeof createOrganizationSchema>;

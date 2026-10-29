@@ -28,6 +28,11 @@
 | Server action | `generatePlanAction`, `applyPlanAction`, `discardPlanAction` | AI task plan: generate draft, apply reviewed selection, discard | `ai:use` (+ `task:create` to apply) |
 | Page | `/[locale]/w/[slug]/goals/[id]/plan`, `.../plan/[planId]` | Objective form and draft review | `ai:use` |
 
+| Server action | `inviteMemberAction`, `revokeInvitationAction` | Create / revoke an invitation (emails the link) | `member:invite` |
+| Server action | `acceptInvitationAction` | Accept an invitation as the signed-in, verified user | authenticated; email must match |
+| Page | `/[locale]/invite/[token]` | Public preview (masked email), accept or sign-in prompt | public |
+| Page | `/[locale]/w/[slug]/members` | Member list; invitations for admins | `member:read` (`member:invite` for invitations and emails) |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints
