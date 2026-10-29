@@ -47,6 +47,7 @@ describe("permission matrix", () => {
       "gamification:read",
       "file:read",
       "knowledge:read",
+      "appointment:read",
     ]);
     expect(permissionsForRole("OWNER")).toEqual([...PERMISSIONS]);
   });
@@ -60,7 +61,7 @@ describe("permission matrix", () => {
 
   it("lets viewers read but never write projects and goals", () => {
     for (const permission of PERMISSIONS.filter((p) =>
-      /^(project|goal|task):(create|update|archive|comment)$|^ai:use$|^chat:(post|manage|moderate)$|^challenge:manage$|^file:(upload|delete-any)$|^knowledge:manage$|^crm:/.test(
+      /^(project|goal|task):(create|update|archive|comment)$|^ai:use$|^chat:(post|manage|moderate)$|^challenge:manage$|^file:(upload|delete-any)$|^knowledge:manage$|^crm:|^appointment:write$/.test(
         p,
       ),
     )) {

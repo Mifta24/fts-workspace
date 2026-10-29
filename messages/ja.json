@@ -68,7 +68,8 @@
     "files": "ファイル",
     "knowledge": "ナレッジ",
     "assistant": "アシスタント",
-    "crm": "CRM"
+    "crm": "CRM",
+    "schedule": "スケジュール"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -315,8 +316,12 @@
     "text": {
       "TASK_ASSIGNED": "{actor} さんが「{title}」をあなたに割り当てました",
       "TASK_COMMENTED": "{actor} さんが「{title}」にコメントしました",
-      "DIRECT_MESSAGE": "{actor} さんからメッセージが届きました"
-    }
+      "DIRECT_MESSAGE": "{actor} さんからメッセージが届きました",
+      "APPOINTMENT_INVITED": "{actor} さんが「{title}」にあなたを招待しました",
+      "APPOINTMENT_UPDATED": "{actor} さんが「{title}」の日時を変更しました",
+      "APPOINTMENT_CANCELLED": "{actor} さんが「{title}」をキャンセルしました"
+    },
+    "anItem": "項目"
   },
   "Progress": {
     "title": "進捗",
@@ -498,5 +503,33 @@
     "wonCount": "受注",
     "lostCount": "失注",
     "winRate": "受注率"
+  },
+  "Schedule": {
+    "title": "スケジュール",
+    "intro": "今後 60 日間の予定です。時刻は UTC で表示・入力します。二重予約はできません。辞退していない人は予定ありとして扱われます。",
+    "empty": "予定はありません。下から会議を作成してください。",
+    "emptyReadOnly": "予定はありません。",
+    "minutes": "{count} 分",
+    "withContact": "{name} について",
+    "formerMember": "元メンバー",
+    "response": {
+      "PENDING": "保留",
+      "ACCEPTED": "承諾",
+      "DECLINED": "辞退"
+    },
+    "accept": "承諾",
+    "decline": "辞退",
+    "cancel": "会議をキャンセル",
+    "reschedule": "日時を変更",
+    "newStart": "新しい開始時刻（UTC）",
+    "createTitle": "新しい会議",
+    "create": "会議を設定",
+    "titleLabel": "タイトル",
+    "startLabel": "開始（UTC）",
+    "durationLabel": "所要時間",
+    "locationLabel": "場所またはリンク",
+    "contactLabel": "関連コンタクト",
+    "none": "なし",
+    "attendeesLabel": "招待する人"
   }
 }

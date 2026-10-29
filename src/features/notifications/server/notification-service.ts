@@ -104,7 +104,10 @@ export async function listNotifications(
   });
   const actorIds = [...new Set(rows.flatMap((row) => (row.actorId ? [row.actorId] : [])))];
   const taskIds = rows.filter((row) => row.resourceType === "task").map((row) => row.resourceId);
-  const [actors, tasks] = await Promise.all([
+  const appointmentIds = rows
+    .filter((row) => row.resourceType === "appointment")
+    .map((row) => row.resourceId);
+  const [actors, tasks, appointments] = await Promise.all([
     prisma.user.findMany({
       where: { id: { in: actorIds }, memberships: { some: { organizationId } } },
       select: { id: true, name: true },
@@ -113,7 +116,19 @@ export async function listNotifications(
       where: { organizationId, id: { in: taskIds } },
       select: { id: true, title: true },
     }),
+    // A title is only resolved for appointments the recipient organizes or attends.
+    prisma.appointment.findMany({
+      where: {
+        organizationId,
+        id: { in: appointmentIds },
+        attendees: { some: { userId: context.userId } },
+      },
+      select: { id: true, title: true },
+    }),
   ]);
+  const appointmentTitles = new Map(
+    appointments.map((appointment) => [appointment.id, appointment.title]),
+  );
   const actorNames = new Map(actors.map((actor) => [actor.id, actor.name]));
   const taskTitles = new Map(tasks.map((task) => [task.id, task.title]));
   return rows.map((row) => ({
@@ -122,7 +137,12 @@ export async function listNotifications(
     actorName: row.actorId ? (actorNames.get(row.actorId) ?? null) : null,
     resourceType: row.resourceType,
     resourceId: row.resourceId,
-    resourceTitle: row.resourceType === "task" ? (taskTitles.get(row.resourceId) ?? null) : null,
+    resourceTitle:
+      row.resourceType === "task"
+        ? (taskTitles.get(row.resourceId) ?? null)
+        : row.resourceType === "appointment"
+          ? (appointmentTitles.get(row.resourceId) ?? null)
+          : null,
     read: row.readAt !== null,
     createdAt: row.createdAt,
   }));

@@ -68,7 +68,8 @@
     "files": "Berkas",
     "knowledge": "Pengetahuan",
     "assistant": "Asisten",
-    "crm": "CRM"
+    "crm": "CRM",
+    "schedule": "Jadwal"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -315,8 +316,12 @@
     "text": {
       "TASK_ASSIGNED": "{actor} menugaskan “{title}” kepada Anda",
       "TASK_COMMENTED": "{actor} mengomentari “{title}”",
-      "DIRECT_MESSAGE": "{actor} mengirim pesan kepada Anda"
-    }
+      "DIRECT_MESSAGE": "{actor} mengirim pesan kepada Anda",
+      "APPOINTMENT_INVITED": "{actor} mengundang Anda ke “{title}”",
+      "APPOINTMENT_UPDATED": "{actor} mengubah waktu “{title}”",
+      "APPOINTMENT_CANCELLED": "{actor} membatalkan “{title}”"
+    },
+    "anItem": "Sesuatu"
   },
   "Progress": {
     "title": "Progres",
@@ -498,5 +503,33 @@
     "wonCount": "Menang",
     "lostCount": "Kalah",
     "winRate": "Tingkat kemenangan"
+  },
+  "Schedule": {
+    "title": "Jadwal",
+    "intro": "Rapat Anda untuk 60 hari ke depan. Waktu ditampilkan dan dimasukkan dalam UTC. Tidak ada yang bisa dipesan ganda: orang yang belum menolak dianggap sibuk.",
+    "empty": "Tidak ada jadwal. Buat rapat di bawah.",
+    "emptyReadOnly": "Anda tidak punya rapat.",
+    "minutes": "{count} menit",
+    "withContact": "Tentang {name}",
+    "formerMember": "Mantan anggota",
+    "response": {
+      "PENDING": "menunggu",
+      "ACCEPTED": "diterima",
+      "DECLINED": "ditolak"
+    },
+    "accept": "Terima",
+    "decline": "Tolak",
+    "cancel": "Batalkan rapat",
+    "reschedule": "Jadwalkan ulang",
+    "newStart": "Mulai baru (UTC)",
+    "createTitle": "Rapat baru",
+    "create": "Jadwalkan rapat",
+    "titleLabel": "Judul",
+    "startLabel": "Mulai (UTC)",
+    "durationLabel": "Durasi",
+    "locationLabel": "Lokasi atau tautan",
+    "contactLabel": "Tentang kontak",
+    "none": "Tidak ada",
+    "attendeesLabel": "Undang"
   }
 }

@@ -107,31 +107,33 @@ model Organization {
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 
-  members            Member[]
-  auditLogs          AuditLog[]
-  projects           Project[]
-  goals              Goal[]
-  tasks              Task[]
-  taskComments       TaskComment[]
-  milestones         Milestone[]
-  aiTaskPlans        AiTaskPlan[]
-  invitations        Invitation[]
-  channels           Channel[]
-  channelMembers     ChannelMember[]
-  messages           Message[]
-  notifications      Notification[]
-  pointEvents        PointEvent[]
-  challenges         Challenge[]
-  fileObjects        FileObject[]
-  fileShares         FileShare[]
-  knowledgeDocuments KnowledgeDocument[]
-  documentChunks     DocumentChunk[]
-  jobs               Job[]
-  aiUsageEvents      AiUsageEvent[]
-  crmContacts        CrmContact[]
-  crmDeals           CrmDeal[]
-  crmActivities      CrmActivity[]
-  consentEvents      ConsentEvent[]
+  members              Member[]
+  auditLogs            AuditLog[]
+  projects             Project[]
+  goals                Goal[]
+  tasks                Task[]
+  taskComments         TaskComment[]
+  milestones           Milestone[]
+  aiTaskPlans          AiTaskPlan[]
+  invitations          Invitation[]
+  channels             Channel[]
+  channelMembers       ChannelMember[]
+  messages             Message[]
+  notifications        Notification[]
+  pointEvents          PointEvent[]
+  challenges           Challenge[]
+  fileObjects          FileObject[]
+  fileShares           FileShare[]
+  knowledgeDocuments   KnowledgeDocument[]
+  documentChunks       DocumentChunk[]
+  jobs                 Job[]
+  aiUsageEvents        AiUsageEvent[]
+  crmContacts          CrmContact[]
+  crmDeals             CrmDeal[]
+  crmActivities        CrmActivity[]
+  consentEvents        ConsentEvent[]
+  appointments         Appointment[]
+  appointmentAttendees AppointmentAttendee[]
 
   @@map("organizations")
 }
@@ -373,6 +375,9 @@ enum NotificationType {
   TASK_ASSIGNED
   TASK_COMMENTED
   DIRECT_MESSAGE
+  APPOINTMENT_INVITED
+  APPOINTMENT_UPDATED
+  APPOINTMENT_CANCELLED
 }
 
 /// A chat room. Every channel, public or private, has explicit `ChannelMember` rows; membership
@@ -722,9 +727,10 @@ model CrmContact {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  deals      CrmDeal[]
-  activities CrmActivity[]
-  consents   ConsentEvent[]
+  deals        CrmDeal[]
+  activities   CrmActivity[]
+  consents     ConsentEvent[]
+  appointments Appointment[]
 
   @@unique([id, organizationId])
   @@index([organizationId, ownerId])
@@ -791,6 +797,61 @@ model CrmActivity {
 
   @@index([organizationId, contactId, occurredAt])
   @@map("crm_activities")
+}
+
+// ---------------------------------------------------------------------------
+// Scheduling
+// ---------------------------------------------------------------------------
+
+enum AppointmentStatus {
+  SCHEDULED
+  CANCELLED
+}
+
+enum AttendeeResponse {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+/// A meeting between members, optionally about a CRM contact. Times are stored in UTC.
+/// Visible only to the organizer and the attendees.
+model Appointment {
+  id             String            @id @default(uuid(7)) @db.Uuid
+  organizationId String            @db.Uuid
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  title          String
+  description    String?
+  location       String?
+  startsAt       DateTime
+  endsAt         DateTime
+  status         AppointmentStatus @default(SCHEDULED)
+  organizerId    String            @db.Uuid
+  contactId      String?           @db.Uuid
+  contact        CrmContact?       @relation(fields: [contactId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  attendees AppointmentAttendee[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId, startsAt])
+  @@map("appointments")
+}
+
+model AppointmentAttendee {
+  id             String           @id @default(uuid(7)) @db.Uuid
+  organizationId String           @db.Uuid
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  appointmentId  String           @db.Uuid
+  appointment    Appointment      @relation(fields: [appointmentId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  userId         String           @db.Uuid
+  response       AttendeeResponse @default(PENDING)
+  createdAt      DateTime         @default(now())
+
+  @@unique([appointmentId, userId])
+  @@index([organizationId, userId])
+  @@map("appointment_attendees")
 }
 
 // ---------------------------------------------------------------------------

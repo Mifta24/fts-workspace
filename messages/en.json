@@ -68,7 +68,8 @@
     "files": "Files",
     "knowledge": "Knowledge",
     "assistant": "Assistant",
-    "crm": "CRM"
+    "crm": "CRM",
+    "schedule": "Schedule"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -315,8 +316,12 @@
     "text": {
       "TASK_ASSIGNED": "{actor} assigned you “{title}”",
       "TASK_COMMENTED": "{actor} commented on “{title}”",
-      "DIRECT_MESSAGE": "{actor} sent you a message"
-    }
+      "DIRECT_MESSAGE": "{actor} sent you a message",
+      "APPOINTMENT_INVITED": "{actor} invited you to “{title}”",
+      "APPOINTMENT_UPDATED": "{actor} changed the time of “{title}”",
+      "APPOINTMENT_CANCELLED": "{actor} cancelled “{title}”"
+    },
+    "anItem": "Someone"
   },
   "Progress": {
     "title": "Progress",
@@ -498,5 +503,33 @@
     "wonCount": "Won",
     "lostCount": "Lost",
     "winRate": "Win rate"
+  },
+  "Schedule": {
+    "title": "Schedule",
+    "intro": "Your meetings for the next 60 days. Times are shown and entered in UTC. Nobody can be double-booked: someone who has not declined counts as busy.",
+    "empty": "Nothing scheduled. Create a meeting below.",
+    "emptyReadOnly": "You have no meetings.",
+    "minutes": "{count} min",
+    "withContact": "About {name}",
+    "formerMember": "Former member",
+    "response": {
+      "PENDING": "pending",
+      "ACCEPTED": "accepted",
+      "DECLINED": "declined"
+    },
+    "accept": "Accept",
+    "decline": "Decline",
+    "cancel": "Cancel meeting",
+    "reschedule": "Reschedule",
+    "newStart": "New start (UTC)",
+    "createTitle": "New meeting",
+    "create": "Schedule meeting",
+    "titleLabel": "Title",
+    "startLabel": "Start (UTC)",
+    "durationLabel": "Duration",
+    "locationLabel": "Location or link",
+    "contactLabel": "About contact",
+    "none": "None",
+    "attendeesLabel": "Invite"
   }
 }

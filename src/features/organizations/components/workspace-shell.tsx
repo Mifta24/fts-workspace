@@ -22,6 +22,7 @@ type Section =
   | "knowledge"
   | "assistant"
   | "crm"
+  | "schedule"
   | "members";
 
 const SECTIONS: { key: Section; path: string; permission?: Permission }[] = [
@@ -36,6 +37,7 @@ const SECTIONS: { key: Section; path: string; permission?: Permission }[] = [
   { key: "knowledge", path: "/knowledge" },
   { key: "assistant", path: "/assistant", permission: "ai:use" },
   { key: "crm", path: "/crm", permission: "crm:read" },
+  { key: "schedule", path: "/schedule" },
   { key: "members", path: "/members" },
 ];
 

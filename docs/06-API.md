@@ -60,6 +60,10 @@
 | Server action | `eraseContactAction` | Erase a contact's personal data | `crm:erase` |
 | Page | `/[locale]/w/[slug]/crm`, `/crm/[contactId]`, `/crm/pipeline` | Contacts, detail with consent/deals/activity, pipeline report | `crm:read` |
 
+| Server action | `createAppointmentAction`, `rescheduleAction`, `cancelAction` | Meetings (organizer) | `appointment:write` |
+| Server action | `respondAction` | Accept / decline an invitation | attendee |
+| Page | `/[locale]/w/[slug]/schedule` | Your meetings for the next 60 days (times in UTC) | `appointment:read` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

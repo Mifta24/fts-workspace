@@ -45,7 +45,9 @@ export default async function NotificationsPage({
             const href =
               item.resourceType === "task"
                 ? `/w/${organizationSlug}/tasks/${item.resourceId}`
-                : `/w/${organizationSlug}/chat/${item.resourceId}`;
+                : item.resourceType === "appointment"
+                  ? `/w/${organizationSlug}/schedule`
+                  : `/w/${organizationSlug}/chat/${item.resourceId}`;
             return (
               <li
                 key={item.id}
@@ -53,7 +55,7 @@ export default async function NotificationsPage({
               >
                 <div>
                   <Link href={href} className={item.read ? "text-sm" : "text-sm font-semibold"}>
-                    {t(`text.${item.type}`, { actor, title: item.resourceTitle ?? t("aTask") })}
+                    {t(`text.${item.type}`, { actor, title: item.resourceTitle ?? t("anItem") })}
                   </Link>
                   <p className="text-xs text-muted-foreground">
                     {item.createdAt.toISOString().slice(0, 16).replace("T", " ")} UTC
