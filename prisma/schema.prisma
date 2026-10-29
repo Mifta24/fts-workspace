@@ -97,11 +97,13 @@ enum MembershipStatus {
 }
 
 model Organization {
-  id        String   @id @default(uuid(7)) @db.Uuid
-  name      String
-  slug      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    String                @id @default(uuid(7)) @db.Uuid
+  name                  String
+  slug                  String                @unique
+  /// Who may see rankings. OFF (default): nobody; OPT_IN: only members who chose to appear.
+  leaderboardVisibility LeaderboardVisibility @default(OFF)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
 
   members        Member[]
   auditLogs      AuditLog[]
@@ -116,20 +118,24 @@ model Organization {
   channelMembers ChannelMember[]
   messages       Message[]
   notifications  Notification[]
+  pointEvents    PointEvent[]
+  challenges     Challenge[]
 
   @@map("organizations")
 }
 
 model Member {
-  id             String           @id @default(uuid(7)) @db.Uuid
-  organizationId String           @db.Uuid
-  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userId         String           @db.Uuid
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role           MemberRole
-  status         MembershipStatus @default(ACTIVE)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  id                String           @id @default(uuid(7)) @db.Uuid
+  organizationId    String           @db.Uuid
+  organization      Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId            String           @db.Uuid
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role              MemberRole
+  status            MembershipStatus @default(ACTIVE)
+  /// Appears on the leaderboard (only matters when the organization enables it). Off by default.
+  showOnLeaderboard Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 
   @@unique([organizationId, userId])
   @@index([userId, status])
@@ -429,6 +435,63 @@ model Notification {
 
   @@index([organizationId, userId, readAt, createdAt])
   @@map("notifications")
+}
+
+// ---------------------------------------------------------------------------
+// Engagement
+// ---------------------------------------------------------------------------
+
+enum LeaderboardVisibility {
+  OFF
+  OPT_IN
+}
+
+enum PointEventType {
+  TASK_COMPLETED
+}
+
+enum ChallengeStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+/// Append-only points ledger (a database trigger rejects UPDATE and DELETE). One award per
+/// (user, type, source), so retries and reopen/complete cycles can never award twice. Points
+/// are a recognition metric only, never a balance, payment or entitlement.
+model PointEvent {
+  id             String         @id @default(uuid(7)) @db.Uuid
+  organizationId String         @db.Uuid
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  userId         String         @db.Uuid
+  type           PointEventType
+  points         Int
+  sourceType     String
+  sourceId       String         @db.Uuid
+  createdAt      DateTime       @default(now())
+
+  @@unique([organizationId, userId, type, sourceId])
+  @@index([organizationId, userId, createdAt])
+  @@index([organizationId, createdAt])
+  @@map("point_events")
+}
+
+/// A time-boxed target on points events. Progress is computed from the ledger, not stored.
+model Challenge {
+  id             String          @id @default(uuid(7)) @db.Uuid
+  organizationId String          @db.Uuid
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  title          String
+  description    String?
+  /// Number of completed tasks (ledger awards) that finishes the challenge.
+  target         Int
+  startsAt       DateTime
+  endsAt         DateTime
+  status         ChallengeStatus @default(ACTIVE)
+  createdById    String          @db.Uuid
+  createdAt      DateTime        @default(now())
+
+  @@index([organizationId, status, endsAt])
+  @@map("challenges")
 }
 
 // ---------------------------------------------------------------------------

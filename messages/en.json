@@ -63,7 +63,8 @@
     "members": "Members",
     "chat": "Chat",
     "notifications": "Inbox",
-    "unread": "{count} unread notifications"
+    "unread": "{count} unread notifications",
+    "progress": "Progress"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -312,5 +313,51 @@
       "TASK_COMMENTED": "{actor} commented on “{title}”",
       "DIRECT_MESSAGE": "{actor} sent you a message"
     }
+  },
+  "Progress": {
+    "title": "Progress",
+    "intro": "Points recognise finished work. They are not money or a balance. Only tasks assigned to you and completed by you count, with a daily limit.",
+    "cards": {
+      "totalPoints": "Total points",
+      "pointsLast7Days": "Last 7 days",
+      "streakDays": "Day streak",
+      "awardsToday": "Awards today"
+    },
+    "challenges": "Challenges",
+    "noChallenges": "No active challenges.",
+    "state": {
+      "upcoming": "Upcoming",
+      "running": "Running",
+      "ended": "Ended"
+    },
+    "challengeProgress": "Progress of {title}",
+    "completed": "Completed",
+    "archive": "Archive",
+    "leaderboard": "Leaderboard",
+    "leaderboardOff": "The leaderboard is turned off for this workspace.",
+    "leaderboardEmpty": "Nobody has opted in with points in this period yet.",
+    "rangeLabel": "Leaderboard period",
+    "range": {
+      "week": "7 days",
+      "month": "30 days",
+      "all": "All time"
+    },
+    "you": "you",
+    "optedIn": "You appear on the leaderboard.",
+    "optedOut": "You do not appear on the leaderboard.",
+    "showMe": "Show me on the leaderboard",
+    "hideMe": "Hide me from the leaderboard",
+    "policyTitle": "Leaderboard policy",
+    "policyOff": "Rankings are off. Nobody sees them.",
+    "policyOptIn": "Rankings are on, and only members who opted in appear.",
+    "enableLeaderboard": "Turn leaderboard on",
+    "disableLeaderboard": "Turn leaderboard off",
+    "createChallengeTitle": "Create a challenge",
+    "createChallenge": "Create challenge",
+    "challengeTitle": "Title",
+    "challengeDescription": "Description (optional)",
+    "challengeTarget": "Tasks to complete",
+    "challengeStart": "Starts",
+    "challengeEnd": "Ends"
   }
 }

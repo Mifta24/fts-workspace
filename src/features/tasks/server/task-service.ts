@@ -13,6 +13,7 @@ import {
   updateTaskSchema,
   type TaskFilter,
 } from "@/features/tasks/schemas/task";
+import { awardTaskCompletion } from "@/features/gamification/server/award";
 import {
   createNotifications,
   publishNotifications,
@@ -225,6 +226,14 @@ export async function updateTask(
       },
       correlationId,
     });
+    if (becameCompleted) {
+      await awardTaskCompletion(tx, {
+        organizationId,
+        actorId: context.userId,
+        task: { ...task, createdAt: existing.createdAt },
+        now: task.completedAt ?? new Date(),
+      });
+    }
     const notified =
       task.assigneeId && task.assigneeId !== existing.assigneeId
         ? await createNotifications(tx, [

@@ -42,6 +42,10 @@
 | HTTP (gateway, internal) | `POST /internal/publish`, `GET /health` | App → gateway fan-out (4 KB limit, shared secret); liveness | secret / public |
 | HTTP | `GET /api/realtime/session` | Gateway asks which user a cookie belongs to | session |
 
+| Server action | `createChallengeAction`, `archiveChallengeAction` | Challenges | `challenge:manage` |
+| Server action | `setLeaderboardOptInAction`, `setLeaderboardVisibilityAction` | Own opt-in; organization policy | `gamification:read` (own); `organization:update` |
+| Page | `/[locale]/w/[slug]/progress?range=week|month|all` | Own points, streak, challenges, leaderboard | `gamification:read` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

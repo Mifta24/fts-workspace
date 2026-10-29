@@ -37,6 +37,8 @@ export const PERMISSIONS = [
   "chat:manage",
   "chat:moderate",
   "notification:read",
+  "gamification:read",
+  "challenge:manage",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -70,6 +72,8 @@ const MATRIX: Record<Permission, readonly OrganizationRole[]> = {
   "chat:manage": ["OWNER", "ADMIN", "MANAGER"],
   "chat:moderate": ["OWNER", "ADMIN"],
   "notification:read": ALL_ROLES,
+  "gamification:read": ALL_ROLES,
+  "challenge:manage": ["OWNER", "ADMIN", "MANAGER"],
 };
 
 export function isOrganizationRole(value: unknown): value is OrganizationRole {

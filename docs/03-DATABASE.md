@@ -91,7 +91,12 @@ The Better Auth organization plugin tables (`invitation`, `session.activeOrganiz
 | `messages` | composite FK to the channel; cursor pagination index `(organizationId, channelId, createdAt, id)`; soft delete (body blanked, CHECK) |
 | `notifications` | references what happened (`type`, `resourceType`, `resourceId`, `actorId`) with no content; coalesced to one unread per recipient/type/resource |
 
-Migrations `20261029030000_projects_goals`, `20261029040000_tasks`, `20261029050000_milestones_ai_plans`, `20261029060000_invitations` and `20261029070000_chat_notifications`. The partial unique index on `invitations` is written in SQL only (Prisma cannot express it), so `prisma migrate dev` may report it as drift; `migrate deploy` is unaffected. Do not drop it when regenerating migrations. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
+| `point_events` | **append-only** (trigger rejects UPDATE/DELETE); unique `(organizationId, userId, type, sourceId)` = one award per task and user; `organizationId` FK is `RESTRICT`; points 1–100 |
+| `challenges` | window and target CHECKs; progress is computed from the ledger, never stored |
+| `organizations.leaderboardVisibility` | `OFF` (default) / `OPT_IN` |
+| `members.showOnLeaderboard` | default `false`; each person decides |
+
+Migrations `20261029030000_projects_goals`, `20261029040000_tasks`, `20261029050000_milestones_ai_plans`, `20261029060000_invitations`, `20261029070000_chat_notifications` and `20261029080000_engagement`. Streaks are derived from award days, not stored. The partial unique index on `invitations` is written in SQL only (Prisma cannot express it), so `prisma migrate dev` may report it as drift; `migrate deploy` is unaffected. Do not drop it when regenerating migrations. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
 
 ### Seed strategy
 - `pnpm db:seed` runs `prisma/seed.ts`; it refuses to run with `NODE_ENV=production`.

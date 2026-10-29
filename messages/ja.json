@@ -63,7 +63,8 @@
     "members": "メンバー",
     "chat": "チャット",
     "notifications": "受信トレイ",
-    "unread": "未読の通知 {count} 件"
+    "unread": "未読の通知 {count} 件",
+    "progress": "進捗"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -312,5 +313,51 @@
       "TASK_COMMENTED": "{actor} さんが「{title}」にコメントしました",
       "DIRECT_MESSAGE": "{actor} さんからメッセージが届きました"
     }
+  },
+  "Progress": {
+    "title": "進捗",
+    "intro": "ポイントは完了した仕事を称えるものです。お金や残高ではありません。自分に割り当てられ、自分で完了したタスクだけが対象で、1 日の上限があります。",
+    "cards": {
+      "totalPoints": "合計ポイント",
+      "pointsLast7Days": "過去 7 日間",
+      "streakDays": "連続日数",
+      "awardsToday": "本日の獲得数"
+    },
+    "challenges": "チャレンジ",
+    "noChallenges": "進行中のチャレンジはありません。",
+    "state": {
+      "upcoming": "開始前",
+      "running": "進行中",
+      "ended": "終了"
+    },
+    "challengeProgress": "{title} の進捗",
+    "completed": "達成",
+    "archive": "アーカイブ",
+    "leaderboard": "リーダーボード",
+    "leaderboardOff": "このワークスペースではリーダーボードがオフです。",
+    "leaderboardEmpty": "この期間にポイントを獲得して参加している人はまだいません。",
+    "rangeLabel": "リーダーボードの期間",
+    "range": {
+      "week": "7 日間",
+      "month": "30 日間",
+      "all": "全期間"
+    },
+    "you": "あなた",
+    "optedIn": "リーダーボードに表示されています。",
+    "optedOut": "リーダーボードには表示されません。",
+    "showMe": "リーダーボードに表示する",
+    "hideMe": "リーダーボードから非表示にする",
+    "policyTitle": "リーダーボードの設定",
+    "policyOff": "ランキングはオフです。誰にも表示されません。",
+    "policyOptIn": "ランキングはオンで、参加を選んだメンバーのみ表示されます。",
+    "enableLeaderboard": "リーダーボードをオンにする",
+    "disableLeaderboard": "リーダーボードをオフにする",
+    "createChallengeTitle": "チャレンジを作成",
+    "createChallenge": "チャレンジを作成",
+    "challengeTitle": "タイトル",
+    "challengeDescription": "説明（任意）",
+    "challengeTarget": "完了するタスク数",
+    "challengeStart": "開始日",
+    "challengeEnd": "終了日"
   }
 }

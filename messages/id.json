@@ -63,7 +63,8 @@
     "members": "Anggota",
     "chat": "Obrolan",
     "notifications": "Kotak masuk",
-    "unread": "{count} notifikasi belum dibaca"
+    "unread": "{count} notifikasi belum dibaca",
+    "progress": "Progres"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -312,5 +313,51 @@
       "TASK_COMMENTED": "{actor} mengomentari “{title}”",
       "DIRECT_MESSAGE": "{actor} mengirim pesan kepada Anda"
     }
+  },
+  "Progress": {
+    "title": "Progres",
+    "intro": "Poin mengakui pekerjaan yang selesai. Poin bukan uang atau saldo. Hanya tugas yang ditugaskan kepada Anda dan Anda selesaikan yang dihitung, dengan batas harian.",
+    "cards": {
+      "totalPoints": "Total poin",
+      "pointsLast7Days": "7 hari terakhir",
+      "streakDays": "Rentetan hari",
+      "awardsToday": "Poin hari ini"
+    },
+    "challenges": "Tantangan",
+    "noChallenges": "Tidak ada tantangan aktif.",
+    "state": {
+      "upcoming": "Akan datang",
+      "running": "Berjalan",
+      "ended": "Selesai"
+    },
+    "challengeProgress": "Progres {title}",
+    "completed": "Tercapai",
+    "archive": "Arsipkan",
+    "leaderboard": "Papan peringkat",
+    "leaderboardOff": "Papan peringkat dimatikan untuk workspace ini.",
+    "leaderboardEmpty": "Belum ada yang ikut serta dengan poin pada periode ini.",
+    "rangeLabel": "Periode papan peringkat",
+    "range": {
+      "week": "7 hari",
+      "month": "30 hari",
+      "all": "Sepanjang waktu"
+    },
+    "you": "Anda",
+    "optedIn": "Anda tampil di papan peringkat.",
+    "optedOut": "Anda tidak tampil di papan peringkat.",
+    "showMe": "Tampilkan saya di papan peringkat",
+    "hideMe": "Sembunyikan saya dari papan peringkat",
+    "policyTitle": "Kebijakan papan peringkat",
+    "policyOff": "Peringkat mati. Tidak ada yang melihatnya.",
+    "policyOptIn": "Peringkat aktif, dan hanya anggota yang ikut serta yang tampil.",
+    "enableLeaderboard": "Aktifkan papan peringkat",
+    "disableLeaderboard": "Matikan papan peringkat",
+    "createChallengeTitle": "Buat tantangan",
+    "createChallenge": "Buat tantangan",
+    "challengeTitle": "Judul",
+    "challengeDescription": "Deskripsi (opsional)",
+    "challengeTarget": "Tugas yang diselesaikan",
+    "challengeStart": "Mulai",
+    "challengeEnd": "Berakhir"
   }
 }
