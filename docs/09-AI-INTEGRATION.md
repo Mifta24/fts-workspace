@@ -41,6 +41,12 @@ Estimates are model suggestions, not guaranteed timelines.
 ## Retrieval implemented in Phase 3 (slice 11)
 Keyword retrieval only: text/Markdown/CSV files are chunked by the worker and searched with PostgreSQL full-text search (`simple` configuration), with the file access rule applied in the query (see 07-SECURITY). Embeddings and pgvector are **not** implemented: they depend on OD-08 (embedding provider) and on a database image with pgvector, which neither the CI service container nor the embedded test database provides yet.
 
+## Implemented in Phase 3 (slice 12)
+- Knowledge assistant (`src/features/assistant`): question → keyword query → ACL-filtered passages → model → plain-text answer with validated citations. No passages, no model call.
+- Metering and budgets (`src/server/ai/usage.ts`, table `ai_usage_events`); the task planner uses the same wrapper.
+- Adapter now also reports provider token usage (`generate`).
+- Tool calling, MCP and workflows are **not** implemented; see `11-MCP-THREAT-MODEL.md` for the conditions to meet first.
+
 ## Proposed tools
 | Tool | Authorization | Mutation? |
 | --- | --- | --- |

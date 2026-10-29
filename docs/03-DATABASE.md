@@ -103,7 +103,10 @@ The Better Auth organization plugin tables (`invitation`, `session.activeOrganiz
 | `document_chunks` | passages (≤ 800 chars, ≤ 500 per file); `tsv` is a **generated** `to_tsvector('simple', content)` column with a GIN index (SQL-only, invisible to Prisma) |
 | `jobs` | database job queue: claimed with `FOR UPDATE SKIP LOCKED`, retries with exponential backoff (30 s, 60 s…), `maxAttempts` 3, idempotent via unique `(organizationId, dedupeKey)` |
 
-Migrations `20261029100000_knowledge_jobs`, `20261029090000_files`, `20261029030000_projects_goals`, `20261029040000_tasks`, `20261029050000_milestones_ai_plans`, `20261029060000_invitations`, `20261029070000_chat_notifications` and `20261029080000_engagement`. Streaks are derived from award days, not stored. The partial unique index on `invitations` is written in SQL only (Prisma cannot express it), so `prisma migrate dev` may report it as drift; `migrate deploy` is unaffected. Do not drop it when regenerating migrations. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
+| `ai_usage_events` | one row per model call (user, feature, provider, model, status, tokens, whether estimated, latency); never prompts or answers; `RESTRICT` on the organization |
+| `organizations.aiDailyTokenBudget` | default 200,000 tokens per UTC day; 0 switches AI off |
+
+Migrations `20261029110000_ai_usage`, `20261029100000_knowledge_jobs`, `20261029090000_files`, `20261029030000_projects_goals`, `20261029040000_tasks`, `20261029050000_milestones_ai_plans`, `20261029060000_invitations`, `20261029070000_chat_notifications` and `20261029080000_engagement`. Streaks are derived from award days, not stored. The partial unique index on `invitations` is written in SQL only (Prisma cannot express it), so `prisma migrate dev` may report it as drift; `migrate deploy` is unaffected. Do not drop it when regenerating migrations. Task-based goal progress = completed / non-cancelled tasks linked to the goal. Migration `20261029030000_projects_goals` (rollback SQL noted at its end). Owner membership is validated in the service, not by FK.
 
 ### Seed strategy
 - `pnpm db:seed` runs `prisma/seed.ts`; it refuses to run with `NODE_ENV=production`.

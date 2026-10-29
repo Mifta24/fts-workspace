@@ -66,7 +66,8 @@
     "unread": "未読の通知 {count} 件",
     "progress": "進捗",
     "files": "ファイル",
-    "knowledge": "ナレッジ"
+    "knowledge": "ナレッジ",
+    "assistant": "アシスタント"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -412,5 +413,21 @@
     },
     "passages": "{count} 件の抜粋",
     "remove": "削除"
+  },
+  "Assistant": {
+    "title": "アシスタント",
+    "intro": "質問すると、閲覧できるナレッジのファイルから出典付きで回答します。回答は誤っている場合があります。出典を確認してください。",
+    "questionLabel": "質問",
+    "ask": "質問する",
+    "answer": "回答",
+    "sources": "出典",
+    "cited": "引用",
+    "aiNote": "以下の出典から AI が生成しました。利用前に確認してください。",
+    "noSources": "閲覧できるファイルに該当する抜粋がないため、AI には何も送信されませんでした。",
+    "notConfigured": "このデプロイではアシスタントが設定されていません。管理者に設定を依頼してください。",
+    "usageTitle": "本日の AI 使用量",
+    "usage": "本日（UTC）{budget} トークン中 {used} を使用",
+    "budgetLabel": "1 日のトークン予算（0 で AI を無効化）",
+    "saveBudget": "予算を保存"
   }
 }

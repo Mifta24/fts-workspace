@@ -102,6 +102,8 @@ model Organization {
   slug                  String                @unique
   /// Who may see rankings. OFF (default): nobody; OPT_IN: only members who chose to appear.
   leaderboardVisibility LeaderboardVisibility @default(OFF)
+  /// Tokens the organization's AI features may use per UTC day (a ceiling, not a purchase).
+  aiDailyTokenBudget    Int                   @default(200000)
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 
@@ -125,6 +127,7 @@ model Organization {
   knowledgeDocuments KnowledgeDocument[]
   documentChunks     DocumentChunk[]
   jobs               Job[]
+  aiUsageEvents      AiUsageEvent[]
 
   @@map("organizations")
 }
@@ -635,6 +638,38 @@ model Job {
   @@unique([organizationId, dedupeKey])
   @@index([status, runAt])
   @@map("jobs")
+}
+
+enum AiFeature {
+  TASK_PLAN
+  KNOWLEDGE_ANSWER
+}
+
+enum AiUsageStatus {
+  OK
+  ERROR
+}
+
+/// One row per model call: who, which feature, which model, how many tokens and how long.
+/// It never stores prompts or answers. `tokens` is the provider's count when it reports one,
+/// otherwise an estimate (characters / 4), so budgets work with any provider.
+model AiUsageEvent {
+  id              String        @id @default(uuid(7)) @db.Uuid
+  organizationId  String        @db.Uuid
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  userId          String        @db.Uuid
+  feature         AiFeature
+  provider        String
+  model           String
+  status          AiUsageStatus
+  tokens          Int
+  tokensEstimated Boolean       @default(false)
+  latencyMs       Int
+  createdAt       DateTime      @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, userId, createdAt])
+  @@map("ai_usage_events")
 }
 
 // ---------------------------------------------------------------------------

@@ -53,6 +53,9 @@
 | Server action | `requestIndexingAction`, `removeFromKnowledgeAction` | Add / remove one of your own text files | `knowledge:manage` |
 | Page | `/[locale]/w/[slug]/knowledge?q=` | Search (min. 2 chars) and indexed files | `knowledge:read` |
 
+| Server action | `askAction`, `setBudgetAction` | Ask the knowledge assistant; set the daily token budget | `ai:use`; `organization:update` |
+| Page | `/[locale]/w/[slug]/assistant` | Question box, answer with sources, today's usage | `ai:use` |
+
 Errors use `AppError` (`src/lib/errors.ts`) with the codes and statuses listed below.
 
 ## Proposed endpoints

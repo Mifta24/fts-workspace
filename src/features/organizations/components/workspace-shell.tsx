@@ -19,6 +19,7 @@ type Section =
   | "progress"
   | "files"
   | "knowledge"
+  | "assistant"
   | "members";
 
 const SECTIONS: { key: Section; path: string }[] = [
@@ -31,6 +32,7 @@ const SECTIONS: { key: Section; path: string }[] = [
   { key: "progress", path: "/progress" },
   { key: "files", path: "/files" },
   { key: "knowledge", path: "/knowledge" },
+  { key: "assistant", path: "/assistant" },
   { key: "members", path: "/members" },
 ];
 

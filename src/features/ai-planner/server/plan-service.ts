@@ -14,6 +14,7 @@ import {
   type OrganizationContext,
 } from "@/features/organizations/server/organization-service";
 import type { TaskPlanProvider } from "@/server/ai/provider";
+import { runMeteredCompletion } from "@/server/ai/usage";
 import { recordAuditEvent } from "@/server/services/audit";
 
 type Deps = { prisma: PrismaClient; correlationId?: string };
@@ -82,13 +83,20 @@ export async function generatePlan(
   }
 
   // Minimal context only: the goal text and the user's objective. No members, ids or other records.
-  const answer = await provider.complete({
-    system: SYSTEM_PROMPT,
-    user: JSON.stringify({
-      goal: { title: goal.title, description: goal.description ?? "" },
-      objective: objective.data,
-    }),
-  });
+  const answer = await runMeteredCompletion(
+    { prisma },
+    context,
+    "TASK_PLAN",
+    provider,
+    {
+      system: SYSTEM_PROMPT,
+      user: JSON.stringify({
+        goal: { title: goal.title, description: goal.description ?? "" },
+        objective: objective.data,
+      }),
+    },
+    now,
+  );
   const tasks = parseModelPlan(answer);
   if (!tasks) throw new AppError("UNPROCESSABLE", "The AI returned a plan we could not use.");
 

@@ -66,7 +66,8 @@
     "unread": "{count} notifikasi belum dibaca",
     "progress": "Progres",
     "files": "Berkas",
-    "knowledge": "Pengetahuan"
+    "knowledge": "Pengetahuan",
+    "assistant": "Asisten"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -412,5 +413,21 @@
     },
     "passages": "{count} kutipan",
     "remove": "Hapus"
+  },
+  "Assistant": {
+    "title": "Asisten",
+    "intro": "Ajukan pertanyaan dan asisten menjawab dari berkas basis pengetahuan yang boleh Anda baca, lengkap dengan sumber. Jawaban bisa keliru: periksa sumbernya.",
+    "questionLabel": "Pertanyaan Anda",
+    "ask": "Tanya",
+    "answer": "Jawaban",
+    "sources": "Sumber",
+    "cited": "dikutip",
+    "aiNote": "Dibuat oleh AI dari sumber di bawah. Verifikasi sebelum diandalkan.",
+    "noSources": "Tidak ada kutipan yang cocok di berkas yang dapat Anda baca, sehingga tidak ada yang dikirim ke AI.",
+    "notConfigured": "Asisten belum dikonfigurasi pada deployment ini. Minta administrator untuk mengaturnya.",
+    "usageTitle": "Pemakaian AI hari ini",
+    "usage": "{used} dari {budget} token terpakai hari ini (UTC).",
+    "budgetLabel": "Anggaran token harian (0 mematikan AI)",
+    "saveBudget": "Simpan anggaran"
   }
 }

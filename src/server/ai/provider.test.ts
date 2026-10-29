@@ -63,3 +63,35 @@ describe("OpenAI-compatible provider", () => {
     );
   });
 });
+
+describe("provider usage reporting", () => {
+  it("returns provider-reported token counts and tolerates their absence", async () => {
+    const body = (usage: unknown) =>
+      new Response(JSON.stringify({ choices: [{ message: { content: "hi" } }], usage }), {
+        status: 200,
+      });
+    const make = (response: Response) =>
+      createOpenAiCompatibleProvider({
+        baseUrl: "http://localhost:1234/v1",
+        model: "m",
+        fetchImpl: (async () => response) as unknown as typeof fetch,
+      });
+    const input = { system: "s", user: "u" };
+    expect(await make(body({ prompt_tokens: 12, completion_tokens: 30 })).generate!(input)).toEqual(
+      {
+        text: "hi",
+        usage: { inputTokens: 12, outputTokens: 30 },
+      },
+    );
+    expect((await make(body(undefined)).generate!(input)).usage).toEqual({
+      inputTokens: null,
+      outputTokens: null,
+    });
+    expect(
+      (await make(body({ prompt_tokens: -1, completion_tokens: "x" })).generate!(input)).usage,
+    ).toEqual({
+      inputTokens: null,
+      outputTokens: null,
+    });
+  });
+});

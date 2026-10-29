@@ -29,7 +29,7 @@ export default async function globalSetup() {
   });
   try {
     await prisma.$executeRawUnsafe(
-      'TRUNCATE TABLE "jobs", "document_chunks", "knowledge_documents", "file_shares", "files", "challenges", "point_events", "notifications", "messages", "channel_members", "channels", "invitations", "ai_task_plans", "milestones", "task_comments", "tasks", "goals", "projects", "audit_logs", "members", "organizations", "verifications", "accounts", "sessions", "users" RESTART IDENTITY CASCADE',
+      'TRUNCATE TABLE "ai_usage_events", "jobs", "document_chunks", "knowledge_documents", "file_shares", "files", "challenges", "point_events", "notifications", "messages", "channel_members", "channels", "invitations", "ai_task_plans", "milestones", "task_comments", "tasks", "goals", "projects", "audit_logs", "members", "organizations", "verifications", "accounts", "sessions", "users" RESTART IDENTITY CASCADE',
     );
     const passwordHash = await hashPassword(E2E_PASSWORD);
     const user = async (email: string, name: string) => {
