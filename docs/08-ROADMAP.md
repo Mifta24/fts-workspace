@@ -20,7 +20,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] AI task planner with review/approval (slice 6: provider adapter, draft → review → apply; disabled until `AI_BASE_URL` and `AI_MODEL` are set)
 - [x] E2E paths (slice 4: Playwright owner flow, cross-tenant 404s, viewer read-only; run in CI)
 - [x] Responsive UI checked at 375px width (no horizontal page scroll, usable navigation); no visual design review yet
-**Exit gate:** key persona flows run end-to-end; cross-tenant tests pass. Met locally on 2026-10-29 (Vitest + Playwright); CI result to be confirmed after push.
+**Exit gate:** key persona flows run end-to-end; cross-tenant tests pass. Met on 2026-10-29: Vitest and Playwright pass locally and in CI (commit `538e25f`, GitHub Actions run 40822659332).
 **Phase 1 notes:** member invitations (`invitations`, `role_grants`) were not on the Phase 1 checklist and remain deferred; there is no real model connected yet (OD-08), so AI planning is verified with a fake provider and a seeded draft; AI plan dependencies between tasks (`task_dependencies`) are not built.
 
 ## Phase 2 — Collaboration & Engagement
