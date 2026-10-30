@@ -4,14 +4,16 @@ import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import { AppError } from "@/lib/errors";
 import {
   buildAnswerSchema,
+  assignFieldKeys,
   createFormSchema,
+  fieldsInputSchema,
   fieldsSchema,
-  FORM_TEMPLATES,
   formIdSchema,
   MAX_PUBLIC_BODY_CHARS,
   publicTokenSchema,
   statusSchema,
   SUBMISSIONS_PER_DAY,
+  templateIn,
   SUBMISSIONS_PER_MINUTE,
   updateFormSchema,
   type FieldDef,
@@ -52,9 +54,10 @@ export async function createForm(
   requirePermission(context, "form:manage");
   const parsed = createFormSchema.safeParse(rawInput);
   if (!parsed.success) throw new AppError("INVALID_INPUT", "Form details are invalid.");
-  const template = FORM_TEMPLATES.find((candidate) => candidate.id === parsed.data.templateId)!;
+  const copy = templateIn(parsed.data.templateId, parsed.data.locale);
+  const template = copy.template;
   const consentText = template.createsContact
-    ? (parsed.data.consentText ?? template.consentText)
+    ? (parsed.data.consentText ?? copy.consentText)
     : null;
 
   return prisma.$transaction(async (tx) => {
@@ -69,7 +72,7 @@ export async function createForm(
         organizationId: context.organization.id,
         title: parsed.data.title,
         description: parsed.data.description,
-        fields: template.fields,
+        fields: copy.fields,
         createsContact: template.createsContact,
         consentText,
         ownerId: context.userId,
@@ -85,7 +88,7 @@ export async function createForm(
       action: "form.created",
       resourceType: "form",
       resourceId: form.id,
-      metadata: { template: template.id },
+      metadata: { template: template.id, locale: parsed.data.locale },
       correlationId,
     });
     return form;
@@ -199,6 +202,71 @@ export async function updateForm(
       resourceType: "form",
       resourceId: form.id,
       metadata: { fields: Object.keys(parsed.data) },
+      correlationId,
+    });
+  });
+}
+
+/** What must stay the same once a form is live: everything about a field except its label. */
+const structure = (fields: FieldDef[]) =>
+  JSON.stringify(
+    fields.map(({ key, type, required, options }) => [key, type, required, options ?? null]),
+  );
+
+/**
+ * Replaces the fields of a form. While the form is a draft (it cannot have submissions yet) the
+ * list can be changed freely; once it has been published only the wording of labels can change,
+ * so stored answers keep matching their fields. Forms that create contacts keep a required name
+ * and email, because the contact is built from them.
+ */
+export async function updateFormFields(
+  { prisma, correlationId }: Deps,
+  context: OrganizationContext,
+  formId: string,
+  rawFields: unknown,
+): Promise<void> {
+  requirePermission(context, "form:manage");
+  const id = formIdSchema.safeParse(formId);
+  if (!id.success) throw notFound();
+  const input = fieldsInputSchema.safeParse(rawFields);
+  if (!input.success) throw new AppError("INVALID_INPUT", "The fields are invalid.");
+  const keyed = fieldsSchema.safeParse(assignFieldKeys(input.data));
+  if (!keyed.success) throw new AppError("INVALID_INPUT", "The fields are invalid.");
+  const fields = keyed.data;
+
+  await prisma.$transaction(async (tx) => {
+    const form = await tx.form.findFirst({
+      where: { id: id.data, organizationId: context.organization.id },
+      select: { id: true, status: true, createsContact: true, fields: true },
+    });
+    if (!form) throw notFound();
+    const current = parseFields(form.fields);
+    const labelsOnly = form.status !== "DRAFT";
+    if (labelsOnly && structure(fields) !== structure(current)) {
+      throw new AppError(
+        "UNPROCESSABLE",
+        "Once a form has been published only the labels can change.",
+      );
+    }
+    if (form.createsContact) {
+      const name = fields.find((field) => field.key === "name");
+      const email = fields.find((field) => field.key === "email");
+      if (name?.type !== "text" || !name.required || email?.type !== "email" || !email.required) {
+        throw new AppError(
+          "UNPROCESSABLE",
+          "A form that creates contacts needs a required name and email.",
+        );
+      }
+    }
+    await tx.form.update({ where: { id: form.id }, data: { fields } });
+    await recordAuditEvent(tx, {
+      organizationId: context.organization.id,
+      actorId: context.userId,
+      action: "form.fields_updated",
+      resourceType: "form",
+      resourceId: form.id,
+      // Counts only: labels are the owner's wording, not something the trail needs to hold.
+      metadata: { fields: fields.length, labelsOnly },
       correlationId,
     });
   });

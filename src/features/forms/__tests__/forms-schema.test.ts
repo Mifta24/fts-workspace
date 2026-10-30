@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   buildAnswerSchema,
   fieldsSchema,
+  FORM_LOCALES,
   FORM_TEMPLATES,
   HONEYPOT_FIELD,
+  TEMPLATE_COPY,
+  templateIn,
 } from "@/features/forms/schemas/forms";
 
 describe("templates and field definitions", () => {
@@ -14,9 +17,28 @@ describe("templates and field definitions", () => {
         expect(template.fields.map((f) => f.key)).toEqual(
           expect.arrayContaining(["name", "email"]),
         );
-        expect(template.consentText?.length ?? 0).toBeGreaterThanOrEqual(10);
       }
     }
+  });
+
+  it("has complete wording in every language for every template", () => {
+    for (const locale of FORM_LOCALES) {
+      for (const template of FORM_TEMPLATES) {
+        const copy = TEMPLATE_COPY[locale][template.id];
+        expect(Object.keys(copy.labels).sort(), `${locale}/${template.id}`).toEqual(
+          template.fields.map((f) => f.key).sort(),
+        );
+        if (template.createsContact) {
+          expect(copy.consentText?.length ?? 0, `${locale}/${template.id}`).toBeGreaterThanOrEqual(
+            10,
+          );
+        } else {
+          expect(copy.consentText).toBeNull();
+        }
+        expect(fieldsSchema.safeParse(templateIn(template.id, locale).fields).success).toBe(true);
+      }
+    }
+    expect(templateIn("contact_request", "ja").fields[0]!.label).toBe("お名前");
   });
 
   it("rejects duplicate keys, reserved names, bad keys, and options on the wrong types", () => {

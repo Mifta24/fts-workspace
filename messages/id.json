@@ -573,11 +573,30 @@
     "consentHint": "Apa yang disetujui pengunjung. Hanya dapat diubah saat formulir masih draf.",
     "fields": "Kolom",
     "required": "wajib",
-    "fieldsFixed": "Kolom berasal dari templat dan belum dapat diubah.",
     "submissionsTitle": "Kiriman",
     "noSubmissions": "Belum ada kiriman.",
     "linkedContact": "terhubung ke kontak CRM",
-    "erased": "Data pribadi dihapus."
+    "erased": "Data pribadi dihapus.",
+    "fieldsDraft": "Tambah, hapus, urutkan ulang, dan ubah kolom selama formulir masih draf. Pengunjung melihat teks persis seperti yang disimpan di sini.",
+    "fieldsLabelsOnly": "Formulir sudah diterbitkan, jadi hanya label yang dapat diubah. Ini menjaga jawaban tersimpan tetap sesuai dengan kolomnya.",
+    "fieldsContactNote": "Formulir yang membuat kontak mempertahankan nama dan email yang wajib diisi.",
+    "fieldLabel": "Label",
+    "fieldType": "Jenis",
+    "fieldRequired": "Wajib diisi",
+    "fieldOptions": "Pilihan (satu per baris)",
+    "types": {
+      "text": "Teks pendek",
+      "email": "Email",
+      "phone": "Telepon",
+      "textarea": "Teks panjang",
+      "select": "Pilihan"
+    },
+    "addField": "Tambah kolom",
+    "removeField": "Hapus",
+    "moveUp": "Naik",
+    "moveDown": "Turun",
+    "saveFields": "Simpan kolom",
+    "fieldNumber": "Kolom {number}"
   },
   "PublicForm": {
     "privacy": "Jawaban Anda dikirim ke organisasi yang menerbitkan formulir ini.",

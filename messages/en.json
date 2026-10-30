@@ -573,11 +573,30 @@
     "consentHint": "What visitors agree to. It can only change while the form is a draft.",
     "fields": "Fields",
     "required": "required",
-    "fieldsFixed": "Fields come from the template and cannot be edited yet.",
     "submissionsTitle": "Submissions",
     "noSubmissions": "No submissions yet.",
     "linkedContact": "linked to a CRM contact",
-    "erased": "Personal data erased."
+    "erased": "Personal data erased.",
+    "fieldsDraft": "Add, remove, reorder and change fields while the form is a draft. Visitors see the wording exactly as saved here.",
+    "fieldsLabelsOnly": "The form has been published, so only the labels can change. This keeps stored answers matching their fields.",
+    "fieldsContactNote": "Forms that create contacts keep a required name and email.",
+    "fieldLabel": "Label",
+    "fieldType": "Type",
+    "fieldRequired": "Required",
+    "fieldOptions": "Options (one per line)",
+    "types": {
+      "text": "Short text",
+      "email": "Email",
+      "phone": "Phone",
+      "textarea": "Long text",
+      "select": "Choice"
+    },
+    "addField": "Add field",
+    "removeField": "Remove",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "saveFields": "Save fields",
+    "fieldNumber": "Field {number}"
   },
   "PublicForm": {
     "privacy": "Your answers are sent to the organization that published this form.",

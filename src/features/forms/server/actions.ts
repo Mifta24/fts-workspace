@@ -11,6 +11,7 @@ import {
   setFormStatus,
   submitPublicForm,
   updateForm,
+  updateFormFields,
 } from "@/features/forms/server/forms-service";
 import { requireWorkspace } from "@/features/organizations/server/require-workspace";
 import { toActionError, type ActionState } from "@/server/services/action-result";
@@ -26,6 +27,8 @@ export async function createFormAction(_p: ActionState, formData: FormData): Pro
   try {
     ({ id } = await createForm({ prisma: db(), correlationId }, context, {
       templateId: formData.get("templateId"),
+      // The copied labels follow the language the owner is using right now.
+      locale: await getLocale(),
       title: formData.get("title"),
       description: formData.get("description"),
       consentText: formData.get("consentText"),
@@ -48,6 +51,32 @@ export async function updateFormAction(_p: ActionState, formData: FormData): Pro
     await updateForm({ prisma: db(), correlationId }, context, text(formData, "id"), input);
   } catch (error) {
     return toActionError(error, correlationId, "form.update");
+  }
+  refresh();
+  return { ok: true };
+}
+
+const MAX_FIELDS_JSON = 30_000;
+
+export async function updateFormFieldsAction(
+  _p: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const context = await requireWorkspace(text(formData, "organizationSlug"), "form:manage");
+  const correlationId = await getCorrelationId();
+  const raw = text(formData, "fields");
+  let fields: unknown = null;
+  if (raw.length <= MAX_FIELDS_JSON) {
+    try {
+      fields = JSON.parse(raw);
+    } catch {
+      fields = null;
+    }
+  }
+  try {
+    await updateFormFields({ prisma: db(), correlationId }, context, text(formData, "id"), fields);
+  } catch (error) {
+    return toActionError(error, correlationId, "form.fields");
   }
   refresh();
   return { ok: true };

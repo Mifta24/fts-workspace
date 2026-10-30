@@ -65,7 +65,7 @@
 | Server action | `setTimeZoneAction` | Choose your own time zone for meeting times | `appointment:read` |
 | Page | `/[locale]/w/[slug]/schedule` | Your meetings for the next 60 days (times in your own time zone, UTC by default) | `appointment:read` |
 
-| Server action | `createFormAction`, `updateFormAction`, `setFormStatusAction` | Form management | `form:manage` |
+| Server action | `createFormAction`, `updateFormAction`, `updateFormFieldsAction`, `setFormStatusAction` | Form management | `form:manage` |
 | Page | `/[locale]/w/[slug]/forms`, `/forms/[formId]` | List, templates, publishing, submissions | `form:manage` |
 | Page + server action (**public, no session**) | `/[locale]/f/[token]`, `submitFormAction` | Anonymous form and submission; unknown/draft/closed tokens give 404 | public (token) |
 

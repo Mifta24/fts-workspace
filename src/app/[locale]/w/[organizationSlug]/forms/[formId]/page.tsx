@@ -5,7 +5,12 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ActionButton } from "@/components/action-button";
-import { setFormStatusAction, updateFormAction } from "@/features/forms/server/actions";
+import { FieldEditor } from "@/features/forms/components/field-editor";
+import {
+  setFormStatusAction,
+  updateFormAction,
+  updateFormFieldsAction,
+} from "@/features/forms/server/actions";
 import { getForm } from "@/features/forms/server/forms-service";
 import { WorkspaceShell } from "@/features/organizations/components/workspace-shell";
 import { requireWorkspace } from "@/features/organizations/server/require-workspace";
@@ -122,15 +127,20 @@ export default async function FormPage({
         <h2 id="fields-title" className="text-lg font-semibold tracking-tight">
           {t("fields")}
         </h2>
-        <ul className="space-y-1 text-sm">
-          {form.fields.map((field) => (
-            <li key={field.key}>
-              {field.label} · {field.type}
-              {field.required ? ` · ${t("required")}` : ""}
-            </li>
-          ))}
-        </ul>
-        <p className="text-xs text-muted-foreground">{t("fieldsFixed")}</p>
+        <p className="text-xs text-muted-foreground">
+          {form.status === "DRAFT" ? t("fieldsDraft") : t("fieldsLabelsOnly")}
+          {form.createsContact ? ` ${t("fieldsContactNote")}` : ""}
+        </p>
+        <ServerForm
+          key={JSON.stringify(form.fields)}
+          action={updateFormFieldsAction}
+          fields={fields}
+          submitLabel={t("saveFields")}
+          resetOnSuccess={false}
+          showSaved
+        >
+          <FieldEditor initialFields={form.fields} labelsOnly={form.status !== "DRAFT"} />
+        </ServerForm>
       </section>
 
       <section aria-labelledby="submissions-title" className="space-y-2">

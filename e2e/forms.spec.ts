@@ -57,3 +57,39 @@ test("only managers see forms, and unknown public links are 404", async ({ page 
   expect((await page.goto("/en/w/acme/forms"))?.status()).toBe(404);
   expect((await page.goto(`/en/f/${"a".repeat(22)}`))?.status()).toBe(404);
 });
+
+test("forms: fields are edited while drafting, templates follow the language, labels only after publishing", async ({
+  page,
+  browser,
+}) => {
+  await signIn(page, "owner@acme.test");
+  await page.goto("/ja/w/acme/forms");
+  await page.locator("#f-template").selectOption("feedback");
+  await page.locator("#f-title").fill("満足度アンケート");
+  await page
+    .locator("form")
+    .filter({ has: page.locator("#f-title") })
+    .getByRole("button")
+    .last()
+    .click();
+  await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
+  // The template's wording was copied in Japanese.
+  await expect(page.getByLabel("ラベル").first()).toHaveValue("満足度を教えてください");
+
+  await page.getByRole("button", { name: "項目を追加" }).click();
+  await page.getByLabel("ラベル").last().fill("ご意見をどうぞ");
+  await page.getByRole("button", { name: "項目を保存" }).click();
+  await expect(page.getByLabel("ラベル")).toHaveCount(3);
+
+  await page.goto(page.url().replace("/ja/", "/en/"));
+  await page.getByRole("button", { name: "Publish" }).click();
+  const publicUrl = (await page.getByTestId("public-url").textContent())!.trim();
+  await expect(page.getByRole("button", { name: "Add field" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Remove" })).toHaveCount(0);
+
+  const visitorContext = await browser.newContext();
+  const visitor = await visitorContext.newPage();
+  await visitor.goto(publicUrl);
+  await expect(visitor.getByLabel(/ご意見をどうぞ/)).toBeVisible();
+  await visitorContext.close();
+});

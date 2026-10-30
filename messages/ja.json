@@ -573,11 +573,30 @@
     "consentHint": "訪問者が同意する内容です。下書きの間のみ変更できます。",
     "fields": "項目",
     "required": "必須",
-    "fieldsFixed": "項目はテンプレート由来で、まだ編集できません。",
     "submissionsTitle": "回答",
     "noSubmissions": "回答はまだありません。",
     "linkedContact": "CRM のコンタクトに紐付け",
-    "erased": "個人情報は消去されました。"
+    "erased": "個人情報は消去されました。",
+    "fieldsDraft": "下書きの間は、項目の追加・削除・並べ替え・変更ができます。訪問者には、ここで保存した文言がそのまま表示されます。",
+    "fieldsLabelsOnly": "公開済みのため、ラベルのみ変更できます。保存済みの回答と項目の対応を保つためです。",
+    "fieldsContactNote": "連絡先を作成するフォームでは、必須の氏名とメールアドレスが維持されます。",
+    "fieldLabel": "ラベル",
+    "fieldType": "種類",
+    "fieldRequired": "必須",
+    "fieldOptions": "選択肢（1行に1つ）",
+    "types": {
+      "text": "短いテキスト",
+      "email": "メール",
+      "phone": "電話",
+      "textarea": "長いテキスト",
+      "select": "選択式"
+    },
+    "addField": "項目を追加",
+    "removeField": "削除",
+    "moveUp": "上へ",
+    "moveDown": "下へ",
+    "saveFields": "項目を保存",
+    "fieldNumber": "項目 {number}"
   },
   "PublicForm": {
     "privacy": "回答は、このフォームを公開した組織に送信されます。",
