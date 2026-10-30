@@ -57,6 +57,8 @@
     "role": "あなたのロール：{role}",
     "switch": "ワークスペースを切り替え",
     "navLabel": "メイン",
+    "showAll": "すべての機能を表示",
+    "showEssentials": "主要な機能のみ表示",
     "projects": "プロジェクト",
     "goals": "ゴール",
     "tasks": "タスク",

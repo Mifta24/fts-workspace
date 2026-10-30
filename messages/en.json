@@ -57,6 +57,8 @@
     "role": "Your role: {role}",
     "switch": "Switch workspace",
     "navLabel": "Primary",
+    "showAll": "Show all features",
+    "showEssentials": "Show essentials only",
     "projects": "Projects",
     "goals": "Goals",
     "tasks": "Tasks",

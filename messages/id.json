@@ -57,6 +57,8 @@
     "role": "Peran Anda: {role}",
     "switch": "Ganti workspace",
     "navLabel": "Utama",
+    "showAll": "Tampilkan semua fitur",
+    "showEssentials": "Tampilkan yang penting saja",
     "projects": "Proyek",
     "goals": "Tujuan",
     "tasks": "Tugas",

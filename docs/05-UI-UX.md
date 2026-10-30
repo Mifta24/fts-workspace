@@ -6,6 +6,7 @@ Professional, calm, responsive, efficient for power users; original identity rat
 ## Navigation proposal
 - Sidebar: Overview, Goals, My Tasks, Projects, Chat, Members, Challenges, Rankings, Explore, Settings.
 - Explore hub groups Knowledge, Files, AI, CRM, Scheduling, Analytics, Workflows and future modules.
+- **Simple and full views (as built).** The workspace sidebar starts in a *simple* view for everyone: Overview, Goals, Tasks, Projects, Chat, Schedule, Inbox and Members. A button at the bottom of the sidebar ("Show all features") adds the specialist pages (Progress, Files, Knowledge, Assistant, CRM, Forms, Insights, Plan) and flips to "Show essentials only". The choice is a per-browser preference kept in the `fts_nav_mode` cookie (no database change; anything but `full` means simple), read on the server so the first paint is right. It is **only a view preference**: permissions still decide which entries exist (a viewer never gets Plan, in either view), every page still authorizes on the server, a page that is not listed still opens from a link, and the page you are on always stays in the menu. Not synced across devices.
 - Topbar: organization switcher, global search, notifications, create action, profile menu.
 - Breadcrumbs on nested pages; persistent accessible primary navigation.
 
