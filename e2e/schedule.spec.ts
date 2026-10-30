@@ -77,3 +77,40 @@ test("schedule: times are entered and shown in the chosen time zone, with a remi
   await page.getByRole("button", { name: "Cancel meeting" }).click();
   await expect(page.getByText("Tokyo sync")).toHaveCount(0);
 });
+
+test("schedule: a private calendar link works without signing in, until it is turned off", async ({
+  page,
+  browser,
+}) => {
+  await signIn(page, "owner@globex.test");
+  await page.goto("/en/w/globex/schedule");
+  await page.getByLabel("Title", { exact: true }).fill("Feed check");
+  await page.getByLabel("Start (UTC)", { exact: true }).fill(local(6, 11));
+  await page.getByRole("button", { name: "Schedule meeting" }).click();
+  await expect(page.getByText("Feed check")).toBeVisible();
+
+  await page.getByRole("button", { name: "Create link" }).click();
+  const link = await page.getByLabel("Your private link").inputValue();
+  expect(link).toMatch(/\/api\/calendar\/[A-Za-z0-9_-]{43}\.ics$/);
+  await expect(page.getByText(/shown only once/)).toBeVisible();
+
+  // A browser with no session reads the feed with the link alone.
+  const anonymous = await browser.newContext();
+  const feed = await anonymous.request.get(link);
+  expect(feed.status()).toBe(200);
+  expect(feed.headers()["content-type"]).toContain("text/calendar");
+  expect(await feed.text()).toContain("SUMMARY:Feed check");
+
+  // After a reload the link cannot be read back; only its existence is shown.
+  await page.reload();
+  await expect(page.getByLabel("Your private link")).toHaveCount(0);
+  await expect(page.getByText(/A link has been active since/)).toBeVisible();
+
+  await page.getByRole("button", { name: "Turn off" }).click();
+  await expect(page.getByText(/A link has been active since/)).toHaveCount(0);
+  expect((await anonymous.request.get(link)).status()).toBe(404);
+  await anonymous.close();
+
+  await page.getByRole("button", { name: "Cancel meeting" }).click();
+  await expect(page.getByText("Feed check")).toHaveCount(0);
+});

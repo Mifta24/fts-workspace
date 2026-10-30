@@ -4,7 +4,12 @@ import { logger } from "@/lib/logger";
 
 export type ActionError =
   "invalid" | "forbidden" | "notFound" | "conflict" | "unprocessable" | "rateLimited" | "generic";
-export type ActionState = { error?: ActionError; ok?: boolean };
+export type ActionState = {
+  error?: ActionError;
+  ok?: boolean;
+  /** A secret link that is shown once, right after it was created. */
+  link?: string;
+};
 
 const BY_CODE: Partial<Record<AppErrorCode, ActionError>> = {
   INVALID_INPUT: "invalid",

@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { getCorrelationId } from "@/lib/correlation";
 import { db } from "@/lib/db";
+import { env } from "@/lib/env";
+import { createFeed, revokeFeed } from "@/features/scheduling/server/calendar-feed";
 import { requireWorkspace } from "@/features/organizations/server/require-workspace";
 import {
   cancelAppointment,
@@ -95,6 +97,33 @@ export async function setTimeZoneAction(_p: ActionState, formData: FormData): Pr
     await setTimeZone({ prisma: db(), correlationId }, context, formData.get("timeZone"));
   } catch (error) {
     return toActionError(error, correlationId, "appointment.timezone");
+  }
+  refresh();
+  return { ok: true };
+}
+
+export async function createFeedAction(_p: ActionState, formData: FormData): Promise<ActionState> {
+  const context = await requireWorkspace(text(formData, "organizationSlug"), "appointment:read");
+  const correlationId = await getCorrelationId();
+  try {
+    const { token } = await createFeed({ prisma: db(), correlationId }, context);
+    refresh();
+    return {
+      ok: true,
+      link: `${env().BETTER_AUTH_URL.replace(/\/+$/, "")}/api/calendar/${token}.ics`,
+    };
+  } catch (error) {
+    return toActionError(error, correlationId, "calendar.feed.create");
+  }
+}
+
+export async function revokeFeedAction(_p: ActionState, formData: FormData): Promise<ActionState> {
+  const context = await requireWorkspace(text(formData, "organizationSlug"), "appointment:read");
+  const correlationId = await getCorrelationId();
+  try {
+    await revokeFeed({ prisma: db(), correlationId }, context);
+  } catch (error) {
+    return toActionError(error, correlationId, "calendar.feed.revoke");
   }
   refresh();
   return { ok: true };

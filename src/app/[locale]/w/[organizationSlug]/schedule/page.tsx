@@ -16,7 +16,9 @@ import {
   respondAction,
   setTimeZoneAction,
 } from "@/features/scheduling/server/actions";
+import { CalendarFeedPanel } from "@/features/scheduling/components/calendar-feed-panel";
 import { REMINDER_CHOICES } from "@/features/scheduling/schemas/scheduling";
+import { getFeedStatus } from "@/features/scheduling/server/calendar-feed";
 import { getTimeZone, listAppointments } from "@/features/scheduling/server/scheduling-service";
 import { db } from "@/lib/db";
 import { roleHasPermission } from "@/lib/permissions/matrix";
@@ -32,12 +34,13 @@ export default async function SchedulePage({
   const deps = { prisma: db() };
   const canWrite = roleHasPermission(context.role, "appointment:write");
   const canSeeContacts = roleHasPermission(context.role, "crm:read");
-  const [t, appointments, members, contacts, timeZone] = await Promise.all([
+  const [t, appointments, members, contacts, timeZone, feed] = await Promise.all([
     getTranslations("Schedule"),
     listAppointments(deps, context),
     listMembers(deps, context),
     canWrite && canSeeContacts ? listContacts(deps, context) : Promise.resolve([]),
     getTimeZone(deps, context),
+    getFeedStatus(deps, context),
   ]);
 
   return (
@@ -225,6 +228,12 @@ export default async function SchedulePage({
           </ServerForm>
         </Card>
       )}
+      <CalendarFeedPanel
+        organizationSlug={organizationSlug}
+        enabled={feed.enabled}
+        createdOn={feed.createdAt ? formatInZone(feed.createdAt, timeZone).slice(0, 10) : null}
+        lastUsedOn={feed.lastUsedAt ? formatInZone(feed.lastUsedAt, timeZone) : null}
+      />
     </WorkspaceShell>
   );
 }

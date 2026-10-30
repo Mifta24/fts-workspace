@@ -558,7 +558,17 @@
     "saveZone": "Simpan zona waktu",
     "reminderLabel": "Pengingat",
     "reminderNone": "Tanpa pengingat",
-    "reminderBefore": "{count, plural, =1440 {1 hari sebelumnya} other {# menit sebelumnya}}"
+    "reminderBefore": "{count, plural, =1440 {1 hari sebelumnya} other {# menit sebelumnya}}",
+    "feedTitle": "Langganan kalender",
+    "feedIntro": "Langganan rapat Anda dari Google Calendar, Apple Calendar, atau Outlook dengan tautan pribadi. Tautan ini hanya-baca dan memuat rapat yang Anda hadiri, termasuk judul, tempat, dan catatan. Siapa pun yang memiliki tautan dapat membacanya, jadi jangan bagikan.",
+    "feedCreate": "Buat tautan",
+    "feedReplace": "Buat tautan baru",
+    "feedRevoke": "Matikan",
+    "feedLink": "Tautan pribadi Anda",
+    "feedShownOnce": "Salin sekarang: tautan hanya ditampilkan sekali. Membuat tautan baru menonaktifkan tautan lama.",
+    "feedActive": "Sebuah tautan aktif sejak {created}.",
+    "feedUsed": "Terakhir dipakai {used}.",
+    "feedNeverUsed": "Belum pernah dipakai."
   },
   "Forms": {
     "title": "Formulir",

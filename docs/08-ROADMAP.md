@@ -41,7 +41,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 
 ## Phase 4 — Business
 - [x] CRM contacts and deal stages (slice 13: contacts, consent history, erasure, deals, activity timeline, pipeline report; slice 19: customer journey stages with append-only history)
-- [~] Scheduling (slice 14: meetings with attendees, conflict protection, responses, notifications; slice 16: reminders from the worker and per-user time zones; **no external calendar sync and no public booking pages**)
+- [~] Scheduling (slice 14: meetings with attendees, conflict protection, responses, notifications; slice 16: reminders from the worker and per-user time zones; slice 20: read-only calendar subscription link (.ics); **no two-way calendar sync and no public booking pages**)
 - [~] Templates/forms (slice 15: template-based forms, public submission links, consent capture, submissions; slice 17: editable fields (labels only after publishing) and templates in en/ja/id; **no CAPTCHA, no file uploads**) and the pipeline report; slice 18: insights page (contacts and consent, forms, own meetings; counts for 7/30/90 days against the previous period)
 **Exit gate:** privacy controls, consent pathways, and reliable reporting.
 

@@ -558,7 +558,17 @@
     "saveZone": "Save time zone",
     "reminderLabel": "Reminder",
     "reminderNone": "No reminder",
-    "reminderBefore": "{count, plural, =1440 {1 day before} other {# min before}}"
+    "reminderBefore": "{count, plural, =1440 {1 day before} other {# min before}}",
+    "feedTitle": "Calendar subscription",
+    "feedIntro": "Subscribe to your meetings from Google Calendar, Apple Calendar or Outlook with a private link. It is read-only and shows the meetings you attend, including titles, places and notes. Anyone who has the link can read them, so share it with nobody.",
+    "feedCreate": "Create link",
+    "feedReplace": "Create a new link",
+    "feedRevoke": "Turn off",
+    "feedLink": "Your private link",
+    "feedShownOnce": "Copy it now: it is shown only once. Creating a new link stops the old one from working.",
+    "feedActive": "A link has been active since {created}.",
+    "feedUsed": "Last used {used}.",
+    "feedNeverUsed": "It has not been used yet."
   },
   "Forms": {
     "title": "Forms",

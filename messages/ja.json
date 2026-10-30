@@ -558,7 +558,17 @@
     "saveZone": "タイムゾーンを保存",
     "reminderLabel": "リマインダー",
     "reminderNone": "リマインダーなし",
-    "reminderBefore": "{count, plural, =1440 {1 日前} other {#分前}}"
+    "reminderBefore": "{count, plural, =1440 {1 日前} other {#分前}}",
+    "feedTitle": "カレンダー購読",
+    "feedIntro": "専用リンクで、Google カレンダー・Apple カレンダー・Outlook から会議を購読できます。読み取り専用で、参加する会議のタイトル・場所・メモが含まれます。リンクを知っている人は誰でも読めるため、他の人と共有しないでください。",
+    "feedCreate": "リンクを作成",
+    "feedReplace": "新しいリンクを作成",
+    "feedRevoke": "無効にする",
+    "feedLink": "専用リンク",
+    "feedShownOnce": "今だけ表示されます。今すぐコピーしてください。新しいリンクを作成すると、古いリンクは使えなくなります。",
+    "feedActive": "{created} からリンクが有効です。",
+    "feedUsed": "最終利用: {used}。",
+    "feedNeverUsed": "まだ使用されていません。"
   },
   "Forms": {
     "title": "フォーム",

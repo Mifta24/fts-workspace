@@ -62,6 +62,8 @@
 
 | Server action | `createAppointmentAction`, `rescheduleAction`, `cancelAction` | Meetings (organizer) | `appointment:write` |
 | Server action | `respondAction` | Accept / decline an invitation | attendee |
+| Server action | `createFeedAction`, `revokeFeedAction` | Create (and replace) or turn off the caller's calendar subscription link; the link is returned once | `appointment:read` |
+| Route (**public, no session**) | `GET /api/calendar/<token>[.ics]` | Read-only iCalendar feed of the token owner's meetings (`text/calendar`, `private, no-store`); unknown, revoked and malformed tokens give the same empty 404 | secret token |
 | Server action | `setTimeZoneAction` | Choose your own time zone for meeting times | `appointment:read` |
 | Page | `/[locale]/w/[slug]/schedule` | Your meetings for the next 60 days (times in your own time zone, UTC by default) | `appointment:read` |
 

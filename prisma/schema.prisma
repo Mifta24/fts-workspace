@@ -135,6 +135,7 @@ model Organization {
   crmActivities        CrmActivity[]
   consentEvents        ConsentEvent[]
   contactStageChanges  ContactStageChange[]
+  calendarFeeds        CalendarFeed[]
   appointments         Appointment[]
   appointmentAttendees AppointmentAttendee[]
   forms                Form[]
@@ -881,6 +882,21 @@ model Appointment {
   @@unique([id, organizationId])
   @@index([organizationId, startsAt])
   @@map("appointments")
+}
+
+/// A secret subscription link to one person's meetings in one organization. Only a hash of the
+/// token is stored, so the link cannot be read back; creating a new one replaces the old.
+model CalendarFeed {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String       @db.Uuid
+  tokenHash      String       @unique
+  createdAt      DateTime     @default(now())
+  lastUsedAt     DateTime?
+
+  @@unique([organizationId, userId])
+  @@map("calendar_feeds")
 }
 
 model AppointmentAttendee {
