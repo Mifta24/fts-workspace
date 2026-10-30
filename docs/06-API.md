@@ -10,7 +10,7 @@
 ## Implemented in Phase 0
 | Method | Path | Purpose | Permission |
 | --- | --- | --- | --- |
-| GET/POST | `/api/auth/*` | Better Auth (sign-up/in/out, email verification, password reset, session) | public; Better Auth default rate limiting in production |
+| GET/POST | `/api/auth/*` | Better Auth (sign-up/in/out, email verification, password reset, session) | public; Better Auth rate limiting in production, counters shared through the database (ADR-019) |
 | GET | `/api/health` | Liveness + database readiness (`200` ok, `503` degraded) | public, no internals exposed |
 | Server action | `createOrganizationAction` | Create organization; creator becomes `OWNER` | authenticated |
 

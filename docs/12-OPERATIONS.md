@@ -68,7 +68,8 @@ Alert delivery (paging) is **not set up**. Choosing a vendor and wiring these th
 ## Deploying and rolling back
 - Apply migrations with `pnpm db:deploy` before starting the new version. Each migration notes its manual rollback SQL; most are additive, so rolling the application back to the previous version with the new schema in place is safe.
 - Rolling back the billing migration (`20261030130000_billing`) means dropping `subscriptions` and `organizations.suspendedAt`; do it only after rolling the application back first.
-- The app refuses to start in production with `EMAIL_TRANSPORT=log`. There is no real email transport yet, so **a production start is not possible until one is added** (a launch blocker, listed in `13-PRODUCTION-READINESS.md`).
+- The app refuses to start in production with `EMAIL_TRANSPORT=log`. Set `EMAIL_TRANSPORT=smtp`, `SMTP_URL` (for example `smtps://user:password@smtp.example.com:465`) and `EMAIL_FROM`. The SMTP URL carries a password: keep it in the secret store, never in the repository, and rotate it at the provider if it leaks (restart the app after changing it). The provider account, sending domain (SPF, DKIM, DMARC) and a real end-to-end test are still launch items (`13-PRODUCTION-READINESS.md`).
+- Migration `20261030160000_auth_rate_limits` adds the `rate_limits` table (rollback: `DROP TABLE "rate_limits"`).
 
 ## Environment variables added in Phase 5
 `BILLING_ENABLED` (default `false`), `BILLING_TRIAL_DAYS` (default 14, 1–90), `PLATFORM_ADMIN_EMAILS` (comma-separated; empty means nobody can open `/admin`).

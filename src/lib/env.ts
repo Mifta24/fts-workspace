@@ -8,7 +8,10 @@ const envSchema = z
     DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
     BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET must be at least 32 characters"),
     BETTER_AUTH_URL: z.url(),
-    EMAIL_TRANSPORT: z.enum(["log"]).default("log"),
+    // "log" prints emails to the server log (development and tests only). "smtp" sends them through
+    // any SMTP provider named by SMTP_URL, for example smtps://user:password@smtp.example.com:465.
+    EMAIL_TRANSPORT: z.enum(["log", "smtp"]).default("log"),
+    SMTP_URL: z.string().min(1).optional(),
     EMAIL_FROM: z.string().min(1).default("FTS Workspace <no-reply@localhost>"),
     // Optional OpenAI-compatible chat endpoint (OpenRouter or a local LM Studio).
     // AI planning is disabled unless AI_BASE_URL and AI_MODEL are both set.
@@ -62,6 +65,15 @@ const envSchema = z
     message: "TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY must be set together",
     path: ["TURNSTILE_SITE_KEY"],
   })
+  .refine(
+    (value) =>
+      value.EMAIL_TRANSPORT !== "smtp" ||
+      (value.SMTP_URL !== undefined && /^smtps?:\/\/[^\s]+$/.test(value.SMTP_URL)),
+    {
+      message: "SMTP_URL (smtp:// or smtps://) is required when EMAIL_TRANSPORT=smtp",
+      path: ["SMTP_URL"],
+    },
+  )
   .refine((value) => Boolean(value.GOOGLE_CLIENT_ID) === Boolean(value.GOOGLE_CLIENT_SECRET), {
     message: "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set together",
     path: ["GOOGLE_CLIENT_ID"],

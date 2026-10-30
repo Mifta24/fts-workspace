@@ -12,7 +12,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] Organization model, membership, authorization service
 - [x] Docker dev environment, secrets configuration, observability baseline (structured logs, health check, correlation id, audit log)
 **Exit gate:** login and tenant isolation integration tests pass; CI reproducible. Verified locally on 2026-10-28: lint, format, typecheck, 32 tests, build. The CI workflow has not run yet.
-**Phase 0 notes:** a production email provider, error monitoring/tracing vendor, and rate-limit storage are not chosen yet; the Better Auth rate limiter uses its default (in-memory, production only).
+**Phase 0 notes:** a production email provider and an error monitoring/tracing vendor are not chosen yet. Since Phase 5 an SMTP transport exists (any provider with SMTP) and the auth rate limiter keeps its counters in the database (ADR-019), still production only.
 
 ## Phase 1 — Productivity MVP
 - [x] Project and goal CRUD with nested tree (slices 1 and 5: create, edit and archive in the UI; milestones in slice 6)

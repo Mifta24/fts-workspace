@@ -981,6 +981,17 @@ model CalendarConnection {
   @@map("calendar_connections")
 }
 
+/// Sign-in and other auth request counters (Better Auth `rateLimit` with database storage), shared
+/// by every app instance. Rows are small, keyed by client and path, and cleaned up by Better Auth.
+model RateLimit {
+  id          String @id @default(uuid(7)) @db.Uuid
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+
+  @@map("rate_limits")
+}
+
 /// A fixed, built-in automation that one organization switched on. Rules are chosen from a catalog
 /// in code (no rule text is stored), they are off until someone turns them on, and a row only
 /// records the choice. See ADR-018.

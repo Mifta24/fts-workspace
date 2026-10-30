@@ -31,19 +31,19 @@ Method: automated checks above, then a read-through of the Phase 5 changes again
 | 3 | No Content-Security-Policy or HSTS. | **Partly fixed**: `frame-ancestors`, `base-uri`, `form-action`, `object-src` and (production) HSTS added; Turnstile still works. |
 | 4 | No `script-src` policy (needs per-request nonces). | **Open.** Design before launch. |
 | 5 | Operator accounts have no MFA; one stolen operator session can suspend any workspace or change any plan (no member content is reachable). | **Open, accepted for a pilot** with a short allow-list; MFA is a launch item. |
-| 6 | Authentication rate limits are per process and in memory (Better Auth default). | **Open** (known since Phase 0); needs shared storage once more than one instance runs. |
+| 6 | Authentication rate limits are per process and in memory (Better Auth default). | **Fixed** (ADR-019): counters are kept in the database (`rate_limits`), so every instance shares them; tested with two separate Better Auth instances. Still on only in production. |
 | 7 | Entitlement checks cost one extra query per guarded call. | Accepted; no caching, so a plan change takes effect immediately. |
 | 8 | Public forms and booking pages still rely on Turnstile (optional) plus volume caps. | **Open**: enable Turnstile in production. |
 
 Not done: an independent penetration test, a threat model for the operator surface beyond the notes in `07-SECURITY.md`, secret scanning and the dependency audit as CI steps (added to the workflow, not yet run there), RLS (OD-02).
 
 ## Launch blockers (must be resolved before real customers)
-1. **Email provider.** The application refuses to start in production with the log transport, and there is no other. Sign-up verification, password reset and invitations cannot work until one is added.
+1. **Email provider.** The application refuses to start in production with the log transport. An SMTP transport now exists (`EMAIL_TRANSPORT=smtp` and `SMTP_URL`, ADR-019), so any provider that offers SMTP works, but **no provider is chosen or tested for real**: someone must pick one, create the account, verify the sending domain (SPF, DKIM, DMARC), set `EMAIL_FROM`, and send a real verification, reset and invitation email end to end before launch. Until then sign-up verification, password reset and invitations cannot work in production.
 2. **Hosting and region (OD-01),** file storage (OD-04: the local-disk adapter is not a production store) and the database service with real backups.
 3. **Backups on the real stack:** a restore from an actual hot backup into a clean environment, measured recovery time and data-loss window written down, retention set (`12-OPERATIONS.md`).
 4. **Monitoring and alert delivery:** a vendor, the thresholds in `12-OPERATIONS.md` wired to a pager, error tracking, and a named on-call person.
 5. **Load test on a production-like deployment** (built app, real database service, realistic data volume), including authenticated flows. The current HTTP test is anonymous and was run against a development server.
-6. **MFA** (at least for operators and workspace owners) and shared rate-limit storage.
+6. **MFA** (at least for operators and workspace owners). Shared rate-limit storage is done (ADR-019).
 7. **AI provider and data residency (OD-08)** decided and recorded before `AI_BASE_URL` is set anywhere real.
 8. **Legal and privacy:** privacy policy, terms, data processing terms, sub-processor list (hosting, email, Cloudflare Turnstile, AI provider, Google when calendar connection is on; the same pages also serve as the home page, privacy policy and terms that Google's OAuth consent screen requires before the app can leave Testing), a data-retention and deletion process for whole workspaces, and the breach-notification contact named in `12-OPERATIONS.md`.
 9. **Pricing and billing (OD-05).** Plans, limits and the operator console exist, but there are no prices, no checkout and no invoices. Charging customers needs a payment provider, tax handling and webhook handling with idempotency (ADR-015). A pilot can run without this.

@@ -105,11 +105,13 @@ export async function createInvitation(
     throw error;
   }
 
+  // The invitation is saved either way. A failed delivery is logged by `sendEmail`; the admin can
+  // revoke the invitation and send it again, so it must not fail the request after the fact.
   await sendEmail({
     to: email,
     subject: `You are invited to ${context.organization.name} on FTS Workspace`,
     text: `You have been invited to join "${context.organization.name}" as ${role.toLowerCase()}.\nSign in with ${email} and open this link within 7 days:\n${options.baseUrl.replace(/\/+$/, "")}/${options.locale}/invite/${token}`,
-  });
+  }).catch(() => undefined);
   return invitation;
 }
 
