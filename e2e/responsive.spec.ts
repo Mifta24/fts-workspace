@@ -10,6 +10,7 @@ const PAGES = [
   "/en/w/acme/projects",
   "/en/w/acme/goals",
   "/en/w/acme/tasks",
+  "/en/w/acme/billing",
 ];
 
 test("pages fit a 375px-wide screen without horizontal page scroll", async ({ page }) => {
@@ -22,6 +23,16 @@ test("pages fit a 375px-wide screen without horizontal page scroll", async ({ pa
     );
     expect(overflow, `${path} overflows by ${overflow}px`).toBeLessThanOrEqual(0);
   }
+});
+
+test("the operator console fits a phone too", async ({ page }) => {
+  await signIn(page, "operator@platform.test");
+  await page.goto("/en/admin");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
 });
 
 test("workspace navigation is usable on a phone", async ({ page }) => {

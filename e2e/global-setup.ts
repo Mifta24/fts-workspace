@@ -62,6 +62,8 @@ export default async function globalSetup() {
     const globexOwner = await user("owner@globex.test", "Globex Owner");
     // Has an account but no membership yet; joins acme through an invitation in E2E.
     await user("invitee@acme.test", "Invited Person");
+    // Listed in PLATFORM_ADMIN_EMAILS (playwright.config.ts): the only operator, in no workspace.
+    await user("operator@platform.test", "Platform Operator");
     await organization("acme", [
       [acmeOwner.id, "OWNER"],
       [acmeViewer.id, "VIEWER"],

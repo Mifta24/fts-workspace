@@ -107,7 +107,7 @@ export async function readFeed(
   const { organizationId, userId } = feed;
 
   const member = await prisma.member.findFirst({
-    where: { organizationId, userId, status: "ACTIVE" },
+    where: { organizationId, userId, status: "ACTIVE", organization: { suspendedAt: null } },
     select: { id: true, organization: { select: { name: true } } },
   });
   if (!member) return null;

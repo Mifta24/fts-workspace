@@ -54,6 +54,11 @@ export async function claimNextJob(prisma: PrismaClient, now: Date): Promise<Cla
     WHERE "id" = (
       SELECT "id" FROM "jobs"
       WHERE "status" = 'QUEUED' AND "runAt" <= ${now}
+        -- A suspended workspace's jobs wait (reminders, indexing) and run again once it is restored.
+        AND NOT EXISTS (
+          SELECT 1 FROM "organizations" o
+          WHERE o."id" = "jobs"."organizationId" AND o."suspendedAt" IS NOT NULL
+        )
       ORDER BY "runAt", "id"
       FOR UPDATE SKIP LOCKED
       LIMIT 1

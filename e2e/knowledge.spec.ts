@@ -43,6 +43,8 @@ test("knowledge: a file is indexed by the worker and found only by people who ma
   await page.getByLabel("Who can see it").selectOption({ label: "Everyone in the workspace" });
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByLabel("Who can see it")).toHaveValue("ORGANIZATION");
+  // The form is re-created once the server answers; changing the select before that would be undone.
+  await page.waitForLoadState("networkidle");
   await viewer.goto("/en/w/acme/knowledge?q=quokka");
   await expect(viewer.getByText("The quokka protocol applies to every new hire.")).toBeVisible();
 

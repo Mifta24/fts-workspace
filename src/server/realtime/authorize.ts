@@ -14,7 +14,11 @@ export async function resolveActiveOrganization(
   organizationSlug: string,
 ): Promise<string | null> {
   const membership = await prisma.member.findFirst({
-    where: { userId, status: "ACTIVE", organization: { slug: organizationSlug.toLowerCase() } },
+    where: {
+      userId,
+      status: "ACTIVE",
+      organization: { slug: organizationSlug.toLowerCase(), suspendedAt: null },
+    },
     select: { organizationId: true },
   });
   return membership?.organizationId ?? null;

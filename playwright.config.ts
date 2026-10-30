@@ -44,6 +44,7 @@ export default defineConfig({
         REALTIME_PUBLIC_URL: `http://localhost:${GATEWAY_PORT}`,
         REALTIME_PUBLISH_SECRET: GATEWAY_SECRET,
         STORAGE_DIR: ".data/files-e2e",
+        PLATFORM_ADMIN_EMAILS: "operator@platform.test",
         // Opt-in captcha run (needs internet): E2E_CAPTCHA=pass or fail, with Cloudflare's
         // documented dummy keys. Off by default, so the normal suite never calls Cloudflare.
         ...(process.env.E2E_CAPTCHA
