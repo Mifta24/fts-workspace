@@ -321,7 +321,8 @@
       "DIRECT_MESSAGE": "{actor} sent you a message",
       "APPOINTMENT_INVITED": "{actor} invited you to “{title}”",
       "APPOINTMENT_UPDATED": "{actor} changed the time of “{title}”",
-      "APPOINTMENT_CANCELLED": "{actor} cancelled “{title}”"
+      "APPOINTMENT_CANCELLED": "{actor} cancelled “{title}”",
+      "APPOINTMENT_REMINDER": "“{title}” starts soon"
     },
     "anItem": "Someone"
   },
@@ -508,7 +509,7 @@
   },
   "Schedule": {
     "title": "Schedule",
-    "intro": "Your meetings for the next 60 days. Times are shown and entered in UTC. Nobody can be double-booked: someone who has not declined counts as busy.",
+    "intro": "Your meetings for the next 60 days. Times are shown and entered in your time zone ({zone}). Nobody can be double-booked: someone who has not declined counts as busy.",
     "empty": "Nothing scheduled. Create a meeting below.",
     "emptyReadOnly": "You have no meetings.",
     "minutes": "{count} min",
@@ -523,16 +524,21 @@
     "decline": "Decline",
     "cancel": "Cancel meeting",
     "reschedule": "Reschedule",
-    "newStart": "New start (UTC)",
+    "newStart": "New start ({zone})",
     "createTitle": "New meeting",
     "create": "Schedule meeting",
     "titleLabel": "Title",
-    "startLabel": "Start (UTC)",
+    "startLabel": "Start ({zone})",
     "durationLabel": "Duration",
     "locationLabel": "Location or link",
     "contactLabel": "About contact",
     "none": "None",
-    "attendeesLabel": "Invite"
+    "attendeesLabel": "Invite",
+    "zoneLabel": "Your time zone",
+    "saveZone": "Save time zone",
+    "reminderLabel": "Reminder",
+    "reminderNone": "No reminder",
+    "reminderBefore": "{count, plural, =1440 {1 day before} other {# min before}}"
   },
   "Forms": {
     "title": "Forms",

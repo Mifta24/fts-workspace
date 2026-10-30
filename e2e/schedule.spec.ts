@@ -53,3 +53,27 @@ test("another tenant cannot reach acme's schedule", async ({ page }) => {
   await signIn(page, "owner@globex.test");
   expect((await page.goto("/en/w/acme/schedule"))?.status()).toBe(404);
 });
+
+test("schedule: times are entered and shown in the chosen time zone, with a reminder choice", async ({
+  page,
+}) => {
+  await signIn(page, "owner@globex.test");
+  await page.goto("/en/w/globex/schedule");
+  await page.getByLabel("Your time zone").selectOption("Asia/Tokyo");
+  await page.getByRole("button", { name: "Save time zone" }).click();
+  await expect(page.getByLabel("Start (Asia/Tokyo)", { exact: true })).toBeVisible();
+
+  const day = local(5, 0).slice(0, 10);
+  await page.getByLabel("Title", { exact: true }).fill("Tokyo sync");
+  await page.getByLabel("Start (Asia/Tokyo)", { exact: true }).fill(`${day}T09:00`);
+  await page.getByLabel("Reminder", { exact: true }).selectOption("30");
+  await page.getByRole("button", { name: "Schedule meeting" }).click();
+  await expect(page.getByText(`${day} 09:00 (Asia/Tokyo)`)).toBeVisible();
+
+  // Back to UTC the same meeting reads nine hours earlier.
+  await page.getByLabel("Your time zone").selectOption("UTC");
+  await page.getByRole("button", { name: "Save time zone" }).click();
+  await expect(page.getByText(`${day} 00:00 (UTC)`)).toBeVisible();
+  await page.getByRole("button", { name: "Cancel meeting" }).click();
+  await expect(page.getByText("Tokyo sync")).toHaveCount(0);
+});

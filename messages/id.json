@@ -321,7 +321,8 @@
       "DIRECT_MESSAGE": "{actor} mengirim pesan kepada Anda",
       "APPOINTMENT_INVITED": "{actor} mengundang Anda ke “{title}”",
       "APPOINTMENT_UPDATED": "{actor} mengubah waktu “{title}”",
-      "APPOINTMENT_CANCELLED": "{actor} membatalkan “{title}”"
+      "APPOINTMENT_CANCELLED": "{actor} membatalkan “{title}”",
+      "APPOINTMENT_REMINDER": "“{title}” akan segera dimulai"
     },
     "anItem": "Sesuatu"
   },
@@ -508,7 +509,7 @@
   },
   "Schedule": {
     "title": "Jadwal",
-    "intro": "Rapat Anda untuk 60 hari ke depan. Waktu ditampilkan dan dimasukkan dalam UTC. Tidak ada yang bisa dipesan ganda: orang yang belum menolak dianggap sibuk.",
+    "intro": "Rapat Anda untuk 60 hari ke depan. Waktu ditampilkan dan dimasukkan dalam zona waktu Anda ({zone}). Tidak ada yang bisa dipesan ganda: orang yang belum menolak dianggap sibuk.",
     "empty": "Tidak ada jadwal. Buat rapat di bawah.",
     "emptyReadOnly": "Anda tidak punya rapat.",
     "minutes": "{count} menit",
@@ -523,16 +524,21 @@
     "decline": "Tolak",
     "cancel": "Batalkan rapat",
     "reschedule": "Jadwalkan ulang",
-    "newStart": "Mulai baru (UTC)",
+    "newStart": "Mulai baru ({zone})",
     "createTitle": "Rapat baru",
     "create": "Jadwalkan rapat",
     "titleLabel": "Judul",
-    "startLabel": "Mulai (UTC)",
+    "startLabel": "Mulai ({zone})",
     "durationLabel": "Durasi",
     "locationLabel": "Lokasi atau tautan",
     "contactLabel": "Tentang kontak",
     "none": "Tidak ada",
-    "attendeesLabel": "Undang"
+    "attendeesLabel": "Undang",
+    "zoneLabel": "Zona waktu Anda",
+    "saveZone": "Simpan zona waktu",
+    "reminderLabel": "Pengingat",
+    "reminderNone": "Tanpa pengingat",
+    "reminderBefore": "{count, plural, =1440 {1 hari sebelumnya} other {# menit sebelumnya}}"
   },
   "Forms": {
     "title": "Formulir",

@@ -14,9 +14,13 @@ import {
   appointmentIdSchema,
   createAppointmentSchema,
   MAX_HORIZON_DAYS,
+  REMINDER_JOB,
   rescheduleSchema,
   responseSchema,
+  timeZoneSchema,
 } from "@/features/scheduling/schemas/scheduling";
+import { DEFAULT_TIME_ZONE, isValidTimeZone, zonedToUtc } from "@/lib/time-zone";
+import { enqueueJob } from "@/server/jobs/queue";
 import { recordAuditEvent } from "@/server/services/audit";
 import { assertActiveMember, lockTree } from "@/server/services/tenant-refs";
 
@@ -33,6 +37,8 @@ export type AppointmentView = {
   location: string | null;
   startsAt: Date;
   endsAt: Date;
+  /** Minutes before the start when attendees are reminded; 0 means no reminder. */
+  reminderMinutes: number;
   organizerId: string;
   organizerName: string | null;
   /** Only shown when the viewer may see that CRM contact. */
@@ -87,6 +93,41 @@ function window(startsAt: Date, durationMinutes: number, now: Date) {
   return new Date(startsAt.getTime() + durationMinutes * MINUTE);
 }
 
+/**
+ * Queues the reminder for the current start time. The job carries that start, so a meeting that
+ * is moved makes the old job a no-op; the dedupe key keeps retries from queueing it twice.
+ */
+async function planReminder(
+  tx: Tx,
+  appointment: { id: string; startsAt: Date; reminderMinutes: number },
+  organizationId: string,
+  now: Date,
+) {
+  if (appointment.reminderMinutes === 0 || appointment.startsAt.getTime() <= now.getTime()) return;
+  const dueAt = appointment.startsAt.getTime() - appointment.reminderMinutes * MINUTE;
+  await enqueueJob(tx, {
+    organizationId,
+    type: REMINDER_JOB,
+    payload: { appointmentId: appointment.id, startsAt: appointment.startsAt.toISOString() },
+    dedupeKey: `reminder:${appointment.id}:${appointment.startsAt.getTime()}`,
+    runAt: new Date(Math.max(dueAt, now.getTime())),
+  });
+}
+
+/** A reminder for a time that no longer applies is not worth keeping unread. */
+async function retireReminders(tx: Tx, organizationId: string, appointmentId: string, now: Date) {
+  await tx.notification.updateMany({
+    where: {
+      organizationId,
+      type: "APPOINTMENT_REMINDER",
+      resourceType: "appointment",
+      resourceId: appointmentId,
+      readAt: null,
+    },
+    data: { readAt: now },
+  });
+}
+
 export async function createAppointment(
   { prisma, correlationId }: Deps,
   context: OrganizationContext,
@@ -137,6 +178,7 @@ export async function createAppointment(
         location: input.location,
         startsAt: input.startsAt,
         endsAt,
+        reminderMinutes: input.reminderMinutes,
         organizerId: context.userId,
         contactId: input.contactId,
         attendees: {
@@ -148,6 +190,12 @@ export async function createAppointment(
       },
       select: { id: true },
     });
+    await planReminder(
+      tx,
+      { id: appointment.id, startsAt: input.startsAt, reminderMinutes: input.reminderMinutes },
+      organizationId,
+      now,
+    );
     await recordAuditEvent(tx, {
       organizationId,
       actorId: context.userId,
@@ -223,6 +271,7 @@ export async function listAppointments(
     location: row.location,
     startsAt: row.startsAt,
     endsAt: row.endsAt,
+    reminderMinutes: row.reminderMinutes,
     organizerId: row.organizerId,
     organizerName: names.get(row.organizerId) ?? null,
     contactName: row.contactId ? (contactNames.get(row.contactId) ?? null) : null,
@@ -332,6 +381,17 @@ export async function rescheduleAppointment(
       where: { appointmentId: appointment.id, organizationId, userId: { not: context.userId } },
       data: { response: "PENDING" },
     });
+    await retireReminders(tx, organizationId, appointment.id, now);
+    await planReminder(
+      tx,
+      {
+        id: appointment.id,
+        startsAt: parsed.data.startsAt,
+        reminderMinutes: appointment.reminderMinutes,
+      },
+      organizationId,
+      now,
+    );
     await recordAuditEvent(tx, {
       organizationId,
       actorId: context.userId,
@@ -359,6 +419,7 @@ export async function cancelAppointment(
   { prisma, correlationId }: Deps,
   context: OrganizationContext,
   appointmentId: string,
+  now: Date = new Date(),
 ): Promise<void> {
   requirePermission(context, "appointment:write");
   const organizationId = context.organization.id;
@@ -367,6 +428,7 @@ export async function cancelAppointment(
     if (appointment.organizerId !== context.userId) throw notFound();
     if (appointment.status === "CANCELLED") return [];
     await tx.appointment.update({ where: { id: appointment.id }, data: { status: "CANCELLED" } });
+    await retireReminders(tx, organizationId, appointment.id, now);
     await recordAuditEvent(tx, {
       organizationId,
       actorId: context.userId,
@@ -388,4 +450,45 @@ export async function cancelAppointment(
     );
   });
   await publishNotifications(notified);
+}
+
+/** The caller's own zone; people who never chose one see UTC. */
+export async function getTimeZone({ prisma }: Deps, context: OrganizationContext): Promise<string> {
+  requirePermission(context, "appointment:read");
+  const user = await prisma.user.findUnique({
+    where: { id: context.userId },
+    select: { timeZone: true },
+  });
+  return user?.timeZone && isValidTimeZone(user.timeZone) ? user.timeZone : DEFAULT_TIME_ZONE;
+}
+
+/** A personal preference: it changes only the caller's own row, never anyone else's view. */
+export async function setTimeZone(
+  { prisma }: Deps,
+  context: OrganizationContext,
+  rawZone: unknown,
+): Promise<void> {
+  requirePermission(context, "appointment:read");
+  const zone = timeZoneSchema.safeParse(rawZone);
+  if (!zone.success || !isValidTimeZone(zone.data)) {
+    throw new AppError("INVALID_INPUT", "Choose a valid time zone.");
+  }
+  await prisma.user.update({ where: { id: context.userId }, data: { timeZone: zone.data } });
+}
+
+/**
+ * Turns a `datetime-local` value typed in the caller's own zone into the UTC start. The zone
+ * comes from the stored preference, never from the request.
+ */
+export async function resolveLocalStart(
+  deps: Deps,
+  context: OrganizationContext,
+  local: unknown,
+): Promise<Date> {
+  const zone = await getTimeZone(deps, context);
+  const instant = typeof local === "string" ? zonedToUtc(local, zone) : null;
+  if (!instant) {
+    throw new AppError("INVALID_INPUT", "Enter a valid date and time in your time zone.");
+  }
+  return instant;
 }

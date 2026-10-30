@@ -9,6 +9,8 @@ import {
   createAppointment,
   rescheduleAppointment,
   respondToAppointment,
+  resolveLocalStart,
+  setTimeZone,
 } from "@/features/scheduling/server/scheduling-service";
 import { toActionError, type ActionState } from "@/server/services/action-result";
 
@@ -22,13 +24,15 @@ export async function createAppointmentAction(
   const context = await requireWorkspace(text(formData, "organizationSlug"), "appointment:write");
   const correlationId = await getCorrelationId();
   try {
-    await createAppointment({ prisma: db(), correlationId }, context, {
+    const deps = { prisma: db(), correlationId };
+    await createAppointment(deps, context, {
       title: formData.get("title"),
       description: formData.get("description"),
       location: formData.get("location"),
-      // The form's date and time are UTC (the page says so).
-      startsAt: formData.get("startsAt") ? `${text(formData, "startsAt")}Z` : "",
+      // Typed in the caller's own time zone; the service converts it to UTC.
+      startsAt: await resolveLocalStart(deps, context, text(formData, "startsAt")),
       durationMinutes: formData.get("durationMinutes"),
+      reminderMinutes: formData.get("reminderMinutes"),
       attendeeIds: formData.getAll("attendeeIds").map(String),
       contactId: formData.get("contactId"),
     });
@@ -60,8 +64,9 @@ export async function rescheduleAction(_p: ActionState, formData: FormData): Pro
   const context = await requireWorkspace(text(formData, "organizationSlug"), "appointment:write");
   const correlationId = await getCorrelationId();
   try {
-    await rescheduleAppointment({ prisma: db(), correlationId }, context, text(formData, "id"), {
-      startsAt: formData.get("startsAt") ? `${text(formData, "startsAt")}Z` : "",
+    const deps = { prisma: db(), correlationId };
+    await rescheduleAppointment(deps, context, text(formData, "id"), {
+      startsAt: await resolveLocalStart(deps, context, text(formData, "startsAt")),
       durationMinutes: formData.get("durationMinutes"),
     });
   } catch (error) {
@@ -78,6 +83,18 @@ export async function cancelAction(_p: ActionState, formData: FormData): Promise
     await cancelAppointment({ prisma: db(), correlationId }, context, text(formData, "id"));
   } catch (error) {
     return toActionError(error, correlationId, "appointment.cancel");
+  }
+  refresh();
+  return { ok: true };
+}
+
+export async function setTimeZoneAction(_p: ActionState, formData: FormData): Promise<ActionState> {
+  const context = await requireWorkspace(text(formData, "organizationSlug"), "appointment:read");
+  const correlationId = await getCorrelationId();
+  try {
+    await setTimeZone({ prisma: db(), correlationId }, context, formData.get("timeZone"));
+  } catch (error) {
+    return toActionError(error, correlationId, "appointment.timezone");
   }
   refresh();
   return { ok: true };

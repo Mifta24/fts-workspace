@@ -321,7 +321,8 @@
       "DIRECT_MESSAGE": "{actor} さんからメッセージが届きました",
       "APPOINTMENT_INVITED": "{actor} さんが「{title}」にあなたを招待しました",
       "APPOINTMENT_UPDATED": "{actor} さんが「{title}」の日時を変更しました",
-      "APPOINTMENT_CANCELLED": "{actor} さんが「{title}」をキャンセルしました"
+      "APPOINTMENT_CANCELLED": "{actor} さんが「{title}」をキャンセルしました",
+      "APPOINTMENT_REMINDER": "「{title}」がまもなく始まります"
     },
     "anItem": "項目"
   },
@@ -508,7 +509,7 @@
   },
   "Schedule": {
     "title": "スケジュール",
-    "intro": "今後 60 日間の予定です。時刻は UTC で表示・入力します。二重予約はできません。辞退していない人は予定ありとして扱われます。",
+    "intro": "今後 60 日間の予定です。時刻はお客様のタイムゾーン（{zone}）で表示・入力します。二重予約はできません。辞退していない人は予定ありとして扱われます。",
     "empty": "予定はありません。下から会議を作成してください。",
     "emptyReadOnly": "予定はありません。",
     "minutes": "{count} 分",
@@ -523,16 +524,21 @@
     "decline": "辞退",
     "cancel": "会議をキャンセル",
     "reschedule": "日時を変更",
-    "newStart": "新しい開始時刻（UTC）",
+    "newStart": "新しい開始時刻（{zone}）",
     "createTitle": "新しい会議",
     "create": "会議を設定",
     "titleLabel": "タイトル",
-    "startLabel": "開始（UTC）",
+    "startLabel": "開始（{zone}）",
     "durationLabel": "所要時間",
     "locationLabel": "場所またはリンク",
     "contactLabel": "関連コンタクト",
     "none": "なし",
-    "attendeesLabel": "招待する人"
+    "attendeesLabel": "招待する人",
+    "zoneLabel": "タイムゾーン",
+    "saveZone": "タイムゾーンを保存",
+    "reminderLabel": "リマインダー",
+    "reminderNone": "リマインダーなし",
+    "reminderBefore": "{count, plural, =1440 {1 日前} other {#分前}}"
   },
   "Forms": {
     "title": "フォーム",

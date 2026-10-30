@@ -26,7 +26,8 @@ export type NewNotification = {
   organizationId: string;
   userId: string;
   type: NotificationType;
-  actorId: string;
+  /** Null for system-generated notifications such as reminders. */
+  actorId: string | null;
   resourceType: string;
   resourceId: string;
 };
@@ -45,7 +46,7 @@ export async function createNotifications(
   const created: { organizationId: string; userId: string; notificationId: string }[] = [];
   const seen = new Set<string>();
   for (const item of items) {
-    if (item.userId === item.actorId) continue;
+    if (item.actorId !== null && item.userId === item.actorId) continue;
     const key = `${item.userId}:${item.type}:${item.resourceId}`;
     if (seen.has(key)) continue;
     seen.add(key);

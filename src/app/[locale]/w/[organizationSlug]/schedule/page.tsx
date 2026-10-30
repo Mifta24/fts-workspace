@@ -14,12 +14,14 @@ import {
   createAppointmentAction,
   rescheduleAction,
   respondAction,
+  setTimeZoneAction,
 } from "@/features/scheduling/server/actions";
-import { listAppointments } from "@/features/scheduling/server/scheduling-service";
+import { REMINDER_CHOICES } from "@/features/scheduling/schemas/scheduling";
+import { getTimeZone, listAppointments } from "@/features/scheduling/server/scheduling-service";
 import { db } from "@/lib/db";
 import { roleHasPermission } from "@/lib/permissions/matrix";
+import { formatInZone, listTimeZones } from "@/lib/time-zone";
 
-const stamp = (date: Date) => date.toISOString().slice(0, 16).replace("T", " ");
 const minutes = (start: Date, end: Date) => Math.round((end.getTime() - start.getTime()) / 60_000);
 
 export default async function SchedulePage({
@@ -30,17 +32,37 @@ export default async function SchedulePage({
   const deps = { prisma: db() };
   const canWrite = roleHasPermission(context.role, "appointment:write");
   const canSeeContacts = roleHasPermission(context.role, "crm:read");
-  const [t, appointments, members, contacts] = await Promise.all([
+  const [t, appointments, members, contacts, timeZone] = await Promise.all([
     getTranslations("Schedule"),
     listAppointments(deps, context),
     listMembers(deps, context),
     canWrite && canSeeContacts ? listContacts(deps, context) : Promise.resolve([]),
+    getTimeZone(deps, context),
   ]);
 
   return (
     <WorkspaceShell context={context} active="schedule">
       <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-      <p className="text-sm text-muted-foreground">{t("intro")}</p>
+      <p className="text-sm text-muted-foreground">{t("intro", { zone: timeZone })}</p>
+
+      <ServerForm
+        action={setTimeZoneAction}
+        fields={{ organizationSlug }}
+        submitLabel={t("saveZone")}
+        resetOnSuccess={false}
+        className="flex flex-wrap items-end gap-3"
+      >
+        <div className="space-y-1">
+          <Label htmlFor="tz">{t("zoneLabel")}</Label>
+          <Select id="tz" name="timeZone" defaultValue={timeZone}>
+            {listTimeZones().map((zone) => (
+              <option key={zone} value={zone}>
+                {zone}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </ServerForm>
 
       {appointments.length === 0 ? (
         <Card>
@@ -56,7 +78,7 @@ export default async function SchedulePage({
               <div>
                 <p className="font-medium">{appointment.title}</p>
                 <p className="text-sm text-muted-foreground">
-                  {stamp(appointment.startsAt)} UTC ·{" "}
+                  {formatInZone(appointment.startsAt, timeZone)} ({timeZone}) ·{" "}
                   {t("minutes", { count: minutes(appointment.startsAt, appointment.endsAt) })}
                   {appointment.location ? ` · ${appointment.location}` : ""}
                 </p>
@@ -103,7 +125,9 @@ export default async function SchedulePage({
                   className="flex flex-wrap items-end gap-3"
                 >
                   <div className="space-y-1">
-                    <Label htmlFor={`rs-${appointment.id}`}>{t("newStart")}</Label>
+                    <Label htmlFor={`rs-${appointment.id}`}>
+                      {t("newStart", { zone: timeZone })}
+                    </Label>
                     <Input
                       id={`rs-${appointment.id}`}
                       name="startsAt"
@@ -137,7 +161,7 @@ export default async function SchedulePage({
                 <Input id="ap-title" name="title" required minLength={2} maxLength={160} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="ap-start">{t("startLabel")}</Label>
+                <Label htmlFor="ap-start">{t("startLabel", { zone: timeZone })}</Label>
                 <Input id="ap-start" name="startsAt" type="datetime-local" required />
               </div>
               <div className="space-y-2">
@@ -146,6 +170,16 @@ export default async function SchedulePage({
                   {[15, 30, 45, 60, 90, 120].map((value) => (
                     <option key={value} value={value}>
                       {t("minutes", { count: value })}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ap-reminder">{t("reminderLabel")}</Label>
+                <Select id="ap-reminder" name="reminderMinutes" defaultValue="15">
+                  {REMINDER_CHOICES.map((value) => (
+                    <option key={value} value={value}>
+                      {value === 0 ? t("reminderNone") : t("reminderBefore", { count: value })}
                     </option>
                   ))}
                 </Select>
