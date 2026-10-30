@@ -62,6 +62,9 @@
 
 | Server action | `createAppointmentAction`, `rescheduleAction`, `cancelAction` | Meetings (organizer) | `appointment:write` |
 | Server action | `respondAction` | Accept / decline an invitation | attendee |
+| Server action | `createBookingPageAction`, `updateBookingPageAction`, `setBookingPageStatusAction` | Own booking pages | `booking:manage` (owner of the page only) |
+| Page | `/[locale]/w/[slug]/booking`, `/booking/[pageId]` | List, create, publish and edit the caller's booking pages | `booking:manage` |
+| Page + server action (**public, no session**) | `/[locale]/b/[token]`, `bookSlotAction` | Free slots of a published page and the booking itself; unknown, draft, closed and ownerless pages give 404 | public (token) |
 | Server action | `createFeedAction`, `revokeFeedAction` | Create (and replace) or turn off the caller's calendar subscription link; the link is returned once | `appointment:read` |
 | Route (**public, no session**) | `GET /api/calendar/<token>[.ics]` | Read-only iCalendar feed of the token owner's meetings (`text/calendar`, `private, no-store`); unknown, revoked and malformed tokens give the same empty 404 | secret token |
 | Server action | `setTimeZoneAction` | Choose your own time zone for meeting times | `appointment:read` |

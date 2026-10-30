@@ -97,7 +97,7 @@ function window(startsAt: Date, durationMinutes: number, now: Date) {
  * Queues the reminder for the current start time. The job carries that start, so a meeting that
  * is moved makes the old job a no-op; the dedupe key keeps retries from queueing it twice.
  */
-async function planReminder(
+export async function planReminder(
   tx: Tx,
   appointment: { id: string; startsAt: Date; reminderMinutes: number },
   organizationId: string,

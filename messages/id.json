@@ -323,7 +323,8 @@
       "APPOINTMENT_INVITED": "{actor} mengundang Anda ke “{title}”",
       "APPOINTMENT_UPDATED": "{actor} mengubah waktu “{title}”",
       "APPOINTMENT_CANCELLED": "{actor} membatalkan “{title}”",
-      "APPOINTMENT_REMINDER": "“{title}” akan segera dimulai"
+      "APPOINTMENT_REMINDER": "“{title}” akan segera dimulai",
+      "BOOKING_RECEIVED": "Pemesanan baru: “{title}”"
     },
     "anItem": "Sesuatu"
   },
@@ -568,7 +569,8 @@
     "feedShownOnce": "Salin sekarang: tautan hanya ditampilkan sekali. Membuat tautan baru menonaktifkan tautan lama.",
     "feedActive": "Sebuah tautan aktif sejak {created}.",
     "feedUsed": "Terakhir dipakai {used}.",
-    "feedNeverUsed": "Belum pernah dipakai."
+    "feedNeverUsed": "Belum pernah dipakai.",
+    "bookingLink": "Halaman pemesanan"
   },
   "Forms": {
     "title": "Formulir",
@@ -680,5 +682,64 @@
       "LAPSED": "Tidak aktif"
     },
     "becameCustomers": "Menjadi pelanggan"
+  },
+  "Booking": {
+    "title": "Halaman pemesanan",
+    "intro": "Biarkan pengunjung memesan waktu kosong Anda lewat tautan publik. Slot berasal dari jam kerja mingguan Anda dikurangi rapat lain. Setiap pemesanan membuat atau menautkan kontak CRM, mencatat persetujuan mereka, dan muncul di jadwal Anda. Hanya Anda yang dapat melihat dan mengelola halaman Anda.",
+    "backToSchedule": "Kembali ke jadwal",
+    "back": "Kembali ke halaman pemesanan",
+    "empty": "Belum ada halaman pemesanan. Buat satu di bawah.",
+    "upcoming": "{count} pemesanan mendatang",
+    "status": {
+      "DRAFT": "Draf",
+      "PUBLISHED": "Diterbitkan",
+      "CLOSED": "Ditutup"
+    },
+    "createTitle": "Halaman pemesanan baru",
+    "create": "Buat halaman pemesanan",
+    "settings": "Pengaturan",
+    "save": "Simpan perubahan",
+    "titleLabel": "Judul",
+    "descriptionLabel": "Deskripsi (opsional)",
+    "locationLabel": "Tempat atau tautan video (opsional)",
+    "durationLabel": "Lama rapat",
+    "minutes": "{count} menit",
+    "zoneLabel": "Zona waktu jam kerja Anda",
+    "weekdaysLabel": "Hari menerima pemesanan",
+    "startLabel": "Mulai",
+    "endLabel": "Sampai",
+    "noticeLabel": "Pemberitahuan minimum (jam)",
+    "aheadLabel": "Berapa hari ke depan",
+    "weekday": {
+      "1": "Sen",
+      "2": "Sel",
+      "3": "Rab",
+      "4": "Kam",
+      "5": "Jum",
+      "6": "Sab",
+      "7": "Min"
+    },
+    "consentLabel": "Pernyataan persetujuan",
+    "consentDefault": "Saya setuju data ini disimpan dan Anda boleh menghubungi saya terkait rapat ini.",
+    "consentHint": "Pengunjung harus menyetujuinya sebelum memesan, dan tidak dapat diubah setelah halaman diterbitkan.",
+    "publishing": "Penerbitan",
+    "publicLink": "Siapa pun dengan tautan ini dapat memesan waktu dengan Anda:",
+    "publish": "Terbitkan",
+    "close": "Tutup halaman",
+    "draftNote": "Belum publik. Terbitkan halaman untuk membagikan tautannya.",
+    "closedNote": "Tautan tidak lagi berfungsi. Terbitkan lagi untuk membukanya."
+  },
+  "PublicBooking": {
+    "details": "Rapat {minutes} menit",
+    "zone": "Tampilkan waktu dalam",
+    "showTimes": "Tampilkan waktu",
+    "noSlots": "Saat ini tidak ada waktu kosong. Silakan periksa lagi nanti.",
+    "name": "Nama Anda",
+    "email": "Email",
+    "note": "Ada yang perlu kami ketahui? (opsional)",
+    "book": "Pesan waktu ini",
+    "booked": "Anda terdaftar untuk {time}. Terima kasih!",
+    "bookedGeneric": "Terima kasih! Permintaan Anda telah dikirim.",
+    "privacy": "Data Anda dikirim ke organisasi yang menerbitkan halaman ini."
   }
 }

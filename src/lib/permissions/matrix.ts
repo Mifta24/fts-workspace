@@ -51,6 +51,7 @@ export const PERMISSIONS = [
   "appointment:read",
   "appointment:write",
   "form:manage",
+  "booking:manage",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -98,6 +99,7 @@ const MATRIX: Record<Permission, readonly OrganizationRole[]> = {
   "appointment:read": ALL_ROLES,
   "appointment:write": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
   "form:manage": ["OWNER", "ADMIN", "MANAGER"],
+  "booking:manage": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
 };
 
 export function isOrganizationRole(value: unknown): value is OrganizationRole {

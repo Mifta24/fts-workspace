@@ -132,6 +132,76 @@ export async function recordStageChange(
   });
 }
 
+/**
+ * Turns a visitor who ticked a consent box (on a public form or booking page) into a contact
+ * owned by `ownerId`: an existing contact with that email is linked rather than overwritten, a new
+ * one starts as a lead, and consent is recorded with where it was given. The caller has already
+ * checked that the owner is an active member.
+ */
+export async function captureVisitorContact(
+  tx: Tx,
+  input: {
+    organizationId: string;
+    ownerId: string;
+    name: string;
+    email: string;
+    phone?: string;
+    company?: string;
+    /** Where consent was given, for example "form: Contact us". */
+    source: string;
+    now: Date;
+  },
+): Promise<{ contactId: string; created: boolean }> {
+  const { organizationId, ownerId, now } = input;
+  const existing = await tx.crmContact.findFirst({
+    where: { organizationId, email: input.email, erasedAt: null },
+    select: { id: true, consentStatus: true },
+  });
+  let contactId: string;
+  if (existing) {
+    contactId = existing.id;
+  } else {
+    const created = await tx.crmContact.create({
+      data: {
+        organizationId,
+        name: input.name,
+        email: input.email,
+        phone: input.phone,
+        company: input.company,
+        ownerId,
+        createdById: ownerId,
+      },
+      select: { id: true },
+    });
+    contactId = created.id;
+    await recordStageChange(tx, {
+      organizationId,
+      contactId,
+      from: null,
+      to: "LEAD",
+      reason: "CREATED",
+      changedById: ownerId,
+    });
+  }
+  if (!existing || existing.consentStatus !== "GRANTED") {
+    await tx.crmContact.update({
+      where: { id: contactId },
+      data: { consentStatus: "GRANTED", consentUpdatedAt: now },
+    });
+    await tx.consentEvent.create({
+      data: {
+        organizationId,
+        contactId,
+        status: "GRANTED",
+        source: input.source.slice(0, 120),
+        recordedById: ownerId,
+        createdAt: now,
+      },
+    });
+  }
+  return { contactId, created: !existing };
+}
+
 /** Moves a contact to another stage of the journey and keeps the history. */
 export async function setJourneyStage(
   { prisma, correlationId }: Deps,
@@ -404,6 +474,15 @@ export async function eraseContact(
     await tx.formSubmission.updateMany({
       where: { organizationId: context.organization.id, contactId: contact.id },
       data: { answers: {}, erasedAt: now },
+    });
+    // Notes a visitor typed when booking a meeting are personal data too.
+    await tx.appointment.updateMany({
+      where: {
+        organizationId: context.organization.id,
+        contactId: contact.id,
+        bookingPageId: { not: null },
+      },
+      data: { description: null },
     });
     await recordAuditEvent(tx, {
       organizationId: context.organization.id,

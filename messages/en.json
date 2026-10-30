@@ -323,7 +323,8 @@
       "APPOINTMENT_INVITED": "{actor} invited you to “{title}”",
       "APPOINTMENT_UPDATED": "{actor} changed the time of “{title}”",
       "APPOINTMENT_CANCELLED": "{actor} cancelled “{title}”",
-      "APPOINTMENT_REMINDER": "“{title}” starts soon"
+      "APPOINTMENT_REMINDER": "“{title}” starts soon",
+      "BOOKING_RECEIVED": "New booking: “{title}”"
     },
     "anItem": "Someone"
   },
@@ -568,7 +569,8 @@
     "feedShownOnce": "Copy it now: it is shown only once. Creating a new link stops the old one from working.",
     "feedActive": "A link has been active since {created}.",
     "feedUsed": "Last used {used}.",
-    "feedNeverUsed": "It has not been used yet."
+    "feedNeverUsed": "It has not been used yet.",
+    "bookingLink": "Booking pages"
   },
   "Forms": {
     "title": "Forms",
@@ -680,5 +682,64 @@
       "LAPSED": "Lapsed"
     },
     "becameCustomers": "Became customers"
+  },
+  "Booking": {
+    "title": "Booking pages",
+    "intro": "Let visitors book a free slot with you from a public link. Slots come from your weekly hours minus your other meetings. Each booking creates or links a CRM contact, records their consent, and appears in your schedule. Only you can see and manage your pages.",
+    "backToSchedule": "Back to schedule",
+    "back": "Back to booking pages",
+    "empty": "No booking pages yet. Create one below.",
+    "upcoming": "{count} upcoming bookings",
+    "status": {
+      "DRAFT": "Draft",
+      "PUBLISHED": "Published",
+      "CLOSED": "Closed"
+    },
+    "createTitle": "New booking page",
+    "create": "Create booking page",
+    "settings": "Settings",
+    "save": "Save changes",
+    "titleLabel": "Title",
+    "descriptionLabel": "Description (optional)",
+    "locationLabel": "Place or video link (optional)",
+    "durationLabel": "Meeting length",
+    "minutes": "{count} min",
+    "zoneLabel": "Time zone of your working hours",
+    "weekdaysLabel": "Days you take bookings",
+    "startLabel": "From",
+    "endLabel": "Until",
+    "noticeLabel": "Minimum notice (hours)",
+    "aheadLabel": "How far ahead (days)",
+    "weekday": {
+      "1": "Mon",
+      "2": "Tue",
+      "3": "Wed",
+      "4": "Thu",
+      "5": "Fri",
+      "6": "Sat",
+      "7": "Sun"
+    },
+    "consentLabel": "Consent statement",
+    "consentDefault": "I agree that you may store these details and contact me about this meeting.",
+    "consentHint": "Visitors must accept this before booking, and it cannot change once the page has been published.",
+    "publishing": "Publishing",
+    "publicLink": "Anyone with this link can book a time with you:",
+    "publish": "Publish",
+    "close": "Close page",
+    "draftNote": "Not public yet. Publish the page to share its link.",
+    "closedNote": "The link no longer works. Publish again to reopen it."
+  },
+  "PublicBooking": {
+    "details": "{minutes} minute meeting",
+    "zone": "Show times in",
+    "showTimes": "Show times",
+    "noSlots": "There are no free times right now. Please check back later.",
+    "name": "Your name",
+    "email": "Email",
+    "note": "Anything we should know? (optional)",
+    "book": "Book this time",
+    "booked": "You are booked for {time}. Thank you!",
+    "bookedGeneric": "Thank you! Your request was sent.",
+    "privacy": "Your details are sent to the organization that published this page."
   }
 }

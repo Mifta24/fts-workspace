@@ -136,6 +136,7 @@ model Organization {
   consentEvents        ConsentEvent[]
   contactStageChanges  ContactStageChange[]
   calendarFeeds        CalendarFeed[]
+  bookingPages         BookingPage[]
   appointments         Appointment[]
   appointmentAttendees AppointmentAttendee[]
   forms                Form[]
@@ -385,6 +386,7 @@ enum NotificationType {
   APPOINTMENT_UPDATED
   APPOINTMENT_CANCELLED
   APPOINTMENT_REMINDER
+  BOOKING_RECEIVED
 }
 
 /// A chat room. Every channel, public or private, has explicit `ChannelMember` rows; membership
@@ -871,6 +873,9 @@ model Appointment {
   status          AppointmentStatus @default(SCHEDULED)
   /// Minutes before the start when attendees are reminded; 0 means no reminder.
   reminderMinutes Int               @default(15)
+  /// Set when a visitor booked this meeting through a public booking page.
+  bookingPageId   String?           @db.Uuid
+  bookingPage     BookingPage?      @relation(fields: [bookingPageId, organizationId], references: [id, organizationId], onDelete: Restrict)
   organizerId     String            @db.Uuid
   contactId       String?           @db.Uuid
   contact         CrmContact?       @relation(fields: [contactId, organizationId], references: [id, organizationId], onDelete: Restrict)
@@ -882,6 +887,45 @@ model Appointment {
   @@unique([id, organizationId])
   @@index([organizationId, startsAt])
   @@map("appointments")
+}
+
+enum BookingPageStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+/// A public page where a visitor books a free slot with one member. The slots come from the
+/// weekly working hours (in `timeZone`) minus the member's other meetings. Booking asks for
+/// consent and creates or matches a CRM contact owned by the member.
+model BookingPage {
+  id              String            @id @default(uuid(7)) @db.Uuid
+  organizationId  String            @db.Uuid
+  organization    Organization      @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  ownerId         String            @db.Uuid
+  title           String
+  description     String?
+  location        String?
+  durationMinutes Int
+  timeZone        String
+  /// ISO weekdays, 1 = Monday ... 7 = Sunday.
+  weekdays        Int[]
+  /// Working hours as minutes after midnight in `timeZone`.
+  startMinute     Int
+  endMinute       Int
+  minNoticeHours  Int               @default(4)
+  maxDaysAhead    Int               @default(30)
+  consentText     String
+  status          BookingPageStatus @default(DRAFT)
+  publicToken     String            @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  appointments Appointment[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId, ownerId])
+  @@map("booking_pages")
 }
 
 /// A secret subscription link to one person's meetings in one organization. Only a hash of the

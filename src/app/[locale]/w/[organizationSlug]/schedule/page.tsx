@@ -20,6 +20,7 @@ import { CalendarFeedPanel } from "@/features/scheduling/components/calendar-fee
 import { REMINDER_CHOICES } from "@/features/scheduling/schemas/scheduling";
 import { getFeedStatus } from "@/features/scheduling/server/calendar-feed";
 import { getTimeZone, listAppointments } from "@/features/scheduling/server/scheduling-service";
+import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { roleHasPermission } from "@/lib/permissions/matrix";
 import { formatInZone, listTimeZones } from "@/lib/time-zone";
@@ -47,6 +48,14 @@ export default async function SchedulePage({
     <WorkspaceShell context={context} active="schedule">
       <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
       <p className="text-sm text-muted-foreground">{t("intro", { zone: timeZone })}</p>
+      {roleHasPermission(context.role, "booking:manage") && (
+        <Link
+          href={`/w/${organizationSlug}/booking`}
+          className="text-sm font-medium text-primary hover:underline"
+        >
+          {t("bookingLink")}
+        </Link>
+      )}
 
       <ServerForm
         action={setTimeZoneAction}

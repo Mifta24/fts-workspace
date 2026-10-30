@@ -2,7 +2,7 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import { AppError } from "@/lib/errors";
-import { recordStageChange } from "@/features/crm/server/crm-service";
+import { captureVisitorContact } from "@/features/crm/server/crm-service";
 import {
   buildAnswerSchema,
   assignFieldKeys,
@@ -420,53 +420,18 @@ export async function submitPublicForm(
       });
       // Without an active owner the submission is still kept, just not turned into a contact.
       if (owner) {
-        const email = data.email!;
-        const existing = await tx.crmContact.findFirst({
-          where: { organizationId, email, erasedAt: null },
-          select: { id: true, consentStatus: true },
+        const captured = await captureVisitorContact(tx, {
+          organizationId,
+          ownerId: form.ownerId,
+          name: data.name!,
+          email: data.email!,
+          phone: data.phone,
+          company: data.company,
+          source: `form: ${form.title}`,
+          now,
         });
-        if (existing) {
-          contactId = existing.id;
-        } else {
-          const created = await tx.crmContact.create({
-            data: {
-              organizationId,
-              name: data.name!,
-              email,
-              phone: data.phone,
-              company: data.company,
-              ownerId: form.ownerId,
-              createdById: form.ownerId,
-            },
-            select: { id: true },
-          });
-          contactId = created.id;
-          contactCreated = true;
-          await recordStageChange(tx, {
-            organizationId,
-            contactId,
-            from: null,
-            to: "LEAD",
-            reason: "CREATED",
-            changedById: form.ownerId,
-          });
-        }
-        if (!existing || existing.consentStatus !== "GRANTED") {
-          await tx.crmContact.update({
-            where: { id: contactId },
-            data: { consentStatus: "GRANTED", consentUpdatedAt: now },
-          });
-          await tx.consentEvent.create({
-            data: {
-              organizationId,
-              contactId,
-              status: "GRANTED",
-              source: `form: ${form.title}`.slice(0, 120),
-              recordedById: form.ownerId,
-              createdAt: now,
-            },
-          });
-        }
+        contactId = captured.contactId;
+        contactCreated = captured.created;
       }
     }
     const submission = await tx.formSubmission.create({

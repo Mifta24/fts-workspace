@@ -323,7 +323,8 @@
       "APPOINTMENT_INVITED": "{actor} さんが「{title}」にあなたを招待しました",
       "APPOINTMENT_UPDATED": "{actor} さんが「{title}」の日時を変更しました",
       "APPOINTMENT_CANCELLED": "{actor} さんが「{title}」をキャンセルしました",
-      "APPOINTMENT_REMINDER": "「{title}」がまもなく始まります"
+      "APPOINTMENT_REMINDER": "「{title}」がまもなく始まります",
+      "BOOKING_RECEIVED": "新しい予約: 「{title}」"
     },
     "anItem": "項目"
   },
@@ -568,7 +569,8 @@
     "feedShownOnce": "今だけ表示されます。今すぐコピーしてください。新しいリンクを作成すると、古いリンクは使えなくなります。",
     "feedActive": "{created} からリンクが有効です。",
     "feedUsed": "最終利用: {used}。",
-    "feedNeverUsed": "まだ使用されていません。"
+    "feedNeverUsed": "まだ使用されていません。",
+    "bookingLink": "予約ページ"
   },
   "Forms": {
     "title": "フォーム",
@@ -680,5 +682,64 @@
       "LAPSED": "休眠"
     },
     "becameCustomers": "期間中に顧客になった数"
+  },
+  "Booking": {
+    "title": "予約ページ",
+    "intro": "公開リンクから、訪問者があなたの空き時間を予約できるようにします。予約枠は、週ごとの稼働時間から他の会議を除いたものです。予約のたびに CRM の連絡先が作成または紐付けられ、同意が記録され、予定表に表示されます。ページを見て管理できるのはあなただけです。",
+    "backToSchedule": "予定表へ戻る",
+    "back": "予約ページ一覧へ戻る",
+    "empty": "予約ページはまだありません。下から作成してください。",
+    "upcoming": "今後の予約 {count} 件",
+    "status": {
+      "DRAFT": "下書き",
+      "PUBLISHED": "公開中",
+      "CLOSED": "終了"
+    },
+    "createTitle": "新しい予約ページ",
+    "create": "予約ページを作成",
+    "settings": "設定",
+    "save": "変更を保存",
+    "titleLabel": "タイトル",
+    "descriptionLabel": "説明（任意）",
+    "locationLabel": "場所または会議リンク（任意）",
+    "durationLabel": "会議の長さ",
+    "minutes": "{count} 分",
+    "zoneLabel": "稼働時間のタイムゾーン",
+    "weekdaysLabel": "予約を受け付ける曜日",
+    "startLabel": "開始",
+    "endLabel": "終了",
+    "noticeLabel": "最短の事前通知（時間）",
+    "aheadLabel": "何日先まで（日）",
+    "weekday": {
+      "1": "月",
+      "2": "火",
+      "3": "水",
+      "4": "木",
+      "5": "金",
+      "6": "土",
+      "7": "日"
+    },
+    "consentLabel": "同意文",
+    "consentDefault": "入力した情報を保管し、この会議の件で私に連絡することに同意します。",
+    "consentHint": "訪問者は予約前にこれに同意する必要があり、ページを公開した後は変更できません。",
+    "publishing": "公開",
+    "publicLink": "このリンクを知っている人は誰でも、あなたとの時間を予約できます:",
+    "publish": "公開する",
+    "close": "ページを終了",
+    "draftNote": "まだ公開されていません。公開するとリンクを共有できます。",
+    "closedNote": "リンクは無効です。再度公開すると再開できます。"
+  },
+  "PublicBooking": {
+    "details": "{minutes} 分の会議",
+    "zone": "時刻の表示タイムゾーン",
+    "showTimes": "時刻を表示",
+    "noSlots": "現在、空き時間はありません。後でもう一度ご確認ください。",
+    "name": "お名前",
+    "email": "メールアドレス",
+    "note": "お伝えしたいこと（任意）",
+    "book": "この時間で予約",
+    "booked": "{time} に予約しました。ありがとうございます。",
+    "bookedGeneric": "ありがとうございます。リクエストを送信しました。",
+    "privacy": "入力内容は、このページを公開した組織に送信されます。"
   }
 }
