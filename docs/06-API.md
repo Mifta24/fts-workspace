@@ -67,6 +67,8 @@
 | Page + server action (**public, no session**) | `/[locale]/b/[token]`, `bookSlotAction` | Free slots of a published page and the booking itself; unknown, draft, closed and ownerless pages give 404 | public (token) |
 | Server action | `createFeedAction`, `revokeFeedAction` | Create (and replace) or turn off the caller's calendar subscription link; the link is returned once | `appointment:read` |
 | Route (**public, no session**) | `GET /api/calendar/<token>[.ics]` | Read-only iCalendar feed of the token owner's meetings (`text/calendar`, `private, no-store`); unknown, revoked and malformed tokens give the same empty 404 | secret token |
+| Server action | `connectGoogleAction`, `disconnectGoogleAction` | Start the Google consent round trip (sets a sealed, httpOnly, single-use state cookie, then redirects to Google), or remove the caller's own connection and revoke the token at Google | `booking:manage` |
+| Route (session + state cookie) | `GET /api/integrations/google/callback` | Where Google returns after consent. Authority comes from the session and the sealed cookie, never from the query: `state` must match the cookie, the cookie must be unexpired and belong to the signed-in user, and `booking:manage` is checked again for the workspace named in the cookie. Always redirects (to `/<locale>/w/<slug>/booking?calendar=connected\|denied\|failed`, or to workspaces when the request cannot be trusted); register `<BETTER_AUTH_URL>/api/integrations/google/callback` with Google exactly | session |
 | Server action | `setTimeZoneAction` | Choose your own time zone for meeting times | `appointment:read` |
 | Page | `/[locale]/w/[slug]/schedule` | Your meetings for the next 60 days (times in your own time zone, UTC by default) | `appointment:read` |
 

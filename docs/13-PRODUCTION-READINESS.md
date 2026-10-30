@@ -45,7 +45,7 @@ Not done: an independent penetration test, a threat model for the operator surfa
 5. **Load test on a production-like deployment** (built app, real database service, realistic data volume), including authenticated flows. The current HTTP test is anonymous and was run against a development server.
 6. **MFA** (at least for operators and workspace owners) and shared rate-limit storage.
 7. **AI provider and data residency (OD-08)** decided and recorded before `AI_BASE_URL` is set anywhere real.
-8. **Legal and privacy:** privacy policy, terms, data processing terms, sub-processor list (hosting, email, Cloudflare Turnstile, AI provider), a data-retention and deletion process for whole workspaces, and the breach-notification contact named in `12-OPERATIONS.md`.
+8. **Legal and privacy:** privacy policy, terms, data processing terms, sub-processor list (hosting, email, Cloudflare Turnstile, AI provider, Google when calendar connection is on; the same pages also serve as the home page, privacy policy and terms that Google's OAuth consent screen requires before the app can leave Testing), a data-retention and deletion process for whole workspaces, and the breach-notification contact named in `12-OPERATIONS.md`.
 9. **Pricing and billing (OD-05).** Plans, limits and the operator console exist, but there are no prices, no checkout and no invoices. Charging customers needs a payment provider, tax handling and webhook handling with idempotency (ADR-015). A pilot can run without this.
 10. **File uploads:** malware scanning before enabling uploads on public forms; the same question applies to member uploads for a public launch.
 

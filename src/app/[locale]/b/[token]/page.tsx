@@ -47,13 +47,19 @@ export default async function PublicBookingPage({
           {t("showTimes")}
         </Button>
       </form>
-      <PublicBookingClient
-        token={token}
-        slots={page.slots.map((slot) => slot.toISOString())}
-        zone={zone}
-        consentText={page.consentText}
-        captchaSiteKey={captchaSiteKey()}
-      />
+      {page.unavailable ? (
+        <p role="status" className="rounded-md border border-border bg-card p-4">
+          {t("unavailable")}
+        </p>
+      ) : (
+        <PublicBookingClient
+          token={token}
+          slots={page.slots.map((slot) => slot.toISOString())}
+          zone={zone}
+          consentText={page.consentText}
+          captchaSiteKey={captchaSiteKey()}
+        />
+      )}
       <p className="text-xs text-muted-foreground">{t("privacy")}</p>
     </main>
   );

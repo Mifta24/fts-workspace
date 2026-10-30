@@ -39,7 +39,7 @@ Alert delivery (paging) is **not set up**. Choosing a vendor and wiring these th
    - **SEV3:** a bug with a workaround.
 3. **Contain first, then diagnose.**
    - Suspected cross-tenant exposure or abusive tenant: **suspend the workspace(s)** in `/admin` (reversible, deletes nothing, stops access, public links, the calendar feed, realtime and downloads).
-   - Leaked secret: rotate it (`BETTER_AUTH_SECRET` invalidates sessions; `REALTIME_PUBLISH_SECRET` must change on app and gateway together; the AI and Turnstile keys at their providers), then redeploy.
+   - Leaked secret: rotate it (`BETTER_AUTH_SECRET` invalidates sessions; `REALTIME_PUBLISH_SECRET` must change on app and gateway together; the AI and Turnstile keys at their providers; `GOOGLE_CLIENT_SECRET` in the Google Cloud console (Clients, add a secret, then remove the old one); `CALENDAR_TOKEN_KEY` makes every stored calendar token unreadable, so people reconnect), then redeploy.
    - Bot abuse on public forms: enable Turnstile (`TURNSTILE_SITE_KEY`/`TURNSTILE_SECRET_KEY`), or unpublish the page.
 4. **Diagnose** with the correlation id from the user's report or the failing log line. The audit trail (`audit_logs`) answers "who changed what, when" per workspace.
 5. **Recover** with the runbook below, then confirm: health check green, backlog draining, a test sign-in works.

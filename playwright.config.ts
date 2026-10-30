@@ -45,6 +45,11 @@ export default defineConfig({
         REALTIME_PUBLISH_SECRET: GATEWAY_SECRET,
         STORAGE_DIR: ".data/files-e2e",
         PLATFORM_ADMIN_EMAILS: "operator@platform.test",
+        // Dummy Google Calendar setup: the consent round trip can be driven up to Google's
+        // screen, which the tests stub. Real Google is never called.
+        GOOGLE_CLIENT_ID: "e2e-client-id.apps.googleusercontent.com",
+        GOOGLE_CLIENT_SECRET: "e2e-only-client-secret",
+        CALENDAR_TOKEN_KEY: Buffer.alloc(32, 9).toString("base64"),
         // Opt-in captcha run (needs internet): E2E_CAPTCHA=pass or fail, with Cloudflare's
         // documented dummy keys. Off by default, so the normal suite never calls Cloudflare.
         ...(process.env.E2E_CAPTCHA

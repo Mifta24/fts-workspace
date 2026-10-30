@@ -1,5 +1,6 @@
 import "server-only";
 import { z } from "zod";
+import { parseSecretKey } from "@/server/security/secret-box";
 
 const envSchema = z
   .object({
@@ -29,6 +30,12 @@ const envSchema = z
     // Both keys or neither: without them those forms rely on the honeypot and the volume limits.
     TURNSTILE_SITE_KEY: z.string().min(1).optional(),
     TURNSTILE_SECRET_KEY: z.string().min(1).optional(),
+    // Optional Google Calendar connection (reads when a member is busy; ADR-016). Both OAuth
+    // values or neither; with them, CALENDAR_TOKEN_KEY (32 random bytes, base64) is required and
+    // seals the stored refresh tokens: `openssl rand -base64 32`.
+    GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+    GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
+    CALENDAR_TOKEN_KEY: z.string().min(1).optional(),
     // Billing is opt-in: with it off, new workspaces are unmetered (no plan limits). With it on, a
     // new workspace starts a trial on the trial plan for BILLING_TRIAL_DAYS days.
     BILLING_ENABLED: z
@@ -54,7 +61,22 @@ const envSchema = z
   .refine((value) => Boolean(value.TURNSTILE_SITE_KEY) === Boolean(value.TURNSTILE_SECRET_KEY), {
     message: "TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY must be set together",
     path: ["TURNSTILE_SITE_KEY"],
-  });
+  })
+  .refine((value) => Boolean(value.GOOGLE_CLIENT_ID) === Boolean(value.GOOGLE_CLIENT_SECRET), {
+    message: "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set together",
+    path: ["GOOGLE_CLIENT_ID"],
+  })
+  .refine((value) => !value.GOOGLE_CLIENT_ID || Boolean(value.CALENDAR_TOKEN_KEY), {
+    message: "CALENDAR_TOKEN_KEY is required when Google Calendar is configured",
+    path: ["CALENDAR_TOKEN_KEY"],
+  })
+  .refine(
+    (value) => !value.CALENDAR_TOKEN_KEY || Boolean(parseSecretKey(value.CALENDAR_TOKEN_KEY)),
+    {
+      message: "CALENDAR_TOKEN_KEY must be 32 random bytes, base64-encoded",
+      path: ["CALENDAR_TOKEN_KEY"],
+    },
+  );
 
 export type Env = z.infer<typeof envSchema>;
 

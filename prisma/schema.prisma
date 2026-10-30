@@ -139,6 +139,7 @@ model Organization {
   consentEvents        ConsentEvent[]
   contactStageChanges  ContactStageChange[]
   calendarFeeds        CalendarFeed[]
+  calendarConnections  CalendarConnection[]
   bookingPages         BookingPage[]
   appointments         Appointment[]
   appointmentAttendees AppointmentAttendee[]
@@ -161,6 +162,8 @@ model Member {
   showOnLeaderboard Boolean          @default(false)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
+
+  calendarConnections CalendarConnection[]
 
   @@unique([organizationId, userId])
   @@index([userId, status])
@@ -945,6 +948,34 @@ model CalendarFeed {
 
   @@unique([organizationId, userId])
   @@map("calendar_feeds")
+}
+
+enum CalendarProvider {
+  GOOGLE
+}
+
+enum CalendarConnectionStatus {
+  ACTIVE
+  NEEDS_RECONNECT
+}
+
+/// One member's connection to an external calendar, used only to read when they are busy. The
+/// refresh token is stored sealed (AES-256-GCM, bound to this row's organization and user); no
+/// calendar content is ever stored. A connection belongs to one organization: the same person
+/// connects again in another one.
+model CalendarConnection {
+  id                 String                   @id @default(uuid(7)) @db.Uuid
+  organizationId     String                   @db.Uuid
+  organization       Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId             String                   @db.Uuid
+  member             Member                   @relation(fields: [organizationId, userId], references: [organizationId, userId], onDelete: Cascade)
+  provider           CalendarProvider
+  status             CalendarConnectionStatus @default(ACTIVE)
+  refreshTokenSealed String
+  connectedAt        DateTime                 @default(now())
+
+  @@unique([organizationId, userId, provider])
+  @@map("calendar_connections")
 }
 
 model AppointmentAttendee {

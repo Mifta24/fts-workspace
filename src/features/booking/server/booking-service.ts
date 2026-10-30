@@ -15,6 +15,11 @@ import {
   visitorBookingSchema,
 } from "@/features/booking/schemas/booking";
 import { computeSlots, type SlotRules } from "@/features/booking/schemas/slots";
+import {
+  googleBusyFor,
+  type BusyLookup,
+} from "@/features/calendar-sync/server/calendar-sync-service";
+import type { CalendarSync } from "@/features/calendar-sync/server/sync-config";
 import { captureVisitorContact } from "@/features/crm/server/crm-service";
 import { publicPagesOpen, requireFeature } from "@/features/billing/server/entitlements";
 import {
@@ -29,7 +34,12 @@ import { planReminder } from "@/features/scheduling/server/scheduling-service";
 import { recordAuditEvent } from "@/server/services/audit";
 import { assertActiveMember, lockTree } from "@/server/services/tenant-refs";
 
-type Deps = { prisma: PrismaClient; correlationId?: string };
+type Deps = {
+  prisma: PrismaClient;
+  correlationId?: string;
+  /** Google Calendar setup; defaults to the deployment's. Tests pass their own. */
+  sync?: CalendarSync | null;
+};
 type Tx = Prisma.TransactionClient;
 
 const MINUTE = 60_000;
@@ -105,6 +115,23 @@ async function ownerBusy(
     select: { startsAt: true, endsAt: true },
   });
 }
+
+/**
+ * The owner's busy periods in a connected external calendar, over the page's whole horizon.
+ * When a connection exists but cannot be read, the caller must offer nothing rather than guess.
+ */
+const externalBusy = (
+  deps: Pick<Deps, "prisma" | "correlationId" | "sync">,
+  page: Prisma.BookingPageGetPayload<object>,
+  now: Date,
+  fresh: boolean,
+): Promise<BusyLookup> =>
+  googleBusyFor(
+    deps,
+    { organizationId: page.organizationId, userId: page.ownerId },
+    new Date(now.getTime() + (page.maxDaysAhead + 1) * DAY),
+    { fresh, now },
+  );
 
 /* ------------------------------ management ------------------------------ */
 
@@ -312,6 +339,8 @@ export type PublicBookingPage = {
   timeZone: string;
   consentText: string;
   slots: Date[];
+  /** The owner's calendar connection cannot be read right now, so no times are offered. */
+  unavailable: boolean;
 };
 
 /** A published page whose owner is still an active member; anything else looks like no page. */
@@ -334,12 +363,17 @@ async function livePage(prisma: PrismaClient, rawToken: string) {
 
 /** What an anonymous visitor may see: the page's wording and its free slots, nothing about why a time is taken. */
 export async function getPublicBookingPage(
-  { prisma }: Pick<Deps, "prisma">,
+  deps: Pick<Deps, "prisma" | "sync">,
   rawToken: string,
   now: Date = new Date(),
 ): Promise<PublicBookingPage> {
-  const page = await livePage(prisma as PrismaClient, rawToken);
-  const busy = await ownerBusy(prisma, page.organizationId, page.ownerId, now, page.maxDaysAhead);
+  const { prisma } = deps;
+  const page = await livePage(prisma, rawToken);
+  const [busy, external] = await Promise.all([
+    ownerBusy(prisma, page.organizationId, page.ownerId, now, page.maxDaysAhead),
+    externalBusy(deps, page, now, false),
+  ]);
+  const unavailable = external.status === "unavailable";
   return {
     title: page.title,
     description: page.description,
@@ -348,7 +382,14 @@ export async function getPublicBookingPage(
     durationMinutes: page.durationMinutes,
     timeZone: page.timeZone,
     consentText: page.consentText,
-    slots: computeSlots(rulesOf(page), busy, now),
+    unavailable,
+    slots: unavailable
+      ? []
+      : computeSlots(
+          rulesOf(page),
+          [...busy, ...(external.status === "ok" ? external.busy : [])],
+          now,
+        ),
   };
 }
 
@@ -360,12 +401,13 @@ export type BookingConfirmation = { title: string; startsAt: Date; endsAt: Date;
  * accepted only if the server would have offered it right now. Consent is required and recorded.
  */
 export async function bookPublicSlot(
-  { prisma, correlationId }: Deps,
+  deps: Deps,
   rawToken: string,
   rawInput: unknown,
   consentAccepted: boolean,
   now: Date = new Date(),
 ): Promise<BookingConfirmation> {
+  const { prisma, correlationId } = deps;
   if (JSON.stringify(rawInput ?? null).length > MAX_PUBLIC_BODY_CHARS) {
     throw new AppError("INVALID_INPUT", "The request is too large.");
   }
@@ -401,12 +443,20 @@ export async function bookPublicSlot(
     throw new AppError("RATE_LIMITED", "You already have upcoming bookings with this page.");
   }
 
+  // Asked before the lock is taken, so a slow answer from Google never holds up other bookings.
+  // A connection that cannot be read refuses the booking: the owner is not assumed to be free.
+  const external = await externalBusy(deps, page, now, true);
+  if (external.status === "unavailable") {
+    throw new AppError("CONFLICT", "That time is no longer available.");
+  }
+  const googleBusy = external.status === "ok" ? external.busy : [];
+
   const endsAt = new Date(input.startsAt.getTime() + page.durationMinutes * MINUTE);
   const notified = await prisma.$transaction(async (tx) => {
     await lockTree(tx, "schedule", organizationId);
     // Decided again under the lock, so two visitors cannot take the same slot.
     const busy = await ownerBusy(tx, organizationId, page.ownerId, now, page.maxDaysAhead);
-    const offered = computeSlots(rulesOf(page), busy, now).some(
+    const offered = computeSlots(rulesOf(page), [...busy, ...googleBusy], now).some(
       (slot) => slot.getTime() === input.startsAt.getTime(),
     );
     if (!offered) throw new AppError("CONFLICT", "That time is no longer available.");
