@@ -34,6 +34,13 @@ describe("permission matrix", () => {
     expect(roleHasPermission("OWNER", "billing:manage" as never)).toBe(false);
   });
 
+  it("shows plan and usage only to owners and admins", () => {
+    expect(ORGANIZATION_ROLES.filter((r) => roleHasPermission(r, "billing:read"))).toEqual([
+      "OWNER",
+      "ADMIN",
+    ]);
+  });
+
   it("lists only granted permissions", () => {
     expect(permissionsForRole("VIEWER")).toEqual([
       "organization:read",

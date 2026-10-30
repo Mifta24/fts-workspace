@@ -71,7 +71,8 @@
     "crm": "CRM",
     "schedule": "スケジュール",
     "forms": "フォーム",
-    "insights": "インサイト"
+    "insights": "インサイト",
+    "billing": "プラン"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -143,6 +144,7 @@
     "unprocessable": "この変更は許可されていません（利用できないプロジェクト、担当者、親ゴールなど）。",
     "generic": "問題が発生しました。もう一度お試しください。",
     "rateLimited": "試行回数が多すぎます。しばらくしてからもう一度お試しください。",
+    "planLimit": "現在のプランではこの操作を行えないか、上限に達しています。ワークスペースのオーナーにプランについてご相談ください。",
     "captcha": "確認を完了してから、もう一度お試しください。"
   },
   "Tasks": {
@@ -742,5 +744,76 @@
     "booked": "{time} に予約しました。ありがとうございます。",
     "bookedGeneric": "ありがとうございます。リクエストを送信しました。",
     "privacy": "入力内容は、このページを公開した組織に送信されます。"
+  },
+  "Billing": {
+    "title": "プランと利用状況",
+    "planTitle": "現在のプラン",
+    "plan": {
+      "FREE": "フリー",
+      "TEAM": "チーム",
+      "BUSINESS": "ビジネス",
+      "UNMETERED": "制限なし"
+    },
+    "unmeteredNote": "このワークスペースにはプランの上限がありません。",
+    "trialEnds": "トライアルは {date} に終了します。",
+    "trialExpired": "トライアルは終了し、ワークスペースはフリープランになりました。",
+    "changePlan": "現時点ではプランの変更はプラットフォーム運営者が行います。変更をご希望の場合は運営者にご連絡ください。",
+    "usageTitle": "利用状況",
+    "seats": "席数（メンバーと保留中の招待）",
+    "storage": "ファイル保存容量",
+    "aiToday": "本日のAIトークン",
+    "aiMonth": "今月のAIトークン",
+    "usedOf": "{used} / {limit}",
+    "unlimited": "{used}（プランの上限なし）",
+    "seatsNote": "招待を送ると、承諾・取り消し・期限切れになるまで1席が確保されます。",
+    "aiNote": "日次または月次のAI利用枠を使い切ると、リセット（UTC）までAI機能は停止します。超過料金はありません。",
+    "featuresTitle": "利用できる機能",
+    "feature": {
+      "ai": "AIプランナーとアシスタント",
+      "crm": "CRMの連絡先と案件",
+      "publicPages": "公開フォームと予約ページ"
+    },
+    "included": "含まれます",
+    "notIncluded": "含まれません",
+    "downgradeNote": "小さいプランに変更してもデータは削除されません。既存の連絡先、ファイル、メンバーは引き続き閲覧できますが、上限に達すると追加できなくなり、プランに含まれない公開リンクは応答しなくなります。"
+  },
+  "Admin": {
+    "title": "運営コンソール",
+    "intro": "ワークスペース横断の運用画面です。ここでの変更はすべて該当ワークスペースの監査ログに記録されます。表示するのは件数とワークスペース名のみで、メンバーのコンテンツは表示しません。",
+    "back": "ワークスペース一覧へ戻る",
+    "healthTitle": "プラットフォームの状態（直近24時間）",
+    "workspaces": "ワークスペース",
+    "suspended": "停止中のワークスペース",
+    "users": "ユーザー",
+    "signups": "新規ユーザー",
+    "jobsQueued": "待機中のジョブ",
+    "oldestDue": "最も長く待っているジョブ",
+    "none": "なし",
+    "seconds": "{count} 秒",
+    "jobsFailed": "失敗したジョブ",
+    "jobsStuck": "停滞したジョブ",
+    "aiCalls": "AI呼び出し",
+    "aiErrors": "AIエラー",
+    "workspacesTitle": "ワークスペース",
+    "search": "名前またはURLで検索",
+    "searchSubmit": "検索",
+    "noWorkspaces": "ワークスペースが見つかりません。",
+    "created": "作成日 {date}",
+    "plan": {
+      "FREE": "フリー",
+      "TEAM": "チーム",
+      "BUSINESS": "ビジネス",
+      "UNMETERED": "制限なし"
+    },
+    "trialEnds": "トライアル終了 {date}",
+    "trialExpired": "トライアル終了",
+    "suspendedBadge": "停止中",
+    "usage": "アクティブメンバー {members} 人 · 今月のAIトークン {tokens}",
+    "planLabel": "プラン",
+    "trialDays": "トライアル日数（任意）",
+    "setPlan": "プランを設定",
+    "suspend": "ワークスペースを停止",
+    "unsuspend": "ワークスペースを再開",
+    "limit": "表示は最大 {count} 件です。他は検索で絞り込んでください。"
   }
 }

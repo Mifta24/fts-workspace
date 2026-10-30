@@ -6,7 +6,8 @@ export type AppErrorCode =
   | "NOT_FOUND"
   | "CONFLICT"
   | "UNPROCESSABLE"
-  | "RATE_LIMITED";
+  | "RATE_LIMITED"
+  | "PLAN_LIMIT";
 
 const HTTP_STATUS: Record<AppErrorCode, number> = {
   INVALID_INPUT: 400,
@@ -16,6 +17,7 @@ const HTTP_STATUS: Record<AppErrorCode, number> = {
   CONFLICT: 409,
   UNPROCESSABLE: 422,
   RATE_LIMITED: 429,
+  PLAN_LIMIT: 402,
 };
 
 export class AppError extends Error {

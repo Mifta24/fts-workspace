@@ -7,9 +7,10 @@ import {
   type OrganizationContext,
 } from "@/features/organizations/server/organization-service";
 import type { TextProvider } from "@/server/ai/provider";
+import { getEntitlements } from "@/features/billing/server/entitlements";
 import { recordAuditEvent } from "@/server/services/audit";
 
-type Db = Pick<PrismaClient, "aiUsageEvent" | "organization">;
+type Db = Pick<PrismaClient, "aiUsageEvent" | "organization" | "subscription">;
 
 /** All AI features together, per person. */
 export const AI_REQUESTS_PER_HOUR = 30;
@@ -18,6 +19,26 @@ const estimateTokens = (text: string) => Math.ceil(text.length / 4);
 
 export const startOfUtcDay = (date: Date) =>
   new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+
+export const startOfUtcMonth = (date: Date) =>
+  new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
+
+export async function tokensUsedThisMonth(
+  prisma: Pick<PrismaClient, "aiUsageEvent">,
+  organizationId: string,
+  now: Date,
+): Promise<number> {
+  const sum = await prisma.aiUsageEvent.aggregate({
+    where: { organizationId, createdAt: { gte: startOfUtcMonth(now) } },
+    _sum: { tokens: true },
+  });
+  return sum._sum.tokens ?? 0;
+}
+
+/** The daily ceiling that applies: the admin's setting, lowered by the plan when the plan is lower. */
+export function effectiveDailyBudget(setting: number, planDaily: number | null): number {
+  return planDaily === null ? setting : Math.min(setting, planDaily);
+}
 
 export async function tokensUsedToday(
   prisma: Db,
@@ -58,16 +79,30 @@ export async function runMeteredCompletion(
   if (recent >= AI_REQUESTS_PER_HOUR) {
     throw new AppError("RATE_LIMITED", "Too many AI requests. Try again later.");
   }
-  const organization = await prisma.organization.findUniqueOrThrow({
-    where: { id: organizationId },
-    select: { aiDailyTokenBudget: true },
-  });
+  const [organization, entitlements] = await Promise.all([
+    prisma.organization.findUniqueOrThrow({
+      where: { id: organizationId },
+      select: { aiDailyTokenBudget: true },
+    }),
+    getEntitlements(prisma, organizationId, now),
+  ]);
+  if (!entitlements.features.includes("ai")) {
+    throw new AppError("PLAN_LIMIT", "Your plan does not include AI features.");
+  }
   const promptEstimate = estimateTokens(input.system) + estimateTokens(input.user);
-  if (
-    (await tokensUsedToday(prisma, organizationId, now)) + promptEstimate >
-    organization.aiDailyTokenBudget
-  ) {
+  const dailyBudget = effectiveDailyBudget(
+    organization.aiDailyTokenBudget,
+    entitlements.aiDailyTokens,
+  );
+  if ((await tokensUsedToday(prisma, organizationId, now)) + promptEstimate > dailyBudget) {
     throw new AppError("RATE_LIMITED", "The daily AI budget of this workspace is used up.");
+  }
+  if (
+    entitlements.aiMonthlyTokens !== null &&
+    (await tokensUsedThisMonth(prisma, organizationId, now)) + promptEstimate >
+      entitlements.aiMonthlyTokens
+  ) {
+    throw new AppError("PLAN_LIMIT", "The monthly AI allowance of this plan is used up.");
   }
 
   const started = Date.now();
@@ -119,13 +154,16 @@ export async function getAiUsage(
   now: Date = new Date(),
 ): Promise<{ usedToday: number; dailyBudget: number }> {
   requirePermission(context, "ai:use");
-  const organization = await prisma.organization.findUniqueOrThrow({
-    where: { id: context.organization.id },
-    select: { aiDailyTokenBudget: true },
-  });
+  const [organization, entitlements] = await Promise.all([
+    prisma.organization.findUniqueOrThrow({
+      where: { id: context.organization.id },
+      select: { aiDailyTokenBudget: true },
+    }),
+    getEntitlements(prisma, context.organization.id, now),
+  ]);
   return {
     usedToday: await tokensUsedToday(prisma, context.organization.id, now),
-    dailyBudget: organization.aiDailyTokenBudget,
+    dailyBudget: effectiveDailyBudget(organization.aiDailyTokenBudget, entitlements.aiDailyTokens),
   };
 }
 

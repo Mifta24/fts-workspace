@@ -9,6 +9,7 @@ export type ActionError =
   | "conflict"
   | "unprocessable"
   | "rateLimited"
+  | "planLimit"
   | "captcha"
   | "generic";
 export type ActionState = {
@@ -25,6 +26,7 @@ const BY_CODE: Partial<Record<AppErrorCode, ActionError>> = {
   CONFLICT: "conflict",
   UNPROCESSABLE: "unprocessable",
   RATE_LIMITED: "rateLimited",
+  PLAN_LIMIT: "planLimit",
 };
 
 /** Maps a thrown error to a client-safe state; unexpected errors are logged, not leaked. */

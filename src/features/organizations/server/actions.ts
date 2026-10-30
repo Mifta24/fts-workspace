@@ -5,6 +5,7 @@ import { redirect } from "@/i18n/navigation";
 import { getSessionUser } from "@/lib/auth/session";
 import { getCorrelationId } from "@/lib/correlation";
 import { db } from "@/lib/db";
+import { env } from "@/lib/env";
 import { isAppError } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 import { createOrganization } from "@/features/organizations/server/organization-service";
@@ -22,10 +23,12 @@ export async function createOrganizationAction(
   const correlationId = await getCorrelationId();
   let slug: string;
   try {
-    const organization = await createOrganization({ prisma: db(), correlationId }, user.id, {
-      name: formData.get("name"),
-      slug: formData.get("slug"),
-    });
+    const organization = await createOrganization(
+      { prisma: db(), correlationId },
+      user.id,
+      { name: formData.get("name"), slug: formData.get("slug") },
+      { trialDays: env().BILLING_ENABLED ? env().BILLING_TRIAL_DAYS : undefined },
+    );
     slug = organization.slug;
   } catch (error) {
     if (isAppError(error) && error.code === "INVALID_INPUT") return { error: "invalid" };

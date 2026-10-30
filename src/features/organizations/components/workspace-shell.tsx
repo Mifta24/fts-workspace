@@ -25,7 +25,8 @@ type Section =
   | "schedule"
   | "forms"
   | "insights"
-  | "members";
+  | "members"
+  | "billing";
 
 const SECTIONS: { key: Section; path: string; permission?: Permission }[] = [
   { key: "overview", path: "" },
@@ -43,6 +44,7 @@ const SECTIONS: { key: Section; path: string; permission?: Permission }[] = [
   { key: "forms", path: "/forms", permission: "form:manage" },
   { key: "insights", path: "/insights" },
   { key: "members", path: "/members" },
+  { key: "billing", path: "/billing", permission: "billing:read" },
 ];
 
 export async function WorkspaceShell({

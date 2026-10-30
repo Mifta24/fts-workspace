@@ -16,6 +16,7 @@ import {
   requirePermission,
   type OrganizationContext,
 } from "@/features/organizations/server/organization-service";
+import { requireFeature } from "@/features/billing/server/entitlements";
 import { recordAuditEvent } from "@/server/services/audit";
 import { assertActiveMember } from "@/server/services/tenant-refs";
 
@@ -278,6 +279,7 @@ export async function createContact(
   rawInput: unknown,
 ): Promise<ContactView> {
   requirePermission(context, "crm:write");
+  await requireFeature(prisma, context.organization.id, "crm");
   const parsed = createContactSchema.safeParse(rawInput);
   if (!parsed.success) throw new AppError("INVALID_INPUT", "Contact details are invalid.");
   const input = parsed.data;
@@ -546,6 +548,7 @@ export async function createDeal(
   rawInput: unknown,
 ): Promise<DealView> {
   requirePermission(context, "crm:write");
+  await requireFeature(prisma, context.organization.id, "crm");
   const parsed = createDealSchema.safeParse(rawInput);
   if (!parsed.success) throw new AppError("INVALID_INPUT", "Deal details are invalid.");
   const input = parsed.data;

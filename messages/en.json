@@ -71,7 +71,8 @@
     "crm": "CRM",
     "schedule": "Schedule",
     "forms": "Forms",
-    "insights": "Insights"
+    "insights": "Insights",
+    "billing": "Plan"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -143,6 +144,7 @@
     "unprocessable": "This change is not allowed (for example an unavailable project, owner or parent goal).",
     "generic": "Something went wrong. Please try again.",
     "rateLimited": "Too many attempts. Please wait a moment and try again.",
+    "planLimit": "Your plan does not include this, or its limit is reached. Ask a workspace owner about the plan.",
     "captcha": "Please complete the verification and try again."
   },
   "Tasks": {
@@ -742,5 +744,76 @@
     "booked": "You are booked for {time}. Thank you!",
     "bookedGeneric": "Thank you! Your request was sent.",
     "privacy": "Your details are sent to the organization that published this page."
+  },
+  "Billing": {
+    "title": "Plan and usage",
+    "planTitle": "Current plan",
+    "plan": {
+      "FREE": "Free",
+      "TEAM": "Team",
+      "BUSINESS": "Business",
+      "UNMETERED": "Unmetered"
+    },
+    "unmeteredNote": "This workspace has no plan limits.",
+    "trialEnds": "Trial ends on {date}.",
+    "trialExpired": "The trial has ended; the workspace is on the Free plan.",
+    "changePlan": "Plans are changed by the platform operator for now. Contact them to move to another plan.",
+    "usageTitle": "Usage",
+    "seats": "Seats (members and pending invitations)",
+    "storage": "File storage",
+    "aiToday": "AI tokens today",
+    "aiMonth": "AI tokens this month",
+    "usedOf": "{used} of {limit}",
+    "unlimited": "{used} (no plan limit)",
+    "seatsNote": "Inviting someone reserves a seat until the invitation is accepted, revoked or expired.",
+    "aiNote": "When the daily or monthly AI allowance is used up, AI features pause until it resets (UTC). There is no overage billing.",
+    "featuresTitle": "Included features",
+    "feature": {
+      "ai": "AI planner and assistant",
+      "crm": "CRM contacts and deals",
+      "publicPages": "Public forms and booking pages"
+    },
+    "included": "Included",
+    "notIncluded": "Not included",
+    "downgradeNote": "Moving to a smaller plan never deletes data. Existing contacts, files and members stay readable; adding more is blocked once a limit is reached, and public links stop answering when the plan does not include them."
+  },
+  "Admin": {
+    "title": "Operator console",
+    "intro": "Cross-workspace operations. Every change here is written to that workspace's audit trail. Only counts and workspace names are shown, never member content.",
+    "back": "Back to your workspaces",
+    "healthTitle": "Platform health (last 24 hours)",
+    "workspaces": "Workspaces",
+    "suspended": "Suspended workspaces",
+    "users": "Users",
+    "signups": "New users",
+    "jobsQueued": "Queued jobs",
+    "oldestDue": "Oldest due job waiting",
+    "none": "None",
+    "seconds": "{count} s",
+    "jobsFailed": "Failed jobs",
+    "jobsStuck": "Stuck jobs",
+    "aiCalls": "AI calls",
+    "aiErrors": "AI errors",
+    "workspacesTitle": "Workspaces",
+    "search": "Search by name or URL",
+    "searchSubmit": "Search",
+    "noWorkspaces": "No workspaces found.",
+    "created": "created {date}",
+    "plan": {
+      "FREE": "Free",
+      "TEAM": "Team",
+      "BUSINESS": "Business",
+      "UNMETERED": "Unmetered"
+    },
+    "trialEnds": "trial ends {date}",
+    "trialExpired": "trial ended",
+    "suspendedBadge": "Suspended",
+    "usage": "{members} active members · {tokens} AI tokens this month",
+    "planLabel": "Plan",
+    "trialDays": "Trial days (optional)",
+    "setPlan": "Set plan",
+    "suspend": "Suspend workspace",
+    "unsuspend": "Restore workspace",
+    "limit": "Showing at most {count} workspaces; narrow the search to find others."
   }
 }

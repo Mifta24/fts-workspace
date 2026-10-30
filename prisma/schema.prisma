@@ -106,6 +106,9 @@ model Organization {
   leaderboardVisibility LeaderboardVisibility @default(OFF)
   /// Tokens the organization's AI features may use per UTC day (a ceiling, not a purchase).
   aiDailyTokenBudget    Int                   @default(200000)
+  /// Set by a platform operator to switch the workspace off (abuse, incident). While set, nobody
+  /// can open it and its public links and feeds stop answering; nothing is deleted.
+  suspendedAt           DateTime?
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 
@@ -141,6 +144,7 @@ model Organization {
   appointmentAttendees AppointmentAttendee[]
   forms                Form[]
   formSubmissions      FormSubmission[]
+  subscription         Subscription?
 
   @@map("organizations")
 }
@@ -1013,6 +1017,39 @@ model FormSubmission {
 
   @@index([organizationId, formId, createdAt])
   @@map("form_submissions")
+}
+
+// ---------------------------------------------------------------------------
+// Billing
+// ---------------------------------------------------------------------------
+
+enum PlanKey {
+  FREE
+  TEAM
+  BUSINESS
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+}
+
+/// The plan an organization is on. No row means the workspace is unmetered (self-hosted pilots and
+/// workspaces created before billing was switched on). What each plan allows lives in code
+/// (`src/features/billing/schemas/plans.ts`), not here, so limits change with a deploy and a
+/// review. A payment provider is not connected yet (ADR-015): a platform operator sets the plan.
+model Subscription {
+  id             String             @id @default(uuid(7)) @db.Uuid
+  organizationId String             @unique @db.Uuid
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  planKey        PlanKey
+  status         SubscriptionStatus
+  /// While TRIALING and in the future, the plan applies; afterwards the workspace falls back to FREE.
+  trialEndsAt    DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@map("subscriptions")
 }
 
 // ---------------------------------------------------------------------------

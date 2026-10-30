@@ -5,7 +5,6 @@ import { AppError } from "@/lib/errors";
 import {
   fileIdSchema,
   MAX_FILE_BYTES,
-  ORGANIZATION_QUOTA_BYTES,
   sanitizeFileName,
   uploadVisibilitySchema,
   verifyContent,
@@ -16,6 +15,7 @@ import {
   type OrganizationContext,
 } from "@/features/organizations/server/organization-service";
 import type { StoragePort } from "@/server/storage/storage";
+import { getEntitlements } from "@/features/billing/server/entitlements";
 import { recordAuditEvent } from "@/server/services/audit";
 import { assertActiveMember } from "@/server/services/tenant-refs";
 
@@ -107,8 +107,12 @@ export async function uploadFile(
     where: { organizationId, status: "READY" },
     _sum: { sizeBytes: true },
   });
-  if ((used._sum.sizeBytes ?? 0) + input.bytes.length > ORGANIZATION_QUOTA_BYTES) {
-    throw new AppError("UNPROCESSABLE", "The storage quota of this workspace is used up.");
+  const entitlements = await getEntitlements(prisma, organizationId);
+  if ((used._sum.sizeBytes ?? 0) + input.bytes.length > entitlements.storageBytes) {
+    throw new AppError(
+      entitlements.plan === "UNMETERED" ? "UNPROCESSABLE" : "PLAN_LIMIT",
+      "The storage quota of this workspace is used up.",
+    );
   }
 
   const storageKey = `${organizationId}/${randomUUID()}`;

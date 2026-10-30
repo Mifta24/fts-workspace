@@ -8,6 +8,7 @@ import {
   type OrganizationRole,
   type Permission,
 } from "@/lib/permissions/matrix";
+import { TRIAL_PLAN } from "@/features/billing/schemas/plans";
 import { recordAuditEvent } from "@/server/services/audit";
 import {
   createOrganizationSchema,
@@ -36,6 +37,7 @@ export async function createOrganization(
   { prisma, correlationId }: Deps,
   actorId: string,
   rawInput: unknown,
+  options: { trialDays?: number } = {},
 ): Promise<OrganizationSummary> {
   const parsed = createOrganizationSchema.safeParse(rawInput);
   if (!parsed.success) throw new AppError("INVALID_INPUT", "Organization details are invalid.");
@@ -48,6 +50,18 @@ export async function createOrganization(
           name: input.name,
           slug: input.slug,
           members: { create: { userId: actorId, role: "OWNER" } },
+          // Only when billing is switched on: a new workspace starts with a time-limited trial.
+          ...(options.trialDays
+            ? {
+                subscription: {
+                  create: {
+                    planKey: TRIAL_PLAN,
+                    status: "TRIALING" as const,
+                    trialEndsAt: new Date(Date.now() + options.trialDays * 86_400_000),
+                  },
+                },
+              }
+            : {}),
         },
       });
       await recordAuditEvent(tx, {
@@ -80,7 +94,7 @@ export async function listUserOrganizations(
   userId: string,
 ): Promise<OrganizationSummary[]> {
   const memberships = await prisma.member.findMany({
-    where: { userId, status: "ACTIVE" },
+    where: { userId, status: "ACTIVE", organization: { suspendedAt: null } },
     include: { organization: { select: { id: true, name: true, slug: true } } },
     orderBy: { organization: { name: "asc" } },
   });
@@ -110,7 +124,7 @@ export async function getAuthorizedOrganization(
     where: {
       userId: params.userId,
       status: "ACTIVE",
-      organization: { slug: slug.data },
+      organization: { slug: slug.data, suspendedAt: null },
     },
     include: { organization: { select: { id: true, name: true, slug: true } } },
   });

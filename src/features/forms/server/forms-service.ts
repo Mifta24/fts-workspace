@@ -3,6 +3,7 @@ import { randomBytes } from "node:crypto";
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import { AppError } from "@/lib/errors";
 import { captureVisitorContact } from "@/features/crm/server/crm-service";
+import { publicPagesOpen, requireFeature } from "@/features/billing/server/entitlements";
 import {
   buildAnswerSchema,
   assignFieldKeys,
@@ -300,6 +301,7 @@ export async function setFormStatus(
       throw new AppError("UNPROCESSABLE", "This status change is not allowed.");
     }
     if (status.data === "PUBLISHED") {
+      await requireFeature(tx, context.organization.id, "publicPages");
       const keys = parseFields(form.fields).map((field) => field.key);
       if (
         form.createsContact &&
@@ -348,9 +350,10 @@ export async function getPublicForm(
   if (!token.success) throw notFound();
   const form = await prisma.form.findUnique({
     where: { publicToken: token.data },
-    include: { organization: { select: { name: true } } },
+    include: { organization: { select: { id: true, name: true, suspendedAt: true } } },
   });
   if (!form || form.status !== "PUBLISHED") throw notFound();
+  if (!(await publicPagesOpen(prisma, form.organization))) throw notFound();
   return {
     title: form.title,
     description: form.description,
@@ -378,8 +381,12 @@ export async function submitPublicForm(
   if (JSON.stringify(rawAnswers ?? null).length > MAX_PUBLIC_BODY_CHARS) {
     throw new AppError("INVALID_INPUT", "The submission is too large.");
   }
-  const form = await prisma.form.findUnique({ where: { publicToken: token.data } });
+  const form = await prisma.form.findUnique({
+    where: { publicToken: token.data },
+    include: { organization: { select: { id: true, suspendedAt: true } } },
+  });
   if (!form || form.status !== "PUBLISHED") throw notFound();
+  if (!(await publicPagesOpen(prisma, form.organization, now))) throw notFound();
   const organizationId = form.organizationId;
 
   const answers = buildAnswerSchema(parseFields(form.fields)).safeParse(rawAnswers);

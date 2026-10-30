@@ -12,6 +12,7 @@ import {
   requirePermission,
   type OrganizationContext,
 } from "@/features/organizations/server/organization-service";
+import { assertSeatAvailable } from "@/features/billing/server/entitlements";
 import { recordAuditEvent } from "@/server/services/audit";
 
 type Deps = { prisma: PrismaClient; correlationId?: string };
@@ -57,6 +58,7 @@ export async function createInvitation(
       });
       if (existingMember) throw new AppError("CONFLICT", "This person is already a member.");
 
+      await assertSeatAvailable(tx, organizationId, now, { reserve: true });
       const pending = await tx.invitation.count({
         where: { organizationId, acceptedAt: null, revokedAt: null, expiresAt: { gt: now } },
       });
@@ -213,6 +215,9 @@ export async function acceptInvitation(
       data: { acceptedAt: now, acceptedById: user.id },
     });
     if (claimed.count === 0) throw invalid();
+    // The invitation already holds a seat in the count of pending invitations, but a plan may have
+    // shrunk since it was sent; accepting must still fit.
+    await assertSeatAvailable(tx, invitation.organizationId, now, { reserve: false });
 
     await tx.member.create({
       data: { organizationId: invitation.organizationId, userId: user.id, role: invitation.role },
@@ -239,9 +244,11 @@ async function findPending(prisma: PrismaClient, rawToken: string, now: Date) {
   if (!token.success) throw invalid();
   const row = await prisma.invitation.findUnique({
     where: { tokenHash: hashToken(token.data) },
-    include: { organization: { select: { name: true, slug: true } } },
+    include: { organization: { select: { name: true, slug: true, suspendedAt: true } } },
   });
   if (!row || row.acceptedAt || row.revokedAt || row.expiresAt <= now) throw invalid();
+  // A suspended workspace takes nobody new; the invitation looks like any other dead link.
+  if (row.organization.suspendedAt) throw invalid();
   return row;
 }
 

@@ -71,7 +71,8 @@
     "crm": "CRM",
     "schedule": "Jadwal",
     "forms": "Formulir",
-    "insights": "Wawasan"
+    "insights": "Wawasan",
+    "billing": "Paket"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -143,6 +144,7 @@
     "unprocessable": "Perubahan ini tidak diizinkan (misalnya proyek, pemilik, atau tujuan induk tidak tersedia).",
     "generic": "Terjadi kesalahan. Silakan coba lagi.",
     "rateLimited": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
+    "planLimit": "Paket Anda tidak mencakup ini, atau batasnya sudah tercapai. Tanyakan paket kepada pemilik workspace.",
     "captcha": "Selesaikan verifikasi lalu coba lagi."
   },
   "Tasks": {
@@ -742,5 +744,76 @@
     "booked": "Anda terdaftar untuk {time}. Terima kasih!",
     "bookedGeneric": "Terima kasih! Permintaan Anda telah dikirim.",
     "privacy": "Data Anda dikirim ke organisasi yang menerbitkan halaman ini."
+  },
+  "Billing": {
+    "title": "Paket dan penggunaan",
+    "planTitle": "Paket saat ini",
+    "plan": {
+      "FREE": "Gratis",
+      "TEAM": "Tim",
+      "BUSINESS": "Bisnis",
+      "UNMETERED": "Tanpa batas"
+    },
+    "unmeteredNote": "Workspace ini tidak memiliki batas paket.",
+    "trialEnds": "Masa percobaan berakhir pada {date}.",
+    "trialExpired": "Masa percobaan telah berakhir; workspace kini memakai paket Gratis.",
+    "changePlan": "Untuk saat ini paket diubah oleh operator platform. Hubungi mereka untuk pindah paket.",
+    "usageTitle": "Penggunaan",
+    "seats": "Kursi (anggota dan undangan tertunda)",
+    "storage": "Penyimpanan file",
+    "aiToday": "Token AI hari ini",
+    "aiMonth": "Token AI bulan ini",
+    "usedOf": "{used} dari {limit}",
+    "unlimited": "{used} (tanpa batas paket)",
+    "seatsNote": "Mengundang seseorang menahan satu kursi sampai undangan diterima, dibatalkan, atau kedaluwarsa.",
+    "aiNote": "Jika jatah AI harian atau bulanan habis, fitur AI berhenti sampai direset (UTC). Tidak ada tagihan kelebihan pemakaian.",
+    "featuresTitle": "Fitur yang termasuk",
+    "feature": {
+      "ai": "Perencana dan asisten AI",
+      "crm": "Kontak dan deal CRM",
+      "publicPages": "Formulir publik dan halaman booking"
+    },
+    "included": "Termasuk",
+    "notIncluded": "Tidak termasuk",
+    "downgradeNote": "Pindah ke paket lebih kecil tidak menghapus data. Kontak, file, dan anggota yang ada tetap bisa dibaca; menambah lagi diblokir setelah batas tercapai, dan tautan publik berhenti menjawab jika paket tidak mencakupnya."
+  },
+  "Admin": {
+    "title": "Konsol operator",
+    "intro": "Operasi lintas workspace. Setiap perubahan di sini dicatat di jejak audit workspace tersebut. Hanya jumlah dan nama workspace yang ditampilkan, tidak pernah isi milik anggota.",
+    "back": "Kembali ke workspace Anda",
+    "healthTitle": "Kesehatan platform (24 jam terakhir)",
+    "workspaces": "Workspace",
+    "suspended": "Workspace ditangguhkan",
+    "users": "Pengguna",
+    "signups": "Pengguna baru",
+    "jobsQueued": "Job dalam antrean",
+    "oldestDue": "Job jatuh tempo terlama menunggu",
+    "none": "Tidak ada",
+    "seconds": "{count} dtk",
+    "jobsFailed": "Job gagal",
+    "jobsStuck": "Job macet",
+    "aiCalls": "Panggilan AI",
+    "aiErrors": "Error AI",
+    "workspacesTitle": "Workspace",
+    "search": "Cari berdasarkan nama atau URL",
+    "searchSubmit": "Cari",
+    "noWorkspaces": "Tidak ada workspace.",
+    "created": "dibuat {date}",
+    "plan": {
+      "FREE": "Gratis",
+      "TEAM": "Tim",
+      "BUSINESS": "Bisnis",
+      "UNMETERED": "Tanpa batas"
+    },
+    "trialEnds": "percobaan berakhir {date}",
+    "trialExpired": "percobaan berakhir",
+    "suspendedBadge": "Ditangguhkan",
+    "usage": "{members} anggota aktif · {tokens} token AI bulan ini",
+    "planLabel": "Paket",
+    "trialDays": "Hari percobaan (opsional)",
+    "setPlan": "Atur paket",
+    "suspend": "Tangguhkan workspace",
+    "unsuspend": "Pulihkan workspace",
+    "limit": "Menampilkan paling banyak {count} workspace; persempit pencarian untuk yang lain."
   }
 }

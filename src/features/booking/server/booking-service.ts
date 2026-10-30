@@ -16,6 +16,7 @@ import {
 } from "@/features/booking/schemas/booking";
 import { computeSlots, type SlotRules } from "@/features/booking/schemas/slots";
 import { captureVisitorContact } from "@/features/crm/server/crm-service";
+import { publicPagesOpen, requireFeature } from "@/features/billing/server/entitlements";
 import {
   createNotifications,
   publishNotifications,
@@ -279,6 +280,7 @@ export async function setBookingPageStatus(
       throw new AppError("UNPROCESSABLE", "This status change is not allowed.");
     }
     if (status.data === "PUBLISHED") {
+      await requireFeature(tx, context.organization.id, "publicPages");
       await assertActiveMember(
         tx,
         context.organization.id,
@@ -318,9 +320,10 @@ async function livePage(prisma: PrismaClient, rawToken: string) {
   if (!token.success) throw notFound();
   const page = await prisma.bookingPage.findUnique({
     where: { publicToken: token.data },
-    include: { organization: { select: { name: true } } },
+    include: { organization: { select: { id: true, name: true, suspendedAt: true } } },
   });
   if (!page || page.status !== "PUBLISHED") throw notFound();
+  if (!(await publicPagesOpen(prisma, page.organization))) throw notFound();
   const owner = await prisma.member.findFirst({
     where: { organizationId: page.organizationId, userId: page.ownerId, status: "ACTIVE" },
     select: { id: true },

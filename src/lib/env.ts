@@ -29,6 +29,24 @@ const envSchema = z
     // Both keys or neither: without them those forms rely on the honeypot and the volume limits.
     TURNSTILE_SITE_KEY: z.string().min(1).optional(),
     TURNSTILE_SECRET_KEY: z.string().min(1).optional(),
+    // Billing is opt-in: with it off, new workspaces are unmetered (no plan limits). With it on, a
+    // new workspace starts a trial on the trial plan for BILLING_TRIAL_DAYS days.
+    BILLING_ENABLED: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((value) => value === "true"),
+    BILLING_TRIAL_DAYS: z.coerce.number().int().min(1).max(90).default(14),
+    // Comma-separated emails of platform operators who may open /admin (cross-tenant by design).
+    // They must still sign in with a verified email. Empty: nobody can.
+    PLATFORM_ADMIN_EMAILS: z
+      .string()
+      .default("")
+      .transform((value) =>
+        value
+          .split(",")
+          .map((email) => email.trim().toLowerCase())
+          .filter(Boolean),
+      ),
     LOG_LEVEL: z
       .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
       .default("info"),
