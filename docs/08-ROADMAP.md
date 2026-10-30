@@ -46,11 +46,11 @@ No durations are commitments; estimate after technical discovery and staffing as
 **Exit gate:** privacy controls, consent pathways, and reliable reporting. Met for the scope built, verified locally on 2026-10-30: lint, format, typecheck, 389 Vitest tests, build, 38 Playwright tests, and the opt-in captcha run against Cloudflare's dummy keys (`pass` and `fail`); the CI workflow has not run on these commits yet. Privacy and consent: consent history and erasure (including a booking visitor's note), consent captured on public forms and booking pages with PII kept out of the audit trail, append-only consent and journey history. Reporting: the insights page and pipeline report are counts only, scoped to what the caller may see, with period edges, empty cases and cross-tenant tests. **Not delivered in Phase 4:** two-way calendar sync (only the read-only `.ics` link), confirmation emails and visitor-side cancellation of bookings (no production email provider), file uploads on public forms (needs malware scanning and OD-04), working-hours availability across several people, and a captcha-less deployment still depends on the volume caps.
 
 ## Phase 5 — SaaS & Production
-- [ ] Plans, feature entitlements, AI usage pricing, subscriptions
-- [ ] Admin operations, monitoring, incident procedures
-- [ ] Load tests, security review, backup restore rehearsal
-- [ ] Pilot onboarding and feedback prioritization
-**Exit gate:** production-readiness checklist approved.
+- [~] Plans, feature entitlements, AI usage pricing, subscriptions (slice 23, ADR-015: plan catalog in code, `subscriptions` row, limits for seats, storage and AI tokens (daily and monthly, hard stop), feature switches for AI, CRM and public pages, trials, plans set by an operator; **no prices, no payment provider, no self-serve checkout, no overage billing**: OD-05 is still open)
+- [~] Admin operations, monitoring, incident procedures (slice 23: operator console `/admin` with platform health counts, plan changes and workspace suspension, all audited; `docs/12-OPERATIONS.md` has signals, incident procedure and runbooks; **no monitoring vendor and no alert delivery**)
+- [~] Load tests, security review, backup restore rehearsal (`pnpm test:load:http` written and smoke-run against a dev server only; self-review and dependency/secret checks done with two issues fixed; `pnpm rehearse:restore` passes for a cold backup; **no production-like load test, no independent review, no hot-backup restore**)
+- [x] Pilot onboarding and feedback prioritization (`docs/14-PILOT.md`: process only, there is no in-app feedback form)
+**Exit gate:** production-readiness checklist approved. **Not approved:** the checklist (`docs/13-PRODUCTION-READINESS.md`) lists what was verified on 2026-10-30 (lint, format, typecheck, 414 Vitest tests, build, 42 Playwright tests with 1 opt-in skipped; the CI workflow has not run on these commits) and ten launch blockers, the first being that there is no production email provider.
 
 ## Suggested first implementation tickets
 1. Bootstrap Next.js TypeScript repo and scripts.

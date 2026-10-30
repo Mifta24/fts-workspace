@@ -91,11 +91,18 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Alternatives:** hCaptcha or reCAPTCHA (similar, more intrusive or more tracking), a self-hosted proof-of-work challenge (no third party, weaker against determined bots), IP-based rate limiting alone (needs a trustworthy client address behind the proxy).  
 **Consequences:** visitors' browsers load a script from `challenges.cloudflare.com` and Cloudflare sees the visit (the public pages' privacy text should be reviewed before enabling it); the widget script must not be proxied or cached; automated tests of the real widget are opt-in (`E2E_CAPTCHA=pass|fail pnpm test:e2e e2e/captcha.spec.ts`, internet needed, Cloudflare's dummy keys).
 
+## ADR-015 — Plans and entitlements without a payment provider (Phase 5)
+**Status:** Accepted (2026-10-30), at the owner's request to start Phase 5.  
+**Context:** Phase 5 asks for plans, feature entitlements, AI usage pricing and subscriptions, but OD-05 (pricing model, quota and overage policy) and the choice of a payment processor are open, and the PRD lists payment processing as a non-goal until decided.  
+**Decision:** build the entitlement mechanism and leave money out. The plan catalog (FREE, TEAM, BUSINESS) is code (`src/features/billing/schemas/plans.ts`) with seats, storage, a daily and a monthly AI token allowance and three feature switches (`ai`, `crm`, `publicPages`); there are no prices in it. A `subscriptions` row holds only the plan, status (TRIALING or ACTIVE) and trial end. **No row means unmetered** (the behaviour before billing existed), so existing workspaces, self-hosted pilots and the test suite are unaffected. `BILLING_ENABLED=true` makes new workspaces start a trial on TEAM (`BILLING_TRIAL_DAYS`, default 14); an ended trial falls back to FREE with no job needed because the plan is computed from the stored trial end. Plans are set by a platform operator in `/admin` (allow-list `PLATFORM_ADMIN_EMAILS`); there is no self-serve checkout. AI use is a hard stop at the allowance, with **no overage billing**. Moving to a smaller plan never deletes data: it blocks adding more and stops public links from answering.  
+**Alternatives:** a billing SaaS or Stripe now (needs the pricing decision, tax and invoicing setup, and webhook handling with idempotency), plan limits as database rows editable at runtime (changes without review), entitlement checks only in the UI (bypassable).  
+**Consequences:** a payment provider later means one adapter that writes the same `subscriptions` row from verified, idempotent webhook events; the enforcement points do not change. Until then the numbers in the catalog are pilot defaults, not a commercial offer. Seat limits are enforced under an advisory lock, so concurrent invitations cannot pass the limit. Usage is counted from existing tables (members, invitations, files, `ai_usage_events`), so there is no separate meter to drift.
+
 ## Open decisions
 - **OD-01:** Which deploy environment/hosting region and target scale?
 - **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?
 - **OD-04:** Storage provider and retention limits?
-- **OD-05:** Pricing model and AI quota/overage policy?
+- **OD-05:** Pricing model and AI quota/overage policy? (Partly answered by ADR-015: plan limits and a hard AI stop exist; prices, a payment provider and any overage policy are still open.)
 - **OD-06:** Is personal workspace a special organization?
 - **OD-07:** Preferred rich text package? (i18n decided: next-intl, ADR-009)
 - **OD-08:** Which AI model providers and residency constraints apply?

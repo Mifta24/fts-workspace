@@ -126,7 +126,7 @@ Server resolves org membership independently of the supplied path id. Server val
   }
 }
 ```
-Suggested statuses: 400 invalid shape, 401 unauthenticated, 403 forbidden, 404 inaccessible/nonexistent resource, 409 conflicts, 422 domain validation, 429 throttled.
+Suggested statuses: 400 invalid shape, 401 unauthenticated, 403 forbidden, 404 inaccessible/nonexistent resource, 409 conflicts, 422 domain validation, 429 throttled, 402 plan limit or feature not in the plan (`PLAN_LIMIT`).
 
 ## Real-time event design (later)
 - `message.created`, `message.updated`, `task.updated`, `notification.created`.

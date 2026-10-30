@@ -21,7 +21,7 @@
 | Business | CRM & scheduling | Later | Leads, deals, appointment booking |
 | Operations | Analytics/forms | Later | Reports, configurable data capture |
 | Automation | Workflows/MCP | Later | User-approved integration actions |
-| Platform | Billing & entitlements | Later | Plans, limits, usage accounting |
+| Platform | Billing & entitlements | Phase 5 (no payments yet) | Plans, limits, usage accounting; plans set by an operator, see ADR-015 |
 | Ecosystem | Virtual space & recording | Optional | Validate demand before building |
 
 ## MVP feature contracts

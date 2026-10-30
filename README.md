@@ -38,6 +38,10 @@ Users organize goals and tasks, collaborate in workspaces, manage knowledge and 
 | `docs/08-ROADMAP.md` | Phases and release gates |
 | `docs/09-AI-INTEGRATION.md` | Agent tools, retrieval and governance |
 | `docs/10-DECISIONS.md` | ADRs and open questions |
+| `docs/11-MCP-THREAT-MODEL.md` | Threat model for model tool use (analysis only) |
+| `docs/12-OPERATIONS.md` | Operator console, monitoring signals, incident procedure, backup and restore |
+| `docs/13-PRODUCTION-READINESS.md` | Phase 5 exit gate: what is verified, launch blockers, sign-off (not approved) |
+| `docs/14-PILOT.md` | Pilot onboarding and feedback prioritization |
 
 ## Status
 **Phase 0 (foundation) implemented.** Email/password auth with verification and reset, organizations with role-based membership, a tenant authorization service, i18n (`en`, `ja`, `id`), health check, CI. Goals, tasks, dashboard and AI arrive in Phase 1. No production readiness is claimed.
@@ -64,6 +68,8 @@ Open http://localhost:3000. Sign-up sends a verification email; in development t
 | `pnpm worker` | Background worker (document indexing); needs the same `STORAGE_DIR` as the app |
 | `pnpm gateway` | Realtime gateway (Socket.IO) on port 4000; see `docs/02-ARCHITECTURE.md` |
 | `pnpm test:load` | Gateway load test (default 500 sockets; `CLIENTS`, `EVENTS`, `RATE` override) |
+| `pnpm test:load:http` | Anonymous HTTP load test against a running instance (`BASE_URL`, `CONCURRENCY`, `REQUESTS`, `PATHS`) |
+| `pnpm rehearse:restore` | Backup and restore rehearsal (cold copy of database and files, verified after restore) |
 | `pnpm build` | Production build |
 | `pnpm check` | All of the above |
 | `pnpm db:migrate` / `pnpm db:deploy` | Create / apply migrations |

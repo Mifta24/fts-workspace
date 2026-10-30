@@ -44,6 +44,7 @@ Keyword retrieval only: text/Markdown/CSV files are chunked by the worker and se
 ## Implemented in Phase 3 (slice 12)
 - Knowledge assistant (`src/features/assistant`): question → keyword query → ACL-filtered passages → model → plain-text answer with validated citations. No passages, no model call.
 - Metering and budgets (`src/server/ai/usage.ts`, table `ai_usage_events`); the task planner uses the same wrapper.
+- Plan allowance (Phase 5, ADR-015): the effective daily budget is the lower of the admin's setting and the plan's daily tokens; a monthly allowance (UTC calendar month) and the `ai` feature are checked before every model call and fail with `PLAN_LIMIT`. It is a hard stop: there is no overage billing and no pricing per token yet.
 - Adapter now also reports provider token usage (`generate`).
 - Tool calling, MCP and workflows are **not** implemented; see `11-MCP-THREAT-MODEL.md` for the conditions to meet first.
 
