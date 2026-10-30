@@ -70,7 +70,8 @@
     "assistant": "アシスタント",
     "crm": "CRM",
     "schedule": "スケジュール",
-    "forms": "フォーム"
+    "forms": "フォーム",
+    "insights": "インサイト"
   },
   "Roles": {
     "OWNER": "オーナー",
@@ -604,5 +605,43 @@
     "required": "必須",
     "choose": "選択してください…",
     "submit": "送信"
+  },
+  "Insights": {
+    "title": "インサイト",
+    "intro": "直近 {days} 日間の件数を、その前の {days} 日間と比較しています。集計値のみで、氏名・回答・会議名は表示されません。",
+    "period": "期間",
+    "days": "{count} 日間",
+    "previous": "前期間 {count}",
+    "contactsTitle": "連絡先と同意",
+    "contactsScopeAll": "組織内のすべての連絡先です。",
+    "contactsScopeOwn": "あなたが担当する連絡先のみです。",
+    "newContacts": "新規の連絡先",
+    "fromForms": "フォーム経由",
+    "erased": "消去済み",
+    "consentTitle": "現在の同意状況",
+    "consent": {
+      "GRANTED": "同意済み",
+      "UNKNOWN": "未確認",
+      "WITHDRAWN": "撤回"
+    },
+    "formsTitle": "フォーム",
+    "submissions": "回答数",
+    "withContact": "連絡先に紐付け済み",
+    "perForm": "フォーム別",
+    "formColumn": "フォーム",
+    "noForms": "フォームはまだありません。",
+    "meetingsTitle": "あなたの会議",
+    "meetingsScope": "あなたが主催または参加する会議のみを集計します。",
+    "upcoming": "今後の予定",
+    "held": "開催済み",
+    "organized": "あなたが主催",
+    "cancelled": "あなたがキャンセル",
+    "guestResponses": "招待した人の回答",
+    "response": {
+      "PENDING": "未回答",
+      "ACCEPTED": "承諾",
+      "DECLINED": "辞退"
+    },
+    "pipelineLink": "案件とパイプラインレポート"
   }
 }

@@ -66,6 +66,7 @@
 | Page | `/[locale]/w/[slug]/schedule` | Your meetings for the next 60 days (times in your own time zone, UTC by default) | `appointment:read` |
 
 | Server action | `createFormAction`, `updateFormAction`, `updateFormFieldsAction`, `setFormStatusAction` | Form management | `form:manage` |
+| Page | `/[locale]/w/[slug]/insights` | Counts for contacts and consent, forms and the caller's own meetings; `?days=7|30|90` (anything else means 30) | `dashboard:read` (sections need their own permission) |
 | Page | `/[locale]/w/[slug]/forms`, `/forms/[formId]` | List, templates, publishing, submissions | `form:manage` |
 | Page + server action (**public, no session**) | `/[locale]/f/[token]`, `submitFormAction` | Anonymous form and submission; unknown/draft/closed tokens give 404 | public (token) |
 

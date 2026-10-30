@@ -70,7 +70,8 @@
     "assistant": "Asisten",
     "crm": "CRM",
     "schedule": "Jadwal",
-    "forms": "Formulir"
+    "forms": "Formulir",
+    "insights": "Wawasan"
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -604,5 +605,43 @@
     "required": "wajib",
     "choose": "Pilih…",
     "submit": "Kirim"
+  },
+  "Insights": {
+    "title": "Wawasan",
+    "intro": "Jumlah {days} hari terakhir dibandingkan dengan {days} hari sebelumnya. Hanya total: tidak ada nama, jawaban, atau judul rapat di sini.",
+    "period": "Periode",
+    "days": "{count} hari",
+    "previous": "{count} sebelumnya",
+    "contactsTitle": "Kontak dan persetujuan",
+    "contactsScopeAll": "Semua kontak di organisasi.",
+    "contactsScopeOwn": "Hanya kontak milik Anda.",
+    "newContacts": "Kontak baru",
+    "fromForms": "Dari formulir",
+    "erased": "Dihapus",
+    "consentTitle": "Status persetujuan saat ini",
+    "consent": {
+      "GRANTED": "Diberikan",
+      "UNKNOWN": "Belum diketahui",
+      "WITHDRAWN": "Dicabut"
+    },
+    "formsTitle": "Formulir",
+    "submissions": "Kiriman",
+    "withContact": "Terhubung ke kontak",
+    "perForm": "Per formulir",
+    "formColumn": "Formulir",
+    "noForms": "Belum ada formulir.",
+    "meetingsTitle": "Rapat Anda",
+    "meetingsScope": "Hanya rapat yang Anda selenggarakan atau hadiri yang dihitung.",
+    "upcoming": "Akan datang",
+    "held": "Sudah berlangsung",
+    "organized": "Diselenggarakan Anda",
+    "cancelled": "Dibatalkan Anda",
+    "guestResponses": "Jawaban tamu Anda",
+    "response": {
+      "PENDING": "Menunggu",
+      "ACCEPTED": "Diterima",
+      "DECLINED": "Ditolak"
+    },
+    "pipelineLink": "Laporan transaksi dan pipeline"
   }
 }

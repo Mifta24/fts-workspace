@@ -62,6 +62,9 @@ Points from auditable events; anti-farming limits; leaderboards opt-in and visib
 ### Knowledge
 Document ACL, file metadata, safe ingestion, versioning, indexing, retrieval grounded in accessible documents only.
 
+### Insights
+A read-only page of counts for 7, 30 or 90 days against the period before. Sections follow the caller's other permissions: contacts and consent (what the caller may see in the CRM), forms (managers and above), and the caller's own meetings. Totals only; no names, answers or titles.
+
 ### CRM
 Tenant-scoped contact ownership, consent-aware data collection, deal stages, activity timeline, meeting scheduling and analytics.
 

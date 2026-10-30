@@ -70,7 +70,8 @@
     "assistant": "Assistant",
     "crm": "CRM",
     "schedule": "Schedule",
-    "forms": "Forms"
+    "forms": "Forms",
+    "insights": "Insights"
   },
   "Roles": {
     "OWNER": "Owner",
@@ -604,5 +605,43 @@
     "required": "required",
     "choose": "Choose…",
     "submit": "Submit"
+  },
+  "Insights": {
+    "title": "Insights",
+    "intro": "Counts for the last {days} days compared with the {days} days before. These are totals only: no names, answers or meeting titles appear here.",
+    "period": "Period",
+    "days": "{count} days",
+    "previous": "{count} before",
+    "contactsTitle": "Contacts and consent",
+    "contactsScopeAll": "All contacts in the organization.",
+    "contactsScopeOwn": "Your own contacts only.",
+    "newContacts": "New contacts",
+    "fromForms": "From forms",
+    "erased": "Erased",
+    "consentTitle": "Consent status today",
+    "consent": {
+      "GRANTED": "Granted",
+      "UNKNOWN": "Unknown",
+      "WITHDRAWN": "Withdrawn"
+    },
+    "formsTitle": "Forms",
+    "submissions": "Submissions",
+    "withContact": "Linked to a contact",
+    "perForm": "Per form",
+    "formColumn": "Form",
+    "noForms": "No forms yet.",
+    "meetingsTitle": "Your meetings",
+    "meetingsScope": "Only meetings you organize or attend are counted.",
+    "upcoming": "Upcoming",
+    "held": "Held",
+    "organized": "Organized by you",
+    "cancelled": "Cancelled by you",
+    "guestResponses": "Answers from your guests",
+    "response": {
+      "PENDING": "Pending",
+      "ACCEPTED": "Accepted",
+      "DECLINED": "Declined"
+    },
+    "pipelineLink": "Deals and pipeline report"
   }
 }
