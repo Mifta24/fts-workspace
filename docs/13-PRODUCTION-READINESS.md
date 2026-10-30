@@ -50,7 +50,7 @@ Not done: an independent penetration test, a threat model for the operator surfa
 10. **File uploads:** malware scanning before enabling uploads on public forms; the same question applies to member uploads for a public launch.
 
 ## Not blockers, but known
-Semantic retrieval, PDF/office extraction, two-way calendar sync, confirmation emails, an automation/workflow engine, a Redis adapter for several gateway instances, in-app feedback, and a visual design review.
+Semantic retrieval, PDF/office extraction, two-way calendar sync and Outlook (not planned, ADR-017), confirmation emails, an automation/workflow engine, a Redis adapter for several gateway instances, in-app feedback, and a visual design review.
 
 ## Sign-off
 | Role | Name | Decision | Date |
