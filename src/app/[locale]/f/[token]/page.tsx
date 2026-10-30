@@ -4,6 +4,7 @@ import { PublicFormClient } from "@/features/forms/components/public-form";
 import { getPublicForm } from "@/features/forms/server/forms-service";
 import { db } from "@/lib/db";
 import { isAppError } from "@/lib/errors";
+import { captchaSiteKey } from "@/server/security/captcha";
 
 export default async function PublicFormPage({ params }: PageProps<"/[locale]/f/[token]">) {
   const { token } = await params;
@@ -18,7 +19,12 @@ export default async function PublicFormPage({ params }: PageProps<"/[locale]/f/
       <p className="text-sm text-muted-foreground">{form.organizationName}</p>
       <h1 className="text-2xl font-semibold tracking-tight">{form.title}</h1>
       {form.description && <p className="text-muted-foreground">{form.description}</p>}
-      <PublicFormClient token={token} fields={form.fields} consentText={form.consentText} />
+      <PublicFormClient
+        token={token}
+        fields={form.fields}
+        consentText={form.consentText}
+        captchaSiteKey={captchaSiteKey()}
+      />
       <p className="text-xs text-muted-foreground">{t("privacy")}</p>
     </main>
   );

@@ -1,31 +1,42 @@
 import "server-only";
 import { z } from "zod";
 
-const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-  DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
-  BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET must be at least 32 characters"),
-  BETTER_AUTH_URL: z.url(),
-  EMAIL_TRANSPORT: z.enum(["log"]).default("log"),
-  EMAIL_FROM: z.string().min(1).default("FTS Workspace <no-reply@localhost>"),
-  // Optional OpenAI-compatible chat endpoint (OpenRouter or a local LM Studio).
-  // AI planning is disabled unless AI_BASE_URL and AI_MODEL are both set.
-  AI_BASE_URL: z.url().optional(),
-  AI_API_KEY: z.string().min(1).optional(),
-  AI_MODEL: z.string().min(1).optional(),
-  // Realtime gateway (Socket.IO). Without REALTIME_URL the app publishes nothing and works
-  // exactly as before; the gateway only broadcasts identifiers.
-  REALTIME_URL: z.url().optional(),
-  // Browser-facing gateway URL (may differ from the internal REALTIME_URL).
-  REALTIME_PUBLIC_URL: z.url().optional(),
-  REALTIME_PUBLISH_SECRET: z
-    .string()
-    .min(32, "REALTIME_PUBLISH_SECRET must be at least 32 characters")
-    .optional(),
-  // Directory for uploaded files (local-disk storage adapter). Private; never served statically.
-  STORAGE_DIR: z.string().min(1).default(".data/files"),
-  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
-});
+const envSchema = z
+  .object({
+    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
+    BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET must be at least 32 characters"),
+    BETTER_AUTH_URL: z.url(),
+    EMAIL_TRANSPORT: z.enum(["log"]).default("log"),
+    EMAIL_FROM: z.string().min(1).default("FTS Workspace <no-reply@localhost>"),
+    // Optional OpenAI-compatible chat endpoint (OpenRouter or a local LM Studio).
+    // AI planning is disabled unless AI_BASE_URL and AI_MODEL are both set.
+    AI_BASE_URL: z.url().optional(),
+    AI_API_KEY: z.string().min(1).optional(),
+    AI_MODEL: z.string().min(1).optional(),
+    // Realtime gateway (Socket.IO). Without REALTIME_URL the app publishes nothing and works
+    // exactly as before; the gateway only broadcasts identifiers.
+    REALTIME_URL: z.url().optional(),
+    // Browser-facing gateway URL (may differ from the internal REALTIME_URL).
+    REALTIME_PUBLIC_URL: z.url().optional(),
+    REALTIME_PUBLISH_SECRET: z
+      .string()
+      .min(32, "REALTIME_PUBLISH_SECRET must be at least 32 characters")
+      .optional(),
+    // Directory for uploaded files (local-disk storage adapter). Private; never served statically.
+    STORAGE_DIR: z.string().min(1).default(".data/files"),
+    // Optional Cloudflare Turnstile for the anonymous forms (public forms and booking pages).
+    // Both keys or neither: without them those forms rely on the honeypot and the volume limits.
+    TURNSTILE_SITE_KEY: z.string().min(1).optional(),
+    TURNSTILE_SECRET_KEY: z.string().min(1).optional(),
+    LOG_LEVEL: z
+      .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
+      .default("info"),
+  })
+  .refine((value) => Boolean(value.TURNSTILE_SITE_KEY) === Boolean(value.TURNSTILE_SECRET_KEY), {
+    message: "TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY must be set together",
+    path: ["TURNSTILE_SITE_KEY"],
+  });
 
 export type Env = z.infer<typeof envSchema>;
 

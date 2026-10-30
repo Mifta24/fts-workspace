@@ -84,6 +84,13 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Alternatives:** BullMQ (richer scheduling, needs Redis), pgvector or an external vector store (needs a provider decision and a different database image).  
 **Consequences:** polling latency (≤ 2 s), no cron-style scheduling, and the `simple` text configuration matches whole words without stemming, which is weak for Japanese. Moving to Redis or adding embeddings later changes the queue/search adapters, not the access model.
 
+## ADR-014 — Cloudflare Turnstile as the optional captcha (Phase 4)
+**Status:** Accepted (2026-10-30), at the owner's request to add a captcha to the anonymous forms.  
+**Context:** the two anonymous write paths (public forms and booking pages) were protected only by a honeypot and per-page volume caps, which a determined bot can exhaust.  
+**Decision:** Cloudflare Turnstile, verified server-side with the Siteverify API before an anonymous submission is read. It is optional: it turns on only when both `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set (setting one is a startup error), so development, tests and self-hosted pilots run unchanged. Verification fails closed (a Cloudflare outage blocks anonymous submissions rather than opening them).  
+**Alternatives:** hCaptcha or reCAPTCHA (similar, more intrusive or more tracking), a self-hosted proof-of-work challenge (no third party, weaker against determined bots), IP-based rate limiting alone (needs a trustworthy client address behind the proxy).  
+**Consequences:** visitors' browsers load a script from `challenges.cloudflare.com` and Cloudflare sees the visit (the public pages' privacy text should be reviewed before enabling it); the widget script must not be proxied or cached; automated tests of the real widget are opt-in (`E2E_CAPTCHA=pass|fail pnpm test:e2e e2e/captcha.spec.ts`, internet needed, Cloudflare's dummy keys).
+
 ## Open decisions
 - **OD-01:** Which deploy environment/hosting region and target scale?
 - **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?

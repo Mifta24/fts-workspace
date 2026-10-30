@@ -142,7 +142,8 @@
     "conflict": "This change conflicts with the current state.",
     "unprocessable": "This change is not allowed (for example an unavailable project, owner or parent goal).",
     "generic": "Something went wrong. Please try again.",
-    "rateLimited": "Too many attempts. Please wait a moment and try again."
+    "rateLimited": "Too many attempts. Please wait a moment and try again.",
+    "captcha": "Please complete the verification and try again."
   },
   "Tasks": {
     "title": "Tasks",

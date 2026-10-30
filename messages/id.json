@@ -142,7 +142,8 @@
     "conflict": "Perubahan ini bertentangan dengan kondisi saat ini.",
     "unprocessable": "Perubahan ini tidak diizinkan (misalnya proyek, pemilik, atau tujuan induk tidak tersedia).",
     "generic": "Terjadi kesalahan. Silakan coba lagi.",
-    "rateLimited": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi."
+    "rateLimited": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
+    "captcha": "Selesaikan verifikasi lalu coba lagi."
   },
   "Tasks": {
     "title": "Tugas",

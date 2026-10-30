@@ -7,6 +7,7 @@ import { PublicBookingClient } from "@/features/booking/components/public-bookin
 import { getPublicBookingPage } from "@/features/booking/server/booking-service";
 import { db } from "@/lib/db";
 import { isAppError } from "@/lib/errors";
+import { captchaSiteKey } from "@/server/security/captcha";
 import { isValidTimeZone, listTimeZones } from "@/lib/time-zone";
 
 export default async function PublicBookingPage({
@@ -51,6 +52,7 @@ export default async function PublicBookingPage({
         slots={page.slots.map((slot) => slot.toISOString())}
         zone={zone}
         consentText={page.consentText}
+        captchaSiteKey={captchaSiteKey()}
       />
       <p className="text-xs text-muted-foreground">{t("privacy")}</p>
     </main>

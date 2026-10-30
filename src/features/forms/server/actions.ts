@@ -14,6 +14,8 @@ import {
   updateFormFields,
 } from "@/features/forms/server/forms-service";
 import { requireWorkspace } from "@/features/organizations/server/require-workspace";
+import { CAPTCHA_FIELD, verifyCaptcha } from "@/server/security/captcha";
+import { requestIp } from "@/server/security/request-ip";
 import { toActionError, type ActionState } from "@/server/services/action-result";
 
 const text = (formData: FormData, key: string) => String(formData.get(key) ?? "");
@@ -107,10 +109,20 @@ export async function submitFormAction(_p: ActionState, formData: FormData): Pro
   const correlationId = await getCorrelationId();
   // Bots fill every field. A filled honeypot gets the same "success" answer and saves nothing.
   if (text(formData, HONEYPOT_FIELD) !== "") return { ok: true };
+  // With Turnstile configured, a valid single-use token is required before anything is read.
+  if (!(await verifyCaptcha(formData.get(CAPTCHA_FIELD), { remoteIp: await requestIp() }))) {
+    return { error: "captcha" };
+  }
 
   const answers: Record<string, FormDataEntryValue> = {};
   for (const [key, value] of formData.entries()) {
-    if (key === "token" || key === "consent" || key === HONEYPOT_FIELD || key.startsWith("$ACTION"))
+    if (
+      key === "token" ||
+      key === "consent" ||
+      key === HONEYPOT_FIELD ||
+      key === CAPTCHA_FIELD ||
+      key.startsWith("$ACTION")
+    )
       continue;
     if (typeof value === "string") answers[key] = value;
   }

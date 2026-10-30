@@ -1,8 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useActionState, useMemo } from "react";
+import { useActionState, useMemo, useState } from "react";
 import { ActionErrorMessage } from "@/components/action-error";
+import { TurnstileWidget } from "@/components/turnstile-widget";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,7 @@ export function PublicBookingClient({
   slots,
   zone,
   consentText,
+  captchaSiteKey,
 }: {
   token: string;
   /** ISO instants of the free slots, soonest first. */
@@ -23,10 +25,21 @@ export function PublicBookingClient({
   /** Zone the times are shown in. */
   zone: string;
   consentText: string;
+  /** Public Turnstile key; absent when the deployment runs without a captcha. */
+  captchaSiteKey?: string | null;
 }) {
   const t = useTranslations("PublicBooking");
   const common = useTranslations("Common");
-  const [state, action, pending] = useActionState<BookingActionState, FormData>(bookSlotAction, {});
+  // Turnstile tokens are single use: every refused attempt needs a fresh one.
+  const [resets, setResets] = useState(0);
+  const [state, action, pending] = useActionState<BookingActionState, FormData>(
+    async (previous, formData) => {
+      const result = await bookSlotAction(previous, formData);
+      if (!result.ok) setResets((count) => count + 1);
+      return result;
+    },
+    {},
+  );
 
   const days = useMemo(() => {
     const byDay = new Map<string, { value: string; time: string }[]>();
@@ -123,6 +136,7 @@ export function PublicBookingClient({
         <input type="checkbox" name="consent" required className="mt-1 size-4" />
         <span>{consentText}</span>
       </label>
+      {captchaSiteKey && <TurnstileWidget siteKey={captchaSiteKey} resetKey={resets} />}
       <ActionErrorMessage error={state.error} />
       <Button type="submit" disabled={pending}>
         {pending ? common("loading") : t("book")}

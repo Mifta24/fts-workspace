@@ -1,8 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useActionState, useRef } from "react";
+import { useActionState, useRef, useState } from "react";
 import { ActionErrorMessage } from "@/components/action-error";
+import { TurnstileWidget } from "@/components/turnstile-widget";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,18 +16,24 @@ export function PublicFormClient({
   token,
   fields,
   consentText,
+  captchaSiteKey,
 }: {
   token: string;
   fields: FieldDef[];
   consentText: string | null;
+  /** Public Turnstile key; absent when the deployment runs without a captcha. */
+  captchaSiteKey?: string | null;
 }) {
   const t = useTranslations("PublicForm");
   const common = useTranslations("Common");
   const formRef = useRef<HTMLFormElement>(null);
+  // Turnstile tokens are single use: every refused attempt needs a fresh one.
+  const [resets, setResets] = useState(0);
   const [state, action, pending] = useActionState<ActionState, FormData>(
     async (previous, formData) => {
       const result = await submitFormAction(previous, formData);
       if (result.ok) formRef.current?.reset();
+      else setResets((count) => count + 1);
       return result;
     },
     {},
@@ -96,6 +103,7 @@ export function PublicFormClient({
           <span>{consentText}</span>
         </label>
       )}
+      {captchaSiteKey && <TurnstileWidget siteKey={captchaSiteKey} resetKey={resets} />}
       <ActionErrorMessage error={state.error} />
       <Button type="submit" disabled={pending}>
         {pending ? common("loading") : t("submit")}

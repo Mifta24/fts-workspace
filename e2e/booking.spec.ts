@@ -53,6 +53,11 @@ test("booking: publish a page, a visitor books a slot, the owner sees it, closin
   await expect(page.getByText(/The link no longer works/)).toBeVisible();
   expect((await visitor.goto(publicUrl))?.status()).toBe(404);
   await visitorContext.close();
+
+  // Leave the schedule as it was found: the booked meeting is the owner's to cancel.
+  await page.goto("/en/w/acme/schedule");
+  await page.getByRole("button", { name: "Cancel meeting" }).click();
+  await expect(page.getByText("Intro call")).toHaveCount(0);
 });
 
 test("booking: viewers have no booking pages, and unknown public links are 404", async ({

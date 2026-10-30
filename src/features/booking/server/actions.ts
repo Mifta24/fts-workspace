@@ -13,6 +13,8 @@ import {
   updateBookingPage,
 } from "@/features/booking/server/booking-service";
 import { requireWorkspace } from "@/features/organizations/server/require-workspace";
+import { CAPTCHA_FIELD, verifyCaptcha } from "@/server/security/captcha";
+import { requestIp } from "@/server/security/request-ip";
 import { toActionError, type ActionState } from "@/server/services/action-result";
 
 const text = (formData: FormData, key: string) => String(formData.get(key) ?? "");
@@ -102,6 +104,9 @@ export async function bookSlotAction(
   const correlationId = await getCorrelationId();
   // Bots fill every field. A filled honeypot gets the same "success" answer and books nothing.
   if (text(formData, HONEYPOT_FIELD) !== "") return { ok: true };
+  if (!(await verifyCaptcha(formData.get(CAPTCHA_FIELD), { remoteIp: await requestIp() }))) {
+    return { error: "captcha" };
+  }
   try {
     const result = await bookPublicSlot(
       { prisma: db(), correlationId },

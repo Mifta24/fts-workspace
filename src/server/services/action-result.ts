@@ -3,7 +3,14 @@ import { isAppError, type AppErrorCode } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 
 export type ActionError =
-  "invalid" | "forbidden" | "notFound" | "conflict" | "unprocessable" | "rateLimited" | "generic";
+  | "invalid"
+  | "forbidden"
+  | "notFound"
+  | "conflict"
+  | "unprocessable"
+  | "rateLimited"
+  | "captcha"
+  | "generic";
 export type ActionState = {
   error?: ActionError;
   ok?: boolean;
