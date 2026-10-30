@@ -55,6 +55,8 @@ jobs:
         env:
           CLIENTS: "300"
           EVENTS: "100"
+      - run: pnpm rehearse:restore
+      - run: pnpm audit
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4

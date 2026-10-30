@@ -27,7 +27,9 @@
     "postinstall": "prisma generate",
     "test:e2e": "playwright test",
     "test:load": "tsx scripts/realtime-load.ts",
-    "worker": "tsx --conditions=react-server worker/main.ts"
+    "worker": "tsx --conditions=react-server worker/main.ts",
+    "rehearse:restore": "tsx scripts/restore-rehearsal.ts",
+    "test:load:http": "tsx scripts/http-load.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.1",
