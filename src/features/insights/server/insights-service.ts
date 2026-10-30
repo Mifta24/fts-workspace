@@ -13,6 +13,7 @@ const DAY = 86_400_000;
 const MAX_FORMS = 100;
 
 type Consent = "UNKNOWN" | "GRANTED" | "WITHDRAWN";
+type JourneyStage = "LEAD" | "PROSPECT" | "CUSTOMER" | "LAPSED";
 type Response = "PENDING" | "ACCEPTED" | "DECLINED";
 
 export type Insights = {
@@ -28,6 +29,10 @@ export type Insights = {
     erased: number;
     /** Consent state of the contacts that still hold personal data. */
     consent: Record<Consent, number>;
+    /** Journey stage today of the contacts that still hold personal data. */
+    journey: Record<JourneyStage, number>;
+    /** Contacts that reached the customer stage during the period. */
+    becameCustomers: number;
   } | null;
   /** Organization-wide form figures. Null unless the caller manages forms. */
   forms: {
@@ -84,22 +89,43 @@ export async function getInsights(
 
   async function contactFigures(): Promise<Insights["contacts"]> {
     const scope = contactAccessWhere(context);
-    const [created, createdPreviousPeriod, createdFromForms, erased, consent] = await Promise.all([
-      prisma.crmContact.count({ where: { ...scope, createdAt: inPeriod } }),
-      prisma.crmContact.count({ where: { ...scope, createdAt: inPrevious } }),
-      prisma.crmContact.count({
-        where: { ...scope, createdAt: inPeriod, formSubmissions: { some: { organizationId } } },
-      }),
-      prisma.crmContact.count({ where: { ...scope, erasedAt: inPeriod } }),
-      prisma.crmContact.groupBy({
-        by: ["consentStatus"],
-        where: { ...scope, erasedAt: null },
-        _count: { _all: true },
-      }),
-    ]);
+    const [created, createdPreviousPeriod, createdFromForms, erased, consent, journey, customers] =
+      await Promise.all([
+        prisma.crmContact.count({ where: { ...scope, createdAt: inPeriod } }),
+        prisma.crmContact.count({ where: { ...scope, createdAt: inPrevious } }),
+        prisma.crmContact.count({
+          where: { ...scope, createdAt: inPeriod, formSubmissions: { some: { organizationId } } },
+        }),
+        prisma.crmContact.count({ where: { ...scope, erasedAt: inPeriod } }),
+        prisma.crmContact.groupBy({
+          by: ["consentStatus"],
+          where: { ...scope, erasedAt: null },
+          _count: { _all: true },
+        }),
+        prisma.crmContact.groupBy({
+          by: ["journeyStage"],
+          where: { ...scope, erasedAt: null },
+          _count: { _all: true },
+        }),
+        prisma.contactStageChange.groupBy({
+          by: ["contactId"],
+          where: { organizationId, toStage: "CUSTOMER", createdAt: inPeriod, contact: scope },
+        }),
+      ]);
     const byStatus: Record<Consent, number> = { UNKNOWN: 0, GRANTED: 0, WITHDRAWN: 0 };
     for (const row of consent) byStatus[row.consentStatus] = row._count._all;
-    return { created, createdPreviousPeriod, createdFromForms, erased, consent: byStatus };
+    const byStage: Record<JourneyStage, number> = { LEAD: 0, PROSPECT: 0, CUSTOMER: 0, LAPSED: 0 };
+    for (const row of journey) byStage[row.journeyStage] = row._count._all;
+    return {
+      created,
+      createdPreviousPeriod,
+      createdFromForms,
+      erased,
+      consent: byStatus,
+      journey: byStage,
+      // One contact counts once, however often they moved in and out of the stage.
+      becameCustomers: customers.length,
+    };
   }
 
   async function formFigures(): Promise<Insights["forms"]> {

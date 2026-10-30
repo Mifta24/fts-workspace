@@ -506,7 +506,26 @@
     "pipelineIntro": "Deal terbuka per tahap, dan deal yang ditutup dalam {days} hari terakhir. Nilai tidak pernah dijumlahkan lintas mata uang.",
     "wonCount": "Menang",
     "lostCount": "Kalah",
-    "winRate": "Tingkat kemenangan"
+    "winRate": "Tingkat kemenangan",
+    "journeyTitle": "Perjalanan pelanggan",
+    "journeyNow": "Tahap saat ini: {stage}",
+    "journeyLabel": "Tahap",
+    "journeyMove": "Pindahkan tahap",
+    "journey": {
+      "LEAD": "Lead",
+      "PROSPECT": "Prospek",
+      "CUSTOMER": "Pelanggan",
+      "LAPSED": "Tidak aktif"
+    },
+    "journeyReason": {
+      "CREATED": "ditambahkan",
+      "MANUAL": "diubah manual",
+      "DEAL_WON": "transaksi berhasil"
+    },
+    "journeyChange": "{from} → {to}",
+    "journeyStart": "Dimulai sebagai {to}",
+    "journeyFilter": "Tahap perjalanan",
+    "journeyAll": "Semua tahap"
   },
   "Schedule": {
     "title": "Jadwal",
@@ -642,6 +661,14 @@
       "ACCEPTED": "Diterima",
       "DECLINED": "Ditolak"
     },
-    "pipelineLink": "Laporan transaksi dan pipeline"
+    "pipelineLink": "Laporan transaksi dan pipeline",
+    "journeyTitle": "Perjalanan pelanggan saat ini",
+    "journey": {
+      "LEAD": "Lead",
+      "PROSPECT": "Prospek",
+      "CUSTOMER": "Pelanggan",
+      "LAPSED": "Tidak aktif"
+    },
+    "becameCustomers": "Menjadi pelanggan"
   }
 }

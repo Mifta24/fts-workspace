@@ -1,5 +1,5 @@
 import "server-only";
-import { Prisma, type PrismaClient } from "@/generated/prisma/client";
+import { Prisma, type JourneyStage, type PrismaClient } from "@/generated/prisma/client";
 import { AppError } from "@/lib/errors";
 import {
   activitySchema,
@@ -7,6 +7,7 @@ import {
   createContactSchema,
   createDealSchema,
   idSchema,
+  journeyStageSchema,
   searchSchema,
   stageSchema,
   updateContactSchema,
@@ -57,6 +58,7 @@ export type ContactView = {
   ownerId: string;
   consentStatus: "UNKNOWN" | "GRANTED" | "WITHDRAWN";
   consentUpdatedAt: Date | null;
+  journeyStage: JourneyStage;
   erased: boolean;
   mine: boolean;
 };
@@ -70,6 +72,7 @@ const contactSelect = {
   ownerId: true,
   consentStatus: true,
   consentUpdatedAt: true,
+  journeyStage: true,
   erasedAt: true,
 } satisfies Prisma.CrmContactSelect;
 
@@ -85,6 +88,7 @@ const toContact = (
   ownerId: row.ownerId,
   consentStatus: row.consentStatus,
   consentUpdatedAt: row.consentUpdatedAt,
+  journeyStage: row.journeyStage,
   erased: row.erasedAt !== null,
   mine: row.ownerId === context.userId,
 });
@@ -104,12 +108,75 @@ async function accessibleContact(
   return row;
 }
 
+/** Writes one entry of the append-only journey history. Callers update the contact themselves. */
+export async function recordStageChange(
+  tx: Pick<Tx, "contactStageChange">,
+  change: {
+    organizationId: string;
+    contactId: string;
+    from: JourneyStage | null;
+    to: JourneyStage;
+    reason: "CREATED" | "MANUAL" | "DEAL_WON";
+    changedById: string;
+  },
+) {
+  await tx.contactStageChange.create({
+    data: {
+      organizationId: change.organizationId,
+      contactId: change.contactId,
+      fromStage: change.from,
+      toStage: change.to,
+      reason: change.reason,
+      changedById: change.changedById,
+    },
+  });
+}
+
+/** Moves a contact to another stage of the journey and keeps the history. */
+export async function setJourneyStage(
+  { prisma, correlationId }: Deps,
+  context: OrganizationContext,
+  contactId: string,
+  rawStage: unknown,
+): Promise<void> {
+  requirePermission(context, "crm:write");
+  const stage = journeyStageSchema.safeParse(rawStage);
+  if (!stage.success) throw new AppError("INVALID_INPUT", "Choose a journey stage.");
+  await prisma.$transaction(async (tx) => {
+    const contact = await accessibleContact(tx, context, contactId);
+    if (contact.erasedAt) {
+      throw new AppError("UNPROCESSABLE", "An erased contact has no journey.");
+    }
+    if (contact.journeyStage === stage.data) return;
+    await tx.crmContact.update({ where: { id: contact.id }, data: { journeyStage: stage.data } });
+    await recordStageChange(tx, {
+      organizationId: context.organization.id,
+      contactId: contact.id,
+      from: contact.journeyStage,
+      to: stage.data,
+      reason: "MANUAL",
+      changedById: context.userId,
+    });
+    await recordAuditEvent(tx, {
+      organizationId: context.organization.id,
+      actorId: context.userId,
+      action: "crm.journey_stage_changed",
+      resourceType: "crm_contact",
+      resourceId: contact.id,
+      metadata: { from: contact.journeyStage, to: stage.data },
+      correlationId,
+    });
+  });
+}
+
 export async function listContacts(
   { prisma }: Deps,
   context: OrganizationContext,
   rawQuery: unknown = "",
+  options: { stage?: unknown } = {},
 ): Promise<ContactView[]> {
   requirePermission(context, "crm:read");
+  const stage = journeyStageSchema.safeParse(options.stage);
   const parsedQuery = searchSchema.safeParse(rawQuery ?? "");
   if (!parsedQuery.success) throw new AppError("INVALID_INPUT", "Search text is too long.");
   // `contains` is a LIKE pattern: escape its wildcards so the text is matched literally.
@@ -117,6 +184,7 @@ export async function listContacts(
   const rows = await prisma.crmContact.findMany({
     where: {
       ...contactAccessWhere(context),
+      ...(stage.success ? { journeyStage: stage.data } : {}),
       ...(q.data
         ? {
             OR: [
@@ -169,6 +237,14 @@ export async function createContact(
           consentUpdatedAt: input.consentStatus ? now : null,
         },
         select: contactSelect,
+      });
+      await recordStageChange(tx, {
+        organizationId,
+        contactId: row.id,
+        from: null,
+        to: row.journeyStage,
+        reason: "CREATED",
+        changedById: context.userId,
       });
       if (input.consentStatus) {
         await tx.consentEvent.create({
@@ -467,6 +543,27 @@ export async function moveDeal(
       metadata: { from: existing.stage, to: stage.data },
       correlationId,
     });
+    // Winning a deal makes the contact a customer, whatever stage they were in.
+    if (stage.data === "WON") {
+      const contact = await tx.crmContact.findFirst({
+        where: { id: existing.contactId, organizationId: context.organization.id },
+        select: { journeyStage: true, erasedAt: true },
+      });
+      if (contact && !contact.erasedAt && contact.journeyStage !== "CUSTOMER") {
+        await tx.crmContact.update({
+          where: { id: existing.contactId },
+          data: { journeyStage: "CUSTOMER" },
+        });
+        await recordStageChange(tx, {
+          organizationId: context.organization.id,
+          contactId: existing.contactId,
+          from: contact.journeyStage,
+          to: "CUSTOMER",
+          reason: "DEAL_WON",
+          changedById: context.userId,
+        });
+      }
+    }
     return toDeal(row);
   });
 }
@@ -530,6 +627,13 @@ export type ContactDetail = {
   deals: DealView[];
   activities: ActivityView[];
   consentHistory: { status: "UNKNOWN" | "GRANTED" | "WITHDRAWN"; source: string; at: Date }[];
+  /** Newest first. Written when the contact is created and on every later change. */
+  journeyHistory: {
+    from: JourneyStage | null;
+    to: JourneyStage;
+    reason: "CREATED" | "MANUAL" | "DEAL_WON";
+    at: Date;
+  }[];
 };
 
 export async function getContactDetail(
@@ -540,7 +644,7 @@ export async function getContactDetail(
   requirePermission(context, "crm:read");
   const contact = await accessibleContact(prisma, context, contactId);
   const organizationId = context.organization.id;
-  const [deals, activities, consents] = await Promise.all([
+  const [deals, activities, consents, journey] = await Promise.all([
     prisma.crmDeal.findMany({
       where: { organizationId, contactId: contact.id },
       include: dealInclude,
@@ -552,6 +656,11 @@ export async function getContactDetail(
       take: 200,
     }),
     prisma.consentEvent.findMany({
+      where: { organizationId, contactId: contact.id },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: 50,
+    }),
+    prisma.contactStageChange.findMany({
       where: { organizationId, contactId: contact.id },
       orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       take: 50,
@@ -580,6 +689,12 @@ export async function getContactDetail(
       status: event.status,
       source: event.source,
       at: event.createdAt,
+    })),
+    journeyHistory: journey.map((change) => ({
+      from: change.fromStage,
+      to: change.toStage,
+      reason: change.reason,
+      at: change.createdAt,
     })),
   };
 }

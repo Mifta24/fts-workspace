@@ -73,6 +73,13 @@ export default async function InsightsPage({
             <Figure label={t("fromForms")} value={contacts.createdFromForms} />
             <Figure label={t("erased")} value={contacts.erased} />
           </dl>
+          <h3 className="text-sm font-medium">{t("journeyTitle")}</h3>
+          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {(["LEAD", "PROSPECT", "CUSTOMER", "LAPSED"] as const).map((stage) => (
+              <Figure key={stage} label={t(`journey.${stage}`)} value={contacts.journey[stage]} />
+            ))}
+            <Figure label={t("becameCustomers")} value={contacts.becameCustomers} />
+          </dl>
           <h3 className="text-sm font-medium">{t("consentTitle")}</h3>
           <dl className="grid gap-4 sm:grid-cols-3">
             {(["GRANTED", "UNKNOWN", "WITHDRAWN"] as const).map((status) => (

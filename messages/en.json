@@ -506,7 +506,26 @@
     "pipelineIntro": "Open deals by stage, and deals closed in the last {days} days. Values are never added across currencies.",
     "wonCount": "Won",
     "lostCount": "Lost",
-    "winRate": "Win rate"
+    "winRate": "Win rate",
+    "journeyTitle": "Customer journey",
+    "journeyNow": "Current stage: {stage}",
+    "journeyLabel": "Stage",
+    "journeyMove": "Move stage",
+    "journey": {
+      "LEAD": "Lead",
+      "PROSPECT": "Prospect",
+      "CUSTOMER": "Customer",
+      "LAPSED": "Lapsed"
+    },
+    "journeyReason": {
+      "CREATED": "added",
+      "MANUAL": "changed by hand",
+      "DEAL_WON": "deal won"
+    },
+    "journeyChange": "{from} → {to}",
+    "journeyStart": "Started as {to}",
+    "journeyFilter": "Journey stage",
+    "journeyAll": "All stages"
   },
   "Schedule": {
     "title": "Schedule",
@@ -642,6 +661,14 @@
       "ACCEPTED": "Accepted",
       "DECLINED": "Declined"
     },
-    "pipelineLink": "Deals and pipeline report"
+    "pipelineLink": "Deals and pipeline report",
+    "journeyTitle": "Customer journey today",
+    "journey": {
+      "LEAD": "Lead",
+      "PROSPECT": "Prospect",
+      "CUSTOMER": "Customer",
+      "LAPSED": "Lapsed"
+    },
+    "becameCustomers": "Became customers"
   }
 }

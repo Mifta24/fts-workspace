@@ -2,6 +2,7 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import { AppError } from "@/lib/errors";
+import { recordStageChange } from "@/features/crm/server/crm-service";
 import {
   buildAnswerSchema,
   assignFieldKeys,
@@ -441,6 +442,14 @@ export async function submitPublicForm(
           });
           contactId = created.id;
           contactCreated = true;
+          await recordStageChange(tx, {
+            organizationId,
+            contactId,
+            from: null,
+            to: "LEAD",
+            reason: "CREATED",
+            changedById: form.ownerId,
+          });
         }
         if (!existing || existing.consentStatus !== "GRANTED") {
           await tx.crmContact.update({

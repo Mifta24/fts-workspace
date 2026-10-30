@@ -27,8 +27,12 @@ test("crm: contact, consent, deal, activity, pipeline report and erasure", async
   await page.getByRole("button", { name: "Add deal" }).click();
   await expect(page.getByText(/Lead · 1,200\.00 USD/)).toBeVisible();
   await page.getByLabel("Stage of Annual plan").selectOption("WON");
-  await page.getByRole("button", { name: "Move" }).click();
+  await page.getByRole("button", { name: "Move", exact: true }).click();
   await expect(page.getByText(/Won · 1,200\.00 USD/)).toBeVisible();
+  // Winning the deal made the contact a customer, and the history says why.
+  await expect(page.getByText("Current stage: Customer")).toBeVisible();
+  await expect(page.getByText(/Lead → Customer · deal won/)).toBeVisible();
+  await expect(page.getByText(/Started as Lead · added/)).toBeVisible();
   await page.getByLabel("What happened").fill("Signed the contract by phone");
   await page.getByRole("button", { name: "Add activity" }).click();
   await expect(page.getByText("Signed the contract by phone")).toBeVisible();
@@ -63,4 +67,25 @@ test("viewers and other tenants have no access to the CRM", async ({ page, brows
   await signIn(outsider, "owner@globex.test");
   expect((await outsider.goto("/en/w/acme/crm"))?.status()).toBe(404);
   await other.close();
+});
+
+test("crm: a contact's journey stage is moved by hand and filters the list", async ({ page }) => {
+  await signIn(page, "owner@acme.test");
+  await page.goto("/en/w/acme/crm");
+  await page.getByLabel("Name", { exact: true }).fill("Jun Prospect");
+  await page.getByRole("button", { name: "Add contact" }).click();
+  await expect(page.getByText("Current stage: Lead")).toBeVisible();
+  await page.getByLabel("Stage", { exact: true }).selectOption("PROSPECT");
+  await page.getByRole("button", { name: "Move stage" }).click();
+  await expect(page.getByText("Current stage: Prospect")).toBeVisible();
+  await expect(page.getByText(/Lead → Prospect · changed by hand/)).toBeVisible();
+
+  await page.goto("/en/w/acme/crm?stage=PROSPECT");
+  await expect(page.getByRole("link", { name: "Jun Prospect" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Prospect", exact: true })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+  await page.goto("/en/w/acme/crm?stage=CUSTOMER");
+  await expect(page.getByRole("link", { name: "Jun Prospect" })).toHaveCount(0);
 });

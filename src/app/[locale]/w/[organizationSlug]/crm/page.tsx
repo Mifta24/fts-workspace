@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { ServerForm } from "@/components/server-form";
+import { JOURNEY_STAGES, journeyStageSchema } from "@/features/crm/schemas/crm";
 import { createContactAction } from "@/features/crm/server/actions";
 import { listContacts } from "@/features/crm/server/crm-service";
 import { WorkspaceShell } from "@/features/organizations/components/workspace-shell";
@@ -21,8 +22,11 @@ export default async function CrmPage({
   const [{ organizationSlug }, query] = await Promise.all([params, searchParams]);
   const context = await requireWorkspace(organizationSlug, "crm:read");
   const q = typeof query.q === "string" ? query.q : "";
+  const stage = journeyStageSchema.safeParse(query.stage);
   const t = await getTranslations("Crm");
-  const contacts = await listContacts({ prisma: db() }, context, q).catch((error: unknown) => {
+  const contacts = await listContacts({ prisma: db() }, context, q, {
+    stage: stage.success ? stage.data : undefined,
+  }).catch((error: unknown) => {
     if (isAppError(error) && error.code === "INVALID_INPUT") return [];
     throw error;
   });
@@ -47,8 +51,29 @@ export default async function CrmPage({
           <Label htmlFor="crm-q">{t("searchLabel")}</Label>
           <Input id="crm-q" name="q" defaultValue={q} maxLength={100} className="w-72" />
         </div>
+        {stage.success && <input type="hidden" name="stage" value={stage.data} />}
         <Button type="submit">{t("search")}</Button>
       </form>
+      <nav aria-label={t("journeyFilter")} className="flex flex-wrap gap-2 text-sm">
+        {[undefined, ...JOURNEY_STAGES].map((value) => {
+          const active = (stage.success ? stage.data : undefined) === value;
+          const params = new URLSearchParams();
+          if (q) params.set("q", q);
+          if (value) params.set("stage", value);
+          return (
+            <Link
+              key={value ?? "all"}
+              href={`/w/${organizationSlug}/crm${params.size ? `?${params}` : ""}`}
+              aria-current={active ? "page" : undefined}
+              className={`rounded-md border border-border px-3 py-1 ${
+                active ? "bg-primary text-primary-foreground" : "bg-card hover:bg-muted"
+              }`}
+            >
+              {value ? t(`journey.${value}`) : t("journeyAll")}
+            </Link>
+          );
+        })}
+      </nav>
 
       {contacts.length === 0 ? (
         <Card>
@@ -67,7 +92,12 @@ export default async function CrmPage({
                 {contact.name}
               </Link>
               <p className="text-xs text-muted-foreground">
-                {[contact.company, contact.email, t(`consent.${contact.consentStatus}`)]
+                {[
+                  contact.company,
+                  contact.email,
+                  t(`journey.${contact.journeyStage}`),
+                  t(`consent.${contact.consentStatus}`),
+                ]
                   .filter(Boolean)
                   .join(" · ")}
               </p>

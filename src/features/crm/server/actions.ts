@@ -12,6 +12,7 @@ import {
   eraseContact,
   moveDeal,
   recordConsent,
+  setJourneyStage,
   updateContact,
 } from "@/features/crm/server/crm-service";
 import { requireWorkspace } from "@/features/organizations/server/require-workspace";
@@ -156,6 +157,26 @@ export async function addActivityAction(
     });
   } catch (error) {
     return toActionError(error, correlationId, "crm.activity.add");
+  }
+  refresh();
+  return { ok: true };
+}
+
+export async function setJourneyStageAction(
+  _previous: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const context = await requireWorkspace(text(formData, "organizationSlug"), "crm:write");
+  const correlationId = await getCorrelationId();
+  try {
+    await setJourneyStage(
+      { prisma: db(), correlationId },
+      context,
+      text(formData, "id"),
+      formData.get("stage"),
+    );
+  } catch (error) {
+    return toActionError(error, correlationId, "crm.journey.set");
   }
   refresh();
   return { ok: true };

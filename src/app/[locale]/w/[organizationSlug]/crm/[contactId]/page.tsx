@@ -6,13 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { ActionButton } from "@/components/action-button";
-import { ACTIVITY_TYPES, DEAL_STAGES } from "@/features/crm/schemas/crm";
+import { ACTIVITY_TYPES, DEAL_STAGES, JOURNEY_STAGES } from "@/features/crm/schemas/crm";
 import {
   addActivityAction,
   createDealAction,
   eraseContactAction,
   moveDealAction,
   recordConsentAction,
+  setJourneyStageAction,
   updateContactAction,
 } from "@/features/crm/server/actions";
 import { getContactDetail } from "@/features/crm/server/crm-service";
@@ -117,6 +118,51 @@ export default async function ContactPage({
           </ServerForm>
         </Card>
       )}
+
+      <section aria-labelledby="journey-title" className="space-y-3">
+        <h2 id="journey-title" className="text-lg font-semibold tracking-tight">
+          {t("journeyTitle")}
+        </h2>
+        <p className="text-sm">
+          {t("journeyNow", { stage: t(`journey.${contact.journeyStage}`) })}
+        </p>
+        {canWrite && (
+          <ServerForm
+            key={contact.journeyStage}
+            action={setJourneyStageAction}
+            fields={fields}
+            submitLabel={t("journeyMove")}
+            resetOnSuccess={false}
+            className="flex flex-wrap items-end gap-3"
+          >
+            <div className="space-y-2">
+              <Label htmlFor="j-stage">{t("journeyLabel")}</Label>
+              <Select id="j-stage" name="stage" defaultValue={contact.journeyStage}>
+                {JOURNEY_STAGES.map((stage) => (
+                  <option key={stage} value={stage}>
+                    {t(`journey.${stage}`)}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </ServerForm>
+        )}
+        {detail.journeyHistory.length > 0 && (
+          <ul className="space-y-1 text-sm text-muted-foreground">
+            {detail.journeyHistory.map((change, index) => (
+              <li key={index}>
+                {change.from
+                  ? t("journeyChange", {
+                      from: t(`journey.${change.from}`),
+                      to: t(`journey.${change.to}`),
+                    })
+                  : t("journeyStart", { to: t(`journey.${change.to}`) })}{" "}
+                · {t(`journeyReason.${change.reason}`)} · {change.at.toISOString().slice(0, 10)}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <section aria-labelledby="consent-title" className="space-y-3">
         <h2 id="consent-title" className="text-lg font-semibold tracking-tight">

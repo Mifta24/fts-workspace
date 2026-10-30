@@ -134,6 +134,7 @@ model Organization {
   crmDeals             CrmDeal[]
   crmActivities        CrmActivity[]
   consentEvents        ConsentEvent[]
+  contactStageChanges  ContactStageChange[]
   appointments         Appointment[]
   appointmentAttendees AppointmentAttendee[]
   forms                Form[]
@@ -696,6 +697,20 @@ enum ConsentStatus {
   WITHDRAWN
 }
 
+/// Where a contact is in the relationship with the organization.
+enum JourneyStage {
+  LEAD
+  PROSPECT
+  CUSTOMER
+  LAPSED
+}
+
+enum StageChangeReason {
+  CREATED
+  MANUAL
+  DEAL_WON
+}
+
 enum DealStage {
   LEAD
   QUALIFIED
@@ -727,11 +742,13 @@ model CrmContact {
   ownerId          String        @db.Uuid
   consentStatus    ConsentStatus @default(UNKNOWN)
   consentUpdatedAt DateTime?
+  journeyStage     JourneyStage  @default(LEAD)
   erasedAt         DateTime?
   createdById      String        @db.Uuid
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
+  stageChanges    ContactStageChange[]
   deals           CrmDeal[]
   activities      CrmActivity[]
   consents        ConsentEvent[]
@@ -758,6 +775,25 @@ model ConsentEvent {
 
   @@index([organizationId, contactId, createdAt])
   @@map("consent_events")
+}
+
+/// Append-only history of a contact's journey stage. Holds no personal data, so it survives erasure.
+model ContactStageChange {
+  id             String            @id @default(uuid(7)) @db.Uuid
+  organizationId String            @db.Uuid
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  contactId      String            @db.Uuid
+  contact        CrmContact        @relation(fields: [contactId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  /// Null for the first entry, written when the contact is created.
+  fromStage      JourneyStage?
+  toStage        JourneyStage
+  reason         StageChangeReason
+  changedById    String            @db.Uuid
+  createdAt      DateTime          @default(now())
+
+  @@index([organizationId, contactId, createdAt])
+  @@index([organizationId, toStage, createdAt])
+  @@map("contact_stage_changes")
 }
 
 model CrmDeal {

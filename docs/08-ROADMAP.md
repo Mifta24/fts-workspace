@@ -40,8 +40,8 @@ No durations are commitments; estimate after technical discovery and staffing as
 **Exit gate:** document ACL holds across retrieval; no unauthorized tool execution. Met for what exists: the ACL parity and retrieval tests, the file and knowledge E2E tests, and the absence of any model tool execution (`11-MCP-THREAT-MODEL.md`) pass in CI (commit `eb5ec94`, run 40836686028). **Not delivered in Phase 3:** semantic/embedding retrieval, PDF/office extraction, malware scanning, the automation prototype, a production object store (OD-04) and a chosen model provider (OD-08).
 
 ## Phase 4 — Business
-- [x] CRM contacts and deal stages (slice 13: contacts, consent history, erasure, deals, activity timeline, pipeline report)
-- [~] Scheduling (slice 14: meetings with attendees, conflict protection, responses, notifications; slice 16: reminders from the worker and per-user time zones; **no external calendar sync and no public booking pages**) — customer journeys not started
+- [x] CRM contacts and deal stages (slice 13: contacts, consent history, erasure, deals, activity timeline, pipeline report; slice 19: customer journey stages with append-only history)
+- [~] Scheduling (slice 14: meetings with attendees, conflict protection, responses, notifications; slice 16: reminders from the worker and per-user time zones; **no external calendar sync and no public booking pages**)
 - [~] Templates/forms (slice 15: template-based forms, public submission links, consent capture, submissions; slice 17: editable fields (labels only after publishing) and templates in en/ja/id; **no CAPTCHA, no file uploads**) and the pipeline report; slice 18: insights page (contacts and consent, forms, own meetings; counts for 7/30/90 days against the previous period)
 **Exit gate:** privacy controls, consent pathways, and reliable reporting.
 

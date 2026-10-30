@@ -56,7 +56,7 @@
 | Server action | `askAction`, `setBudgetAction` | Ask the knowledge assistant; set the daily token budget | `ai:use`; `organization:update` |
 | Page | `/[locale]/w/[slug]/assistant` | Question box, answer with sources, today's usage | `ai:use` |
 
-| Server action | `createContactAction`, `updateContactAction`, `recordConsentAction`, `createDealAction`, `moveDealAction`, `addActivityAction` | CRM writes | `crm:write` (+ contact access) |
+| Server action | `createContactAction`, `updateContactAction`, `recordConsentAction`, `setJourneyStageAction`, `createDealAction`, `moveDealAction`, `addActivityAction` | CRM writes | `crm:write` (+ contact access) |
 | Server action | `eraseContactAction` | Erase a contact's personal data | `crm:erase` |
 | Page | `/[locale]/w/[slug]/crm`, `/crm/[contactId]`, `/crm/pipeline` | Contacts, detail with consent/deals/activity, pipeline report | `crm:read` |
 

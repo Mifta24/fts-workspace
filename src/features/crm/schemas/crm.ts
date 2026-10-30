@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export const CONTACT_CONSENT = ["GRANTED", "WITHDRAWN"] as const;
 export const DEAL_STAGES = ["LEAD", "QUALIFIED", "PROPOSAL", "NEGOTIATION", "WON", "LOST"] as const;
+export const JOURNEY_STAGES = ["LEAD", "PROSPECT", "CUSTOMER", "LAPSED"] as const;
+export const journeyStageSchema = z.enum(JOURNEY_STAGES);
 export const ACTIVITY_TYPES = ["NOTE", "CALL", "EMAIL", "MEETING"] as const;
 
 export const idSchema = z.uuid();

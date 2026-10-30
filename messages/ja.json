@@ -506,7 +506,26 @@
     "pipelineIntro": "ステージ別の進行中の案件と、過去 {days} 日間に完了した案件です。通貨をまたいで合算することはありません。",
     "wonCount": "受注",
     "lostCount": "失注",
-    "winRate": "受注率"
+    "winRate": "受注率",
+    "journeyTitle": "カスタマージャーニー",
+    "journeyNow": "現在のステージ: {stage}",
+    "journeyLabel": "ステージ",
+    "journeyMove": "ステージを変更",
+    "journey": {
+      "LEAD": "リード",
+      "PROSPECT": "見込み客",
+      "CUSTOMER": "顧客",
+      "LAPSED": "休眠"
+    },
+    "journeyReason": {
+      "CREATED": "登録",
+      "MANUAL": "手動で変更",
+      "DEAL_WON": "案件成立"
+    },
+    "journeyChange": "{from} → {to}",
+    "journeyStart": "{to} として開始",
+    "journeyFilter": "ジャーニーのステージ",
+    "journeyAll": "すべて"
   },
   "Schedule": {
     "title": "スケジュール",
@@ -642,6 +661,14 @@
       "ACCEPTED": "承諾",
       "DECLINED": "辞退"
     },
-    "pipelineLink": "案件とパイプラインレポート"
+    "pipelineLink": "案件とパイプラインレポート",
+    "journeyTitle": "現在のカスタマージャーニー",
+    "journey": {
+      "LEAD": "リード",
+      "PROSPECT": "見込み客",
+      "CUSTOMER": "顧客",
+      "LAPSED": "休眠"
+    },
+    "becameCustomers": "期間中に顧客になった数"
   }
 }
