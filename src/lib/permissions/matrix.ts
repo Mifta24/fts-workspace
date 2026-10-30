@@ -52,6 +52,7 @@ export const PERMISSIONS = [
   "appointment:write",
   "form:manage",
   "booking:manage",
+  "automation:manage",
   "billing:read",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
@@ -101,6 +102,7 @@ const MATRIX: Record<Permission, readonly OrganizationRole[]> = {
   "appointment:write": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
   "form:manage": ["OWNER", "ADMIN", "MANAGER"],
   "booking:manage": ["OWNER", "ADMIN", "MANAGER", "MEMBER"],
+  "automation:manage": ["OWNER", "ADMIN"],
   "billing:read": ["OWNER", "ADMIN"],
 };
 

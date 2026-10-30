@@ -74,6 +74,7 @@
     "schedule": "Jadwal",
     "forms": "Formulir",
     "insights": "Wawasan",
+    "automations": "Otomasi",
     "billing": "Paket"
   },
   "Roles": {
@@ -329,7 +330,8 @@
       "APPOINTMENT_UPDATED": "{actor} mengubah waktu “{title}”",
       "APPOINTMENT_CANCELLED": "{actor} membatalkan “{title}”",
       "APPOINTMENT_REMINDER": "“{title}” akan segera dimulai",
-      "BOOKING_RECEIVED": "Pemesanan baru: “{title}”"
+      "BOOKING_RECEIVED": "Pemesanan baru: “{title}”",
+      "FORM_SUBMITTED": "Isian baru di “{title}”"
     },
     "anItem": "Sesuatu"
   },
@@ -831,5 +833,28 @@
     "suspend": "Tangguhkan workspace",
     "unsuspend": "Pulihkan workspace",
     "limit": "Menampilkan paling banyak {count} workspace; persempit pencarian untuk yang lain."
+  },
+  "Automations": {
+    "title": "Otomasi",
+    "intro": "Pekerjaan kecil yang berjalan sendiri. Masing-masing mati sampai Anda menyalakannya. Semuanya hanya bekerja di dalam workspace ini: tidak ada email atau pesan keluar, dan tidak ada yang dihapus.",
+    "rules": {
+      "FORM_SUBMITTED_NOTIFY": {
+        "title": "Beri tahu pemilik formulir tentang isian baru",
+        "description": "Saat seseorang mengisi formulir publik, pemilik formulir menerima notifikasi."
+      },
+      "FORM_SUBMITTED_TASK": {
+        "title": "Buat tugas tindak lanjut untuk setiap isian",
+        "description": "Pemilik formulir mendapat tugas “Tindak lanjut: <nama formulir>” yang jatuh tempo dua hari lagi. Isinya tidak memuat apa yang ditulis pengunjung."
+      },
+      "BOOKING_RECEIVED_NOTE": {
+        "title": "Catat pemesanan baru di kontak",
+        "description": "Saat pengunjung memesan waktu, catatan berisi nama dan waktu pertemuan ditambahkan ke data kontaknya."
+      }
+    },
+    "on": "Menyala",
+    "off": "Mati",
+    "turnOn": "Nyalakan",
+    "turnOff": "Matikan",
+    "note": "Perubahan hanya berlaku untuk kejadian baru: isian formulir dan pemesanan sebelumnya tidak diproses."
   }
 }

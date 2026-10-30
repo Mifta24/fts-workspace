@@ -74,6 +74,7 @@
     "schedule": "Schedule",
     "forms": "Forms",
     "insights": "Insights",
+    "automations": "Automations",
     "billing": "Plan"
   },
   "Roles": {
@@ -329,7 +330,8 @@
       "APPOINTMENT_UPDATED": "{actor} changed the time of “{title}”",
       "APPOINTMENT_CANCELLED": "{actor} cancelled “{title}”",
       "APPOINTMENT_REMINDER": "“{title}” starts soon",
-      "BOOKING_RECEIVED": "New booking: “{title}”"
+      "BOOKING_RECEIVED": "New booking: “{title}”",
+      "FORM_SUBMITTED": "New submission on “{title}”"
     },
     "anItem": "Someone"
   },
@@ -831,5 +833,28 @@
     "suspend": "Suspend workspace",
     "unsuspend": "Restore workspace",
     "limit": "Showing at most {count} workspaces; narrow the search to find others."
+  },
+  "Automations": {
+    "title": "Automations",
+    "intro": "Small chores that happen by themselves. Each one is off until you turn it on. They only act inside this workspace: nothing is emailed or sent outside it, and nothing is deleted.",
+    "rules": {
+      "FORM_SUBMITTED_NOTIFY": {
+        "title": "Tell the form owner about new submissions",
+        "description": "When someone fills in a public form, the form’s owner gets a notification."
+      },
+      "FORM_SUBMITTED_TASK": {
+        "title": "Create a follow-up task for each submission",
+        "description": "The form’s owner gets a task, “Follow up: <form name>”, due in two days. It does not contain what the visitor wrote."
+      },
+      "BOOKING_RECEIVED_NOTE": {
+        "title": "Note new bookings on the contact",
+        "description": "When a visitor books a time, a note with the meeting’s name and time is added to their contact record."
+      }
+    },
+    "on": "On",
+    "off": "Off",
+    "turnOn": "Turn on",
+    "turnOff": "Turn off",
+    "note": "A change applies to new events only: earlier form submissions and bookings are not processed."
   }
 }

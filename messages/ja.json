@@ -74,6 +74,7 @@
     "schedule": "スケジュール",
     "forms": "フォーム",
     "insights": "インサイト",
+    "automations": "自動化",
     "billing": "プラン"
   },
   "Roles": {
@@ -329,7 +330,8 @@
       "APPOINTMENT_UPDATED": "{actor} さんが「{title}」の日時を変更しました",
       "APPOINTMENT_CANCELLED": "{actor} さんが「{title}」をキャンセルしました",
       "APPOINTMENT_REMINDER": "「{title}」がまもなく始まります",
-      "BOOKING_RECEIVED": "新しい予約: 「{title}」"
+      "BOOKING_RECEIVED": "新しい予約: 「{title}」",
+      "FORM_SUBMITTED": "「{title}」に新しい回答があります"
     },
     "anItem": "項目"
   },
@@ -831,5 +833,28 @@
     "suspend": "ワークスペースを停止",
     "unsuspend": "ワークスペースを再開",
     "limit": "表示は最大 {count} 件です。他は検索で絞り込んでください。"
+  },
+  "Automations": {
+    "title": "自動化",
+    "intro": "ひとりでに行われる小さな作業です。どれもオンにするまでは動きません。動作はこのワークスペースの中だけで、メールや外部への送信はなく、何も削除されません。",
+    "rules": {
+      "FORM_SUBMITTED_NOTIFY": {
+        "title": "新しい回答をフォームの所有者に知らせる",
+        "description": "公開フォームに誰かが入力すると、フォームの所有者に通知が届きます。"
+      },
+      "FORM_SUBMITTED_TASK": {
+        "title": "回答ごとにフォローアップのタスクを作成する",
+        "description": "フォームの所有者に、2日後が期限の「Follow up: <フォーム名>」というタスクが作られます。訪問者の入力内容は含まれません。"
+      },
+      "BOOKING_RECEIVED_NOTE": {
+        "title": "新しい予約を連絡先にメモする",
+        "description": "訪問者が時間を予約すると、会議の名前と時間のメモが連絡先に追加されます。"
+      }
+    },
+    "on": "オン",
+    "off": "オフ",
+    "turnOn": "オンにする",
+    "turnOff": "オフにする",
+    "note": "変更は新しい出来事にのみ適用されます。以前のフォーム回答や予約は処理されません。"
   }
 }

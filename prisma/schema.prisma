@@ -140,6 +140,8 @@ model Organization {
   contactStageChanges  ContactStageChange[]
   calendarFeeds        CalendarFeed[]
   calendarConnections  CalendarConnection[]
+  automationRules      AutomationRule[]
+  automationRuns       AutomationRun[]
   bookingPages         BookingPage[]
   appointments         Appointment[]
   appointmentAttendees AppointmentAttendee[]
@@ -394,6 +396,7 @@ enum NotificationType {
   APPOINTMENT_CANCELLED
   APPOINTMENT_REMINDER
   BOOKING_RECEIVED
+  FORM_SUBMITTED
 }
 
 /// A chat room. Every channel, public or private, has explicit `ChannelMember` rows; membership
@@ -976,6 +979,42 @@ model CalendarConnection {
 
   @@unique([organizationId, userId, provider])
   @@map("calendar_connections")
+}
+
+/// A fixed, built-in automation that one organization switched on. Rules are chosen from a catalog
+/// in code (no rule text is stored), they are off until someone turns them on, and a row only
+/// records the choice. See ADR-018.
+model AutomationRule {
+  id             String            @id @default(uuid(7)) @db.Uuid
+  organizationId String            @db.Uuid
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ruleKey        AutomationRuleKey
+  enabled        Boolean           @default(false)
+  updatedById    String            @db.Uuid
+  updatedAt      DateTime          @updatedAt
+
+  @@unique([organizationId, ruleKey])
+  @@map("automation_rules")
+}
+
+enum AutomationRuleKey {
+  FORM_SUBMITTED_NOTIFY
+  FORM_SUBMITTED_TASK
+  BOOKING_RECEIVED_NOTE
+}
+
+/// One row per rule and triggering record, written in the same transaction as the rule's action:
+/// a job that runs twice (for example after a worker crash) cannot do the action twice.
+model AutomationRun {
+  id             String            @id @default(uuid(7)) @db.Uuid
+  organizationId String            @db.Uuid
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ruleKey        AutomationRuleKey
+  subjectId      String            @db.Uuid
+  createdAt      DateTime          @default(now())
+
+  @@unique([organizationId, ruleKey, subjectId])
+  @@map("automation_runs")
 }
 
 model AppointmentAttendee {

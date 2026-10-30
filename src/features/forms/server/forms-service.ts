@@ -2,6 +2,7 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import { AppError } from "@/lib/errors";
+import { queueAutomations } from "@/features/automations/server/automation-plan";
 import { captureVisitorContact } from "@/features/crm/server/crm-service";
 import { publicPagesOpen, requireFeature } from "@/features/billing/server/entitlements";
 import {
@@ -450,6 +451,11 @@ export async function submitPublicForm(
         createdAt: now,
       },
       select: { id: true },
+    });
+    await queueAutomations(tx, organizationId, {
+      type: "form.submitted",
+      formId: form.id,
+      submissionId: submission.id,
     });
     // No actor (an anonymous visitor) and no answers: the audit trail holds the fact only.
     await recordAuditEvent(tx, {

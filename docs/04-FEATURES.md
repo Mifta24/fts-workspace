@@ -20,7 +20,7 @@
 | AI | Knowledge Q&A/tools | Next | ACL-aware retrieval and actions |
 | Business | CRM & scheduling | Later | Leads, deals, appointment booking |
 | Operations | Analytics/forms | Later | Reports, configurable data capture |
-| Automation | Workflows/MCP | Later | User-approved integration actions |
+| Automation | Built-in rules; workflows/MCP | Built-in rules: done (ADR-018). Rule builder and model-run actions: later | Three fixed rules owners switch on; user-approved integration actions later |
 | Platform | Billing & entitlements | Phase 5 (no payments yet) | Plans, limits, usage accounting; plans set by an operator, see ADR-015 |
 | Ecosystem | Virtual space & recording | Optional | Validate demand before building |
 

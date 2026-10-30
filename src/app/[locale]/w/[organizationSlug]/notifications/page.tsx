@@ -47,7 +47,9 @@ export default async function NotificationsPage({
                 ? `/w/${organizationSlug}/tasks/${item.resourceId}`
                 : item.resourceType === "appointment"
                   ? `/w/${organizationSlug}/schedule`
-                  : `/w/${organizationSlug}/chat/${item.resourceId}`;
+                  : item.resourceType === "form"
+                    ? `/w/${organizationSlug}/forms/${item.resourceId}`
+                    : `/w/${organizationSlug}/chat/${item.resourceId}`;
             return (
               <li
                 key={item.id}

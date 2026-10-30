@@ -15,6 +15,7 @@ import {
   visitorBookingSchema,
 } from "@/features/booking/schemas/booking";
 import { computeSlots, type SlotRules } from "@/features/booking/schemas/slots";
+import { queueAutomations } from "@/features/automations/server/automation-plan";
 import {
   googleBusyFor,
   type BusyLookup,
@@ -494,6 +495,10 @@ export async function bookPublicSlot(
       organizationId,
       now,
     );
+    await queueAutomations(tx, organizationId, {
+      type: "booking.received",
+      appointmentId: appointment.id,
+    });
     // No actor and no visitor details: the trail holds the fact and the identifiers only.
     await recordAuditEvent(tx, {
       organizationId,

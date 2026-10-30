@@ -108,7 +108,8 @@ export async function listNotifications(
   const appointmentIds = rows
     .filter((row) => row.resourceType === "appointment")
     .map((row) => row.resourceId);
-  const [actors, tasks, appointments] = await Promise.all([
+  const formIds = rows.filter((row) => row.resourceType === "form").map((row) => row.resourceId);
+  const [actors, tasks, appointments, forms] = await Promise.all([
     prisma.user.findMany({
       where: { id: { in: actorIds }, memberships: { some: { organizationId } } },
       select: { id: true, name: true },
@@ -126,7 +127,13 @@ export async function listNotifications(
       },
       select: { id: true, title: true },
     }),
+    // A form's name is only resolved for the person who owns it.
+    prisma.form.findMany({
+      where: { organizationId, id: { in: formIds }, ownerId: context.userId },
+      select: { id: true, title: true },
+    }),
   ]);
+  const formTitles = new Map(forms.map((form) => [form.id, form.title]));
   const appointmentTitles = new Map(
     appointments.map((appointment) => [appointment.id, appointment.title]),
   );
@@ -143,7 +150,9 @@ export async function listNotifications(
         ? (taskTitles.get(row.resourceId) ?? null)
         : row.resourceType === "appointment"
           ? (appointmentTitles.get(row.resourceId) ?? null)
-          : null,
+          : row.resourceType === "form"
+            ? (formTitles.get(row.resourceId) ?? null)
+            : null,
     read: row.readAt !== null,
     createdAt: row.createdAt,
   }));

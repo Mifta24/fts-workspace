@@ -1,10 +1,12 @@
 /**
- * Background worker: `pnpm worker`. Runs queued jobs (document indexing, meeting reminders).
+ * Background worker: `pnpm worker`. Runs queued jobs (document indexing, meeting reminders, automations).
  * Environment: DATABASE_URL and STORAGE_DIR (the same directory the app uses).
  */
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { AUTOMATION_JOB } from "../src/features/automations/schemas/automations";
+import { runAutomation } from "../src/features/automations/server/automation-runner";
 import { INGEST_JOB } from "../src/features/knowledge/schemas/knowledge";
 import { ingestDocument } from "../src/features/knowledge/server/ingest";
 import { REMINDER_JOB } from "../src/features/scheduling/schemas/scheduling";
@@ -22,6 +24,7 @@ const handlers = {
     ingestDocument({ prisma, storage }, job),
   [REMINDER_JOB]: (job: Parameters<typeof sendAppointmentReminder>[1]) =>
     sendAppointmentReminder({ prisma }, job),
+  [AUTOMATION_JOB]: (job: Parameters<typeof runAutomation>[1]) => runAutomation({ prisma }, job),
 };
 
 const log = (message: string, fields: Record<string, unknown> = {}) =>

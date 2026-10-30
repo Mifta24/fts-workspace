@@ -32,6 +32,7 @@ type Section =
   | "schedule"
   | "forms"
   | "insights"
+  | "automations"
   | "members"
   | "billing";
 
@@ -50,6 +51,7 @@ const SECTIONS: { key: Section; path: string; permission?: Permission }[] = [
   { key: "schedule", path: "/schedule" },
   { key: "forms", path: "/forms", permission: "form:manage" },
   { key: "insights", path: "/insights" },
+  { key: "automations", path: "/automations", permission: "automation:manage" },
   { key: "members", path: "/members" },
   { key: "billing", path: "/billing", permission: "billing:read" },
 ];
