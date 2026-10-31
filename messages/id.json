@@ -331,7 +331,8 @@
       "APPOINTMENT_CANCELLED": "{actor} membatalkan “{title}”",
       "APPOINTMENT_REMINDER": "“{title}” akan segera dimulai",
       "BOOKING_RECEIVED": "Pemesanan baru: “{title}”",
-      "FORM_SUBMITTED": "Isian baru di “{title}”"
+      "FORM_SUBMITTED": "Isian baru di “{title}”",
+      "TASK_DUE_SOON": "“{title}” jatuh tempo dalam sehari"
     },
     "anItem": "Sesuatu"
   },

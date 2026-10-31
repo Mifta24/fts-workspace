@@ -1,5 +1,6 @@
 /**
- * Background worker: `pnpm worker`. Runs queued jobs (document indexing, meeting reminders, automations).
+ * Background worker: `pnpm worker`. Runs queued jobs (document indexing, meeting reminders, automations) and
+ * the five-minute sweep for tasks that are due within a day.
  * Environment: DATABASE_URL and STORAGE_DIR (the same directory the app uses).
  */
 import "dotenv/config";
@@ -7,6 +8,8 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { AUTOMATION_JOB } from "../src/features/automations/schemas/automations";
 import { runAutomation } from "../src/features/automations/server/automation-runner";
+import { sendDueSoonReminders } from "../src/features/tasks/server/deadline-reminders";
+import { DEADLINE_SWEEP_INTERVAL_MS } from "../src/features/tasks/schemas/deadline-reminders";
 import { INGEST_JOB } from "../src/features/knowledge/schemas/knowledge";
 import { ingestDocument } from "../src/features/knowledge/server/ingest";
 import { REMINDER_JOB } from "../src/features/scheduling/schemas/scheduling";
@@ -35,8 +38,14 @@ process.on("SIGINT", () => (stopping = true));
 process.on("SIGTERM", () => (stopping = true));
 
 log("worker ready");
+let lastSweep = 0;
 while (!stopping) {
   try {
+    if (Date.now() - lastSweep >= DEADLINE_SWEEP_INTERVAL_MS) {
+      lastSweep = Date.now();
+      const { reminded } = await sendDueSoonReminders({ prisma });
+      if (reminded > 0) log("deadline reminders sent", { reminded });
+    }
     const result = await runJobs(prisma, handlers, { max: 10 });
     if (result.done + result.retried + result.failed > 0) log("jobs processed", result);
   } catch (error) {

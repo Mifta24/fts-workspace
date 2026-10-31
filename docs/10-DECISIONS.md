@@ -126,6 +126,13 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Alternatives:** a provider's HTTP API directly (ties the code to one vendor), a hosted email SDK (same), an outbox table with retries (more reliable delivery, more moving parts; worth it once volume or deliverability matters), Redis for rate limits (another service to run, ADR-013), and leaving limits in memory (each instance gets its own allowance).  
 **Consequences:** a failed auth email is only logged, so the person asks again and operators should watch the log (alerts are still an open Phase 5 item). There is no delivery receipt or bounce handling. The rate limiter adds a database read and write per limited auth request. Nothing was sent to a real provider in tests: the SMTP code is tested against a local SMTP server that records the conversation. Confirmation emails and visitor cancellation for bookings (Phase 4) become possible but are not built, in keeping with ADR-017.
 
+## ADR-020 — Task deadline reminders as a worker sweep (Phase 2 leftover)
+**Status:** Accepted (2026-10-31), at the owner's request to finish the unfinished phases.  
+**Context:** Phase 2 left "deadline reminders" unbuilt. Tasks change in many places (create, edit, assign, status), so queueing one job per change would mean hooking every path and cancelling jobs when a task moves.  
+**Decision:** the worker runs a sweep every five minutes. It finds open, assigned tasks whose due date falls within the next 24 hours, in workspaces that are not suspended, and sends the assignee one in-app `TASK_DUE_SOON` notification. A `task_due_reminders` row (unique per task, person and due date) is written in the same transaction as the notification, so repeating the sweep sends nothing new; a new due date or a new assignee earns a new reminder. Each task is re-read inside its own organization before anything is written. Overdue, done and cancelled tasks are left alone. In-app only: no email, no per-person settings.  
+**Alternatives:** a job per task with a run-at time (precise, but every edit path must replace the job), reminders at several offsets (more noise; "keep it simple", ADR-017), email reminders (waits for a real provider).  
+**Consequences:** a reminder can arrive up to five minutes late. If the worker is down, reminders resume when it returns, and a task that has already become overdue is not announced. Mentions in chat and comments are still not built.
+
 ## Open decisions
 - **OD-01:** Which deploy environment/hosting region and target scale?
 - **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?

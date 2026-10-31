@@ -331,7 +331,8 @@
       "APPOINTMENT_CANCELLED": "{actor} cancelled “{title}”",
       "APPOINTMENT_REMINDER": "“{title}” starts soon",
       "BOOKING_RECEIVED": "New booking: “{title}”",
-      "FORM_SUBMITTED": "New submission on “{title}”"
+      "FORM_SUBMITTED": "New submission on “{title}”",
+      "TASK_DUE_SOON": "“{title}” is due within a day"
     },
     "anItem": "Someone"
   },

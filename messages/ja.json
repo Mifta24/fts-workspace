@@ -331,7 +331,8 @@
       "APPOINTMENT_CANCELLED": "{actor} さんが「{title}」をキャンセルしました",
       "APPOINTMENT_REMINDER": "「{title}」がまもなく始まります",
       "BOOKING_RECEIVED": "新しい予約: 「{title}」",
-      "FORM_SUBMITTED": "「{title}」に新しい回答があります"
+      "FORM_SUBMITTED": "「{title}」に新しい回答があります",
+      "TASK_DUE_SOON": "「{title}」の期限が24時間以内です"
     },
     "anItem": "項目"
   },

@@ -49,7 +49,7 @@ Alert delivery (paging) is **not set up**. Choosing a vendor and wiring these th
 ## Runbooks
 **Health check returns 503.** The database is unreachable. Check the database host and its connection limit, then the app's `DATABASE_URL`. The app recovers on its own once the database is back; there is no state in the app process that needs repair.
 
-**Jobs are stuck or the backlog grows.** Restart the worker (`pnpm worker`). A job that was running when the worker died goes back to the queue once its lock is older than 5 minutes, as soon as a worker runs again (its attempt still counts). If one job type fails repeatedly, read `jobs.lastError` for that workspace (the error text, never the content); failed jobs stay in the table for inspection. Document indexing failures only affect search for that file.
+**Jobs are stuck or the backlog grows.** Restart the worker (`pnpm worker`). The same process also sweeps for tasks due within a day every five minutes (ADR-020); if people say they get no deadline reminders, check that the worker is running. A job that was running when the worker died goes back to the queue once its lock is older than 5 minutes, as soon as a worker runs again (its attempt still counts). If one job type fails repeatedly, read `jobs.lastError` for that workspace (the error text, never the content); failed jobs stay in the table for inspection. Document indexing failures only affect search for that file.
 
 **AI answers fail.** Check the console's AI errors, then the provider status. The planner and the assistant fail closed (an error message, no partial change). Setting a workspace's daily budget to 0 switches AI off for that workspace only.
 

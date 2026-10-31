@@ -142,6 +142,7 @@ model Organization {
   calendarConnections  CalendarConnection[]
   automationRules      AutomationRule[]
   automationRuns       AutomationRun[]
+  taskDueReminders     TaskDueReminder[]
   bookingPages         BookingPage[]
   appointments         Appointment[]
   appointmentAttendees AppointmentAttendee[]
@@ -307,7 +308,8 @@ model Task {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  comments TaskComment[]
+  comments     TaskComment[]
+  dueReminders TaskDueReminder[]
 
   @@unique([id, organizationId])
   @@index([organizationId, status, dueAt])
@@ -397,6 +399,7 @@ enum NotificationType {
   APPOINTMENT_REMINDER
   BOOKING_RECEIVED
   FORM_SUBMITTED
+  TASK_DUE_SOON
 }
 
 /// A chat room. Every channel, public or private, has explicit `ChannelMember` rows; membership
@@ -1026,6 +1029,23 @@ model AutomationRun {
 
   @@unique([organizationId, ruleKey, subjectId])
   @@map("automation_runs")
+}
+
+/// One "due soon" reminder already sent for a task, to one person, for one due date. The unique
+/// key makes the sweep safe to repeat; moving the due date or reassigning the task earns a new one.
+model TaskDueReminder {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  taskId         String       @db.Uuid
+  task           Task         @relation(fields: [taskId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  userId         String       @db.Uuid
+  dueAt          DateTime
+  createdAt      DateTime     @default(now())
+
+  @@unique([taskId, userId, dueAt])
+  @@index([organizationId])
+  @@map("task_due_reminders")
 }
 
 model AppointmentAttendee {
