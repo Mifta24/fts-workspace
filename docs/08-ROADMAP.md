@@ -56,8 +56,9 @@ No durations are commitments; estimate after technical discovery and staffing as
 
 ## Interface refresh (ADR-021)
 - [x] Colour tokens in light and dark, Plus Jakarta Sans, progress thread, landing page with an example goal, light sidebar (commits `555933f` and `87ff39c`)
-- [ ] Topbar restyle, a branded header on sign-in and sign-up, input border contrast (below 3:1), and a view of the signed-in pages in a browser after the refresh
-- [ ] Fix the date-dependent `insights` form tests (they use a fixed "now" of 2026-11-30 and fail now that the real date is inside that period)
+- [x] Input border contrast raised to 3:1 on cards
+- [ ] Topbar restyle, a branded header on sign-in and sign-up, and a view of the signed-in pages in a browser after the refresh
+- [x] Date-dependent `insights` form tests fixed (the fixed "now" moved to 2040-06-30; the old 2026-11-30 broke once the real date entered that period). Other tests still use a fixed "now" of 2026-11-02; they pass today and were not changed
 
 ## Suggested first implementation tickets
 1. Bootstrap Next.js TypeScript repo and scripts.

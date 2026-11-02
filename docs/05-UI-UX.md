@@ -48,9 +48,9 @@ WCAG contrast ratios calculated from the hex values above with a script. This is
 | Primary on background | 6.0 | 7.5 |
 | Warning, destructive and success text on background | 4.9, 6.1, 5.3 | 10.1, 6.6, 9.1 |
 | Progress fill on its track | 5.6 | 6.2 |
-| **Input border on a card** | **1.6** | **1.7** |
+| Input border on a card | 3.8 | 3.7 |
 
-**Known gap:** form field borders are below the 3:1 that WCAG 1.4.11 asks for on component boundaries (the value predates the green palette). It is not fixed yet; fields still have visible focus rings.
+Form field borders (`--input`, `#78877F` light and `#66796F` dark) reach the 3:1 that WCAG 1.4.11 asks for on component boundaries, also on the muted surface (3.3 in both themes). Fields keep a visible focus ring.
 
 ## Core screens
 1. Onboarding: create/select organization, invite or skip, first goal.
@@ -80,6 +80,6 @@ WCAG contrast ratios calculated from the hex values above with a script. This is
 A new user can create an organization, create a goal, add tasks, invite a member and review an AI task plan without guidance.
 
 ## Visual refresh status
-- **Done:** colour tokens (light and dark), Plus Jakarta Sans, the progress thread on goals, challenges and the dashboard, the landing page with an example goal (en, id, ja), the light sidebar and cards without shadows.
-- **Not done:** restyling the topbar area, a branded header on the sign-in and sign-up pages, the input border contrast above, and a Japanese-font choice (system fonts are used for Japanese).
+- **Done:** input border contrast, colour tokens (light and dark), Plus Jakarta Sans, the progress thread on goals, challenges and the dashboard, the landing page with an example goal (en, id, ja), the light sidebar and cards without shadows.
+- **Not done:** restyling the topbar area, a branded header on the sign-in and sign-up pages, and a Japanese-font choice (system fonts are used for Japanese).
 - **Not checked yet:** the logged-in pages were not viewed in a browser after the refresh (they need a signed-in account); the landing page was checked in light and dark and at 390 px width.

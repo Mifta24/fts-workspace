@@ -22,7 +22,9 @@ import { createTestOrganization, resetDatabase } from "../helpers/db";
 
 const deps = () => ({ prisma: db() });
 const DAY = 86_400_000;
-const NOW = new Date("2026-11-30T12:00:00Z");
+// Far in the future on purpose: some tests create rows at the real clock and expect them to fall
+// outside this fixed period, which a date near the present would eventually break.
+const NOW = new Date("2040-06-30T12:00:00Z");
 const daysAgo = (days: number) => new Date(NOW.getTime() - days * DAY);
 
 const contextFor = (slug: string, userId: string): Promise<OrganizationContext> =>
