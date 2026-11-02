@@ -1,0 +1,8 @@
+# /etc/systemd/system/fts-alert-unit@.service: mails at once when a unit it is hooked to fails.
+[Unit]
+Description=Mail an alert that %i failed
+
+[Service]
+Type=oneshot
+User=fts
+ExecStart=/opt/fts-workspace/bin/healthcheck-notify.sh --unit %i
