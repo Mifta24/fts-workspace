@@ -51,7 +51,7 @@ export default async function SchedulePage({
       {roleHasPermission(context.role, "booking:manage") && (
         <Link
           href={`/w/${organizationSlug}/booking`}
-          className="text-sm font-medium text-primary hover:underline"
+          className="inline-flex text-sm font-medium text-primary hover:underline"
         >
           {t("bookingLink")}
         </Link>
