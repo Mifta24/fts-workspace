@@ -161,7 +161,9 @@ export default async function SchedulePage({
 
       {canWrite && (
         <Card>
-          <CardTitle className="mb-4 text-lg">{t("createTitle")}</CardTitle>
+          <CardTitle level={2} className="mb-4 text-lg">
+            {t("createTitle")}
+          </CardTitle>
           <ServerForm
             action={createAppointmentAction}
             fields={{ organizationSlug }}

@@ -43,7 +43,9 @@ export default async function GoalsPage({
       )}
       {canCreate && (
         <Card>
-          <CardTitle className="mb-4 text-lg">{t("createTitle")}</CardTitle>
+          <CardTitle level={2} className="mb-4 text-lg">
+            {t("createTitle")}
+          </CardTitle>
           <CreateGoalForm
             organizationSlug={organizationSlug}
             projects={projects.map((project) => ({ id: project.id, label: project.name }))}

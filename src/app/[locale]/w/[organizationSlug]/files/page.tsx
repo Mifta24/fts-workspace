@@ -98,7 +98,9 @@ export default async function FilesPage({
       )}
       {canUpload && (
         <Card>
-          <CardTitle className="mb-4 text-lg">{t("uploadTitle")}</CardTitle>
+          <CardTitle level={2} className="mb-4 text-lg">
+            {t("uploadTitle")}
+          </CardTitle>
           <UploadForm organizationSlug={organizationSlug} />
         </Card>
       )}

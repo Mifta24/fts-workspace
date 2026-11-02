@@ -108,7 +108,9 @@ export default async function CrmPage({
 
       {canWrite && (
         <Card>
-          <CardTitle className="mb-4 text-lg">{t("createTitle")}</CardTitle>
+          <CardTitle level={2} className="mb-4 text-lg">
+            {t("createTitle")}
+          </CardTitle>
           <ServerForm
             action={createContactAction}
             fields={{ organizationSlug }}

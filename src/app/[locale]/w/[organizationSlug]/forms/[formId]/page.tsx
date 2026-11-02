@@ -43,7 +43,9 @@ export default async function FormPage({
       <p className="text-sm text-muted-foreground">{t(`status.${form.status}`)}</p>
 
       <Card className="space-y-3">
-        <CardTitle className="text-lg">{t("publishing")}</CardTitle>
+        <CardTitle level={2} className="text-lg">
+          {t("publishing")}
+        </CardTitle>
         {form.status === "PUBLISHED" ? (
           <>
             <p className="text-sm">{t("publicLink")}</p>
@@ -75,7 +77,9 @@ export default async function FormPage({
       </Card>
 
       <Card>
-        <CardTitle className="mb-4 text-lg">{t("settings")}</CardTitle>
+        <CardTitle level={2} className="mb-4 text-lg">
+          {t("settings")}
+        </CardTitle>
         <ServerForm
           key={JSON.stringify([form.title, form.description, form.consentText])}
           action={updateFormAction}

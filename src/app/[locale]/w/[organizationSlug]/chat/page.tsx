@@ -30,7 +30,9 @@ export default async function ChatPage({
           </Card>
           {canManage && (
             <Card>
-              <CardTitle className="mb-4 text-lg">{t("createTitle")}</CardTitle>
+              <CardTitle level={2} className="mb-4 text-lg">
+                {t("createTitle")}
+              </CardTitle>
               <CreateChannelForm organizationSlug={organizationSlug} />
             </Card>
           )}

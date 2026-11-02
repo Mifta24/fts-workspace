@@ -68,7 +68,9 @@ export default async function ProjectsPage({
       )}
       {canCreate && (
         <Card>
-          <CardTitle className="mb-4 text-lg">{t("createTitle")}</CardTitle>
+          <CardTitle level={2} className="mb-4 text-lg">
+            {t("createTitle")}
+          </CardTitle>
           <CreateProjectForm organizationSlug={organizationSlug} />
         </Card>
       )}

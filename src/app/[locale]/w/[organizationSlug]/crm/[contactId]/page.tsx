@@ -65,7 +65,9 @@ export default async function ContactPage({
 
       {canWrite && (
         <Card>
-          <CardTitle className="mb-4 text-lg">{t("editTitle")}</CardTitle>
+          <CardTitle level={2} className="mb-4 text-lg">
+            {t("editTitle")}
+          </CardTitle>
           <ServerForm
             key={JSON.stringify(contact)}
             action={updateContactAction}
@@ -322,7 +324,9 @@ export default async function ContactPage({
 
       {canErase && (
         <Card className="space-y-3">
-          <CardTitle className="text-lg">{t("eraseTitle")}</CardTitle>
+          <CardTitle level={2} className="text-lg">
+            {t("eraseTitle")}
+          </CardTitle>
           <p className="text-sm text-muted-foreground">{t("eraseBody")}</p>
           <ActionButton action={eraseContactAction} fields={fields} label={t("erase")} />
         </Card>

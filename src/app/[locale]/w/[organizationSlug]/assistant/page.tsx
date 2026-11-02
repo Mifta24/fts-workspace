@@ -32,7 +32,9 @@ export default async function AssistantPage({
         )}
       </Card>
       <Card className="space-y-3">
-        <CardTitle className="text-lg">{t("usageTitle")}</CardTitle>
+        <CardTitle level={2} className="text-lg">
+          {t("usageTitle")}
+        </CardTitle>
         <p className="text-sm tabular-nums">
           {t("usage", {
             used: usage.usedToday.toLocaleString("en"),

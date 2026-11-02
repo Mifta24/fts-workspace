@@ -86,7 +86,7 @@ export default async function TaskPage({
       )}
       {subtasks.length > 0 && (
         <section aria-labelledby="subtasks-title" className="space-y-2">
-          <CardTitle id="subtasks-title" className="text-lg">
+          <CardTitle level={2} id="subtasks-title" className="text-lg">
             {t("subtasks")}
           </CardTitle>
           <ul className="space-y-2">
@@ -105,7 +105,7 @@ export default async function TaskPage({
         </section>
       )}
       <section aria-labelledby="comments-title" className="space-y-3">
-        <CardTitle id="comments-title" className="text-lg">
+        <CardTitle level={2} id="comments-title" className="text-lg">
           {t("comments")}
         </CardTitle>
         {comments.length === 0 ? (

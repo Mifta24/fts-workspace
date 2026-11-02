@@ -10,6 +10,12 @@ export function Card({ className, ...props }: ComponentProps<"section">) {
   );
 }
 
-export function CardTitle({ className, ...props }: ComponentProps<"h1">) {
-  return <h1 className={cn("text-xl font-semibold tracking-tight", className)} {...props} />;
+/** `level` 1 is for a card that is the page's only title (sign-in, invitation); use 2 inside a page that already has an h1. */
+export function CardTitle({
+  className,
+  level = 1,
+  ...props
+}: ComponentProps<"h1"> & { level?: 1 | 2 }) {
+  const Heading = level === 1 ? "h1" : "h2";
+  return <Heading className={cn("text-xl font-semibold tracking-tight", className)} {...props} />;
 }

@@ -51,7 +51,9 @@ export default async function WorkspacesPage() {
       </Card>
 
       <Card className="space-y-4">
-        <CardTitle className="text-lg">{t("createTitle")}</CardTitle>
+        <CardTitle level={2} className="text-lg">
+          {t("createTitle")}
+        </CardTitle>
         <CreateOrganizationForm />
       </Card>
     </main>

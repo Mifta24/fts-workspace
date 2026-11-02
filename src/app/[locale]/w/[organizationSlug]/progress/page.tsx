@@ -174,7 +174,9 @@ export default async function ProgressPage({
 
       {canSetPolicy && (
         <Card className="space-y-3">
-          <CardTitle className="text-lg">{t("policyTitle")}</CardTitle>
+          <CardTitle level={2} className="text-lg">
+            {t("policyTitle")}
+          </CardTitle>
           <p className="text-sm text-muted-foreground">
             {organization.leaderboardVisibility === "OFF" ? t("policyOff") : t("policyOptIn")}
           </p>
@@ -195,7 +197,9 @@ export default async function ProgressPage({
 
       {canManageChallenges && (
         <Card>
-          <CardTitle className="mb-4 text-lg">{t("createChallengeTitle")}</CardTitle>
+          <CardTitle level={2} className="mb-4 text-lg">
+            {t("createChallengeTitle")}
+          </CardTitle>
           <CreateChallengeForm organizationSlug={organizationSlug} />
         </Card>
       )}

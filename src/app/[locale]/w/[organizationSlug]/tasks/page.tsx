@@ -99,7 +99,9 @@ export default async function TasksPage({
       )}
       {canCreate && (
         <Card>
-          <CardTitle className="mb-4 text-lg">{t("createTitle")}</CardTitle>
+          <CardTitle level={2} className="mb-4 text-lg">
+            {t("createTitle")}
+          </CardTitle>
           <CreateTaskForm
             organizationSlug={organizationSlug}
             goals={goals.map((goal) => ({ id: goal.id, label: goal.title }))}

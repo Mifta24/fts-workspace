@@ -91,7 +91,9 @@ export default async function MembersPage({
             )}
           </section>
           <Card>
-            <CardTitle className="mb-4 text-lg">{t("inviteTitle")}</CardTitle>
+            <CardTitle level={2} className="mb-4 text-lg">
+              {t("inviteTitle")}
+            </CardTitle>
             <InviteMemberForm organizationSlug={organizationSlug} />
           </Card>
         </>

@@ -45,7 +45,9 @@ export default async function BookingPageDetail({
       </p>
 
       <Card className="space-y-3">
-        <CardTitle className="text-lg">{t("publishing")}</CardTitle>
+        <CardTitle level={2} className="text-lg">
+          {t("publishing")}
+        </CardTitle>
         {page.status === "PUBLISHED" ? (
           <>
             <p className="text-sm">{t("publicLink")}</p>
@@ -77,7 +79,9 @@ export default async function BookingPageDetail({
       </Card>
 
       <Card>
-        <CardTitle className="mb-4 text-lg">{t("settings")}</CardTitle>
+        <CardTitle level={2} className="mb-4 text-lg">
+          {t("settings")}
+        </CardTitle>
         <ServerForm
           key={JSON.stringify(page)}
           action={updateBookingPageAction}

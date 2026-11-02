@@ -77,7 +77,9 @@ export default async function BookingPagesPage({
       )}
 
       <Card>
-        <CardTitle className="mb-4 text-lg">{t("createTitle")}</CardTitle>
+        <CardTitle level={2} className="mb-4 text-lg">
+          {t("createTitle")}
+        </CardTitle>
         <ServerForm
           action={createBookingPageAction}
           fields={{ organizationSlug }}
