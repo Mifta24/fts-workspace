@@ -20,7 +20,7 @@ Calm, light and focused on progress. The one signature element is the progress t
 | `--primary` | `#0F6B5C` | `#3DB8A0` |
 | `--border` | `#DDE3DE` | `#25322C` |
 | `--warning` | `#9A5F08` | `#FDB022` |
-| `--sidebar` | `#14201C` | `#14201C` |
+| `--sidebar` | `#EAEEE9` | `#111A16` |
 
 Typeface: Plus Jakarta Sans (self-hosted through `next/font`), with system Japanese fonts as fallback. Numbers use tabular figures.
 

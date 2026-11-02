@@ -16,8 +16,8 @@
   --destructive: #b42318;
   --success: #067647;
   --warning: #9a5f08;
-  --sidebar: #14201c;
-  --sidebar-foreground: #f1f5f2;
+  --sidebar: #eaeee9;
+  --sidebar-foreground: #16211d;
   --radius: 0.5rem;
 }
 
@@ -37,6 +37,8 @@
     --destructive: #f97066;
     --success: #47cd89;
     --warning: #fdb022;
+    --sidebar: #111a16;
+    --sidebar-foreground: #e4eae6;
   }
 }
 

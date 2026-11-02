@@ -92,7 +92,7 @@ export async function WorkspaceShell({
     <div className="flex flex-1 flex-col md:flex-row">
       <nav
         aria-label={t("navLabel")}
-        className="flex shrink-0 gap-2 overflow-x-auto bg-sidebar p-4 text-sidebar-foreground md:w-60 md:flex-col"
+        className="flex shrink-0 gap-2 overflow-x-auto border-b border-border bg-sidebar p-4 text-sidebar-foreground md:w-60 md:flex-col md:border-r md:border-b-0"
       >
         <p className="hidden truncate px-2 font-semibold md:block">{context.organization.name}</p>
         {allowed
@@ -103,14 +103,14 @@ export async function WorkspaceShell({
               href={`${base}${path}`}
               aria-current={key === active ? "page" : undefined}
               className={cn(
-                "rounded-md px-2 py-1.5 text-sm whitespace-nowrap hover:bg-white/10 focus-visible:outline-2",
-                key === active && "bg-white/10",
+                "rounded-md px-2 py-1.5 text-sm whitespace-nowrap hover:bg-foreground/5 focus-visible:outline-2",
+                key === active && "bg-card font-semibold text-primary hover:bg-card",
               )}
             >
               {t(key)}
               {key === "notifications" && unread > 0 && (
                 <span
-                  className="ml-2 rounded-full bg-white/20 px-2 text-xs"
+                  className="ml-2 rounded-full bg-primary px-2 text-xs text-primary-foreground"
                   aria-label={t("unread", { count: unread })}
                 >
                   {unread}
@@ -122,7 +122,7 @@ export async function WorkspaceShell({
           <input type="hidden" name="mode" value={mode === "simple" ? "full" : "simple"} />
           <button
             type="submit"
-            className="rounded-md px-2 py-1.5 text-sm whitespace-nowrap text-sidebar-foreground/70 hover:bg-white/10 focus-visible:outline-2"
+            className="rounded-md px-2 py-1.5 text-sm whitespace-nowrap text-sidebar-foreground/70 hover:bg-foreground/5 focus-visible:outline-2"
           >
             {mode === "simple" ? t("showAll") : t("showEssentials")}
           </button>
