@@ -66,7 +66,7 @@ Executable schema: `prisma/schema.prisma`; migrations in `prisma/migrations/`.
 | Table | Owner | Notes |
 | --- | --- | --- |
 | `users`, `sessions`, `accounts`, `verifications` | Better Auth (Prisma adapter) | UUIDv7 ids (Prisma default); passwords hashed in `accounts.password` |
-| `organizations` | `src/features/organizations` | globally unique `slug` |
+| `organizations` | `src/features/organizations` | globally unique `slug`; `suspendedAt` (operator switch); `deletionRequestedAt` / `deletionRequestedBy` (owner's request to delete the workspace, 14-day wait; nothing is removed by the request) |
 | `members` | `src/features/organizations` | unique `(organizationId, userId)`; `role` enum `OWNER/ADMIN/MANAGER/MEMBER/VIEWER`; `status` `ACTIVE/DISABLED` |
 | `audit_logs` | `src/server/services/audit.ts` | append-only; `organizationId` FK is `RESTRICT` so tenant deletion cannot silently drop audit history |
 

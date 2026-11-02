@@ -57,6 +57,10 @@ Alert delivery (paging) is **not set up**. Choosing a vendor and wiring these th
 
 **A workspace must be taken offline** (abuse, legal request): suspend it. To bring it back, restore it. Neither deletes data.
 
+**A workspace owner asks to delete the workspace** (owner: Settings, then Request deletion; the page is in the owner's menu under "Show all features"). The request is only recorded: the workspace keeps working, the owner can cancel, every member sees a notice, and `/admin` shows "Deletion requested ... can be removed after <date>" on the workspace (14 days after the request, `DELETION_GRACE_DAYS`). The request and any cancellation are in the audit trail (`organization.deletion_requested`, `organization.deletion_cancelled`). Before removing anything: check that the date has passed, that the request still stands (the owner may have cancelled), and that the person asking is the owner; take a fresh backup. **The removal itself is not automated and not yet designed in code**: it is not just `DELETE FROM organizations`, because `point_events`, `consent_events` and `contact_stage_changes` reject deletes by trigger, `audit_logs` and several foreign keys are `RESTRICT`, and uploaded files live on disk outside the database. Until a tested purge script exists (a launch item in `13-PRODUCTION-READINESS.md`), do not improvise this on the live database: plan it as a reviewed one-off, record what was removed, and tell the owner when it is done. The privacy notice promises removal from the live system after the waiting period and from backups within 14 days more; keep to that.
+
+**A person asks for their personal data** (access, correction, deletion, withdrawal of consent; the privacy notice promises an answer within 30 days to the address in `LEGAL_CONTACT_EMAIL`). Confirm who they are, then: for account data (name, email, sessions), handle it directly; for data inside a customer's workspace (CRM contacts, form submissions, messages), pass the request to that workspace's owner, who can use the CRM erase function (`crm:erase`). Record the request and the answer.
+
 **Realtime is down.** The product still works; pages need a refresh to show new messages. Restart `pnpm gateway`; clients reconnect and re-authorize every join.
 
 ## Backup and restore
@@ -90,3 +94,5 @@ The first real deployment runs on the owner's Plesk VPS (AlmaLinux 9, shared wit
 
 ## Environment variables added in Phase 5
 `BILLING_ENABLED` (default `false`), `BILLING_TRIAL_DAYS` (default 14, 1–90), `PLATFORM_ADMIN_EMAILS` (comma-separated; empty means nobody can open `/admin`).
+
+`LEGAL_OPERATOR_NAME` and `LEGAL_CONTACT_EMAIL` (added 2026-11-02): the name and the privacy contact printed on `/privacy` and `/terms`. **Both are required in production** (the app refuses to start without them, like the email transport check), so those pages never go live without a name and a contact. On the pilot server they are set in `/opt/fts-workspace/.env` before the deploy that ships the pages.

@@ -604,6 +604,7 @@ describe("operator", () => {
       [
         "aiTokensThisMonth",
         "createdAt",
+        "deletionRequestedAt",
         "id",
         "members",
         "name",

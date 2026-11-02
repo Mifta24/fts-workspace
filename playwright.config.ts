@@ -45,6 +45,8 @@ export default defineConfig({
         REALTIME_PUBLISH_SECRET: GATEWAY_SECRET,
         STORAGE_DIR: ".data/files-e2e",
         PLATFORM_ADMIN_EMAILS: "operator@platform.test",
+        LEGAL_OPERATOR_NAME: "Example Operator Ltd",
+        LEGAL_CONTACT_EMAIL: "privacy@example.test",
         // Dummy Google Calendar setup: the consent round trip can be driven up to Google's
         // screen, which the tests stub. Real Google is never called.
         GOOGLE_CLIENT_ID: "e2e-client-id.apps.googleusercontent.com",

@@ -34,6 +34,8 @@ export type WorkspaceRow = {
   slug: string;
   createdAt: Date;
   suspended: boolean;
+  /** When the owner asked to delete the workspace; null when no request is waiting. */
+  deletionRequestedAt: Date | null;
   plan: Entitlements["plan"];
   /** The plan as stored (a trial that ran out is still stored as TRIALING). */
   trialEndsAt: Date | null;
@@ -67,6 +69,7 @@ export async function listWorkspaces(
       slug: true,
       createdAt: true,
       suspendedAt: true,
+      deletionRequestedAt: true,
       subscription: { select: { planKey: true, status: true, trialEndsAt: true } },
     },
     orderBy: [{ createdAt: "desc" }, { id: "asc" }],
@@ -95,6 +98,7 @@ export async function listWorkspaces(
       slug: organization.slug,
       createdAt: organization.createdAt,
       suspended: organization.suspendedAt !== null,
+      deletionRequestedAt: organization.deletionRequestedAt,
       plan: entitlements.plan,
       trialEndsAt: entitlements.trialEndsAt,
       trialExpired: entitlements.trialExpired,

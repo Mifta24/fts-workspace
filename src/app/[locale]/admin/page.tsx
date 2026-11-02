@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { MAX_TRIAL_DAYS } from "@/features/admin/schemas/admin";
+import { dueAfter } from "@/features/organizations/schemas/deletion";
 import { PLAN_KEYS } from "@/features/billing/schemas/plans";
 import { getOperationsSnapshot, listWorkspaces } from "@/features/admin/server/admin-service";
 import { setPlanAction, setSuspendedAction } from "@/features/admin/server/actions";
@@ -121,6 +122,14 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
                       )}
                     </p>
                   </div>
+                  {workspace.deletionRequestedAt && (
+                    <p className="text-sm font-medium" data-testid={`deletion-${workspace.slug}`}>
+                      {t("deletionRequested", {
+                        requested: date(workspace.deletionRequestedAt),
+                        due: date(dueAfter(workspace.deletionRequestedAt)),
+                      })}
+                    </p>
+                  )}
                   <p className="text-sm text-muted-foreground">
                     {t("usage", {
                       members: workspace.members,

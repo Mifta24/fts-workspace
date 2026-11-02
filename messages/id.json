@@ -44,7 +44,8 @@
     "resetDone": "Kata sandi diperbarui. Silakan masuk.",
     "verifyTitle": "Periksa kotak masuk Anda",
     "verifyBody": "Kami mengirim tautan verifikasi ke email Anda. Buka tautan itu untuk mengaktifkan akun.",
-    "backToSignIn": "Kembali ke halaman masuk"
+    "backToSignIn": "Kembali ke halaman masuk",
+    "signUpTerms": "Dengan membuat akun, Anda menyetujui <terms>Ketentuan penggunaan</terms> dan <privacy>Pemberitahuan privasi</privacy>."
   },
   "Workspaces": {
     "title": "Workspace Anda",
@@ -81,7 +82,9 @@
     "forms": "Formulir",
     "insights": "Wawasan",
     "automations": "Otomasi",
-    "billing": "Paket"
+    "billing": "Paket",
+    "settings": "Pengaturan",
+    "deletionBanner": "Workspace ini dijadwalkan dihapus setelah {date}. Pemilik dapat membatalkannya di Pengaturan."
   },
   "Roles": {
     "OWNER": "Pemilik",
@@ -839,7 +842,8 @@
     "setPlan": "Atur paket",
     "suspend": "Tangguhkan workspace",
     "unsuspend": "Pulihkan workspace",
-    "limit": "Menampilkan paling banyak {count} workspace; persempit pencarian untuk yang lain."
+    "limit": "Menampilkan paling banyak {count} workspace; persempit pencarian untuk yang lain.",
+    "deletionRequested": "Penghapusan diminta {requested}, dapat dihapus setelah {due}"
   },
   "Automations": {
     "title": "Otomasi",
@@ -863,5 +867,150 @@
     "turnOn": "Nyalakan",
     "turnOff": "Matikan",
     "note": "Perubahan hanya berlaku untuk kejadian baru: isian formulir dan pemesanan sebelumnya tidak diproses."
+  },
+  "Legal": {
+    "footerLabel": "Legal",
+    "privacy": "Pemberitahuan privasi",
+    "terms": "Ketentuan penggunaan",
+    "updated": "Terakhir diperbarui: {date}",
+    "back": "Kembali ke FTS Workspace",
+    "contactEmail": "Email",
+    "privacyDoc": {
+      "title": "Pemberitahuan privasi",
+      "intro": "Pemberitahuan ini menjelaskan data pribadi apa yang diproses FTS Workspace, untuk apa, siapa lagi yang memprosesnya, dan apa yang dapat Anda minta dari kami. FTS Workspace dijalankan oleh {operator} (kami) di workspace.fts-tech.co.id.",
+      "who": {
+        "title": "Siapa yang bertanggung jawab",
+        "p1": "Untuk akun Anda dan keamanan layanan, kami yang menentukan mengapa dan bagaimana data pribadi digunakan. Untuk isi sebuah workspace (tugas, pesan, berkas, kontak, dan sebagainya), organisasi pemilik workspace yang menentukan, dan kami memprosesnya atas nama organisasi itu. Jika data Anda ada di workspace perusahaan tempat Anda bekerja atau klien, tanyakan kepada mereka terlebih dahulu."
+      },
+      "data": {
+        "title": "Data yang kami simpan",
+        "p1": "Tergantung cara Anda memakai layanan:",
+        "i1": "Akun: nama, alamat email, kata sandi yang di-hash (kami tidak dapat membacanya), zona waktu, dan status verifikasi email Anda.",
+        "i2": "Sesi masuk: kapan Anda masuk serta dari alamat IP dan peramban apa, agar akun Anda dapat dilindungi dan sesi dapat diakhiri.",
+        "i3": "Isi workspace yang ditambahkan anggota: sasaran, proyek, tugas, komentar, pesan obrolan, berkas, dokumen pengetahuan, rapat, dan catatan pelanggan (kontak, transaksi, catatan, dan riwayat persetujuan).",
+        "i4": "Pengunjung: apa yang diketik seseorang di formulir publik atau halaman pemesanan, persetujuan yang diberikan, dan hasil pemeriksaan captcha.",
+        "i5": "Catatan tindakan: jejak audit tentang siapa melakukan apa di sebuah workspace dan kapan (tanpa isi kontennya), serta log server berisi alamat permintaan yang kami pakai untuk keamanan dan pembatasan penyalahgunaan.",
+        "i6": "Cookie: satu untuk menjaga Anda tetap masuk, dan beberapa kecil untuk bahasa dan tampilan menu. Kami tidak memakai cookie iklan atau analitik."
+      },
+      "why": {
+        "title": "Untuk apa kami memakainya",
+        "p1": "Untuk menyediakan layanan yang Anda minta; menjaga keamanannya dan mencegah penyalahgunaan; mengirim pesan yang Anda perlukan, seperti email verifikasi dan undangan; bila Anda setuju, misalnya saat anggota menghubungkan kalender atau pengunjung mencentang kotak persetujuan; dan bila diwajibkan hukum. Kami tidak menjual data pribadi dan tidak memakainya untuk iklan."
+      },
+      "ai": {
+        "title": "Fitur AI",
+        "p1": "Bantuan AI saat ini dimatikan di layanan ini. Sebelum kami menyalakannya, kami akan menyebutkan penyedianya di halaman ini. Yang dikirim ke model dibatasi pada permintaan dan dokumen yang boleh dilihat anggota tersebut, dan seseorang meninjau hasil rancangannya sebelum apa pun diterapkan."
+      },
+      "sharing": {
+        "title": "Siapa lagi yang memproses data",
+        "p1": "Kami memakai layanan berikut untuk menjalankan FTS Workspace:",
+        "p2": "Kami juga dapat mengungkapkan data bila hukum atau pengadilan mewajibkannya. Di konsol operator kami melihat jumlah, nama workspace, dan data paket untuk menjalankan layanan; kami tidak membaca isi workspace kecuali bila perlu untuk memperbaiki masalah yang Anda laporkan.",
+        "i1": "Cloudflare berada di depan situs web untuk menyampaikannya dan menahan serangan, sehingga ia melihat permintaan ke situs (termasuk alamat IP), dan menjalankan captcha Turnstile di formulir publik dan halaman pemesanan. Cloudflare dapat memasang cookie keamanannya sendiri.",
+        "i2": "Penyedia hosting kami menjalankan server yang menyimpan basis data, berkas, dan cadangan.",
+        "i3": "Google, hanya bila anggota menghubungkan Google Kalender. Kami hanya membaca waktu sibuk dan tidak pernah menulis ke kalender.",
+        "i4": "Email dikirim dari server email kami sendiri, yang berjalan di hosting yang sama."
+      },
+      "transfers": {
+        "title": "Transfer ke luar negeri",
+        "p1": "Cloudflare dan Google memproses data di beberapa negara. Saat data pribadi keluar dari Indonesia, kami mengandalkan perlindungan yang disyaratkan Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi, seperti ketentuan pemrosesan data dari penyedia."
+      },
+      "retention": {
+        "title": "Berapa lama kami menyimpannya",
+        "i1": "Data akun: selama akun ada. Minta kami menghapusnya dan kami akan menghapus, kecuali hukum mewajibkan kami menyimpan sesuatu.",
+        "i2": "Isi workspace: sampai anggota menghapusnya atau workspace dihapus.",
+        "i3": "Menghapus workspace: pemilik memintanya di pengaturan workspace. Tidak ada yang dihapus selama 14 hari, dan pemilik dapat membatalkan selama waktu itu. Setelah itu kami menghapus isi dan berkas workspace dari sistem yang berjalan, dan catatan auditnya dihapus atau dikurangi menjadi catatan minimal bahwa workspace itu pernah ada dan telah dihapus.",
+        "i4": "Cadangan: layanan dicadangkan setiap hari dan tiap cadangan disimpan 14 hari, sehingga data yang dihapus dapat tetap ada di cadangan hingga 14 hari berikutnya.",
+        "i5": "Log: disimpan hanya selama diperlukan untuk keamanan, dan dirotasi."
+      },
+      "rights": {
+        "title": "Hak Anda",
+        "p1": "Anda dapat meminta kami menunjukkan data pribadi Anda yang kami simpan, memperbaikinya, menghapusnya, membatasi atau keberatan atas penggunaannya, menarik persetujuan yang pernah Anda berikan, dan memberi Anda salinan yang dapat dibawa ke tempat lain. Tulis ke kontak di bawah. Kami menjawab secepatnya dan paling lambat 30 hari. Kami mungkin perlu memastikan identitas Anda terlebih dahulu. Jika data Anda ada di workspace orang lain, kami dapat meneruskan permintaan Anda kepada pemiliknya."
+      },
+      "security": {
+        "title": "Cara kami melindunginya",
+        "p1": "Sambungan memakai HTTPS. Setiap permintaan diperiksa terhadap workspace dan peran orang yang masuk, sehingga satu workspace tidak dapat melihat data workspace lain. Kata sandi disimpan sebagai hash, percobaan masuk dibatasi lajunya, dan layanan dicadangkan setiap hari. Tidak ada sistem yang sepenuhnya aman: bila terjadi kebocoran yang mengenai data Anda, kami memberi tahu pemilik workspace yang terdampak dan, bila hukum mewajibkan, otoritas serta orang yang bersangkutan, dalam waktu yang ditetapkan hukum."
+      },
+      "children": {
+        "title": "Anak-anak",
+        "p1": "FTS Workspace untuk orang berusia 18 tahun ke atas. Kami tidak dengan sengaja mengumpulkan data dari anak-anak."
+      },
+      "changes": {
+        "title": "Perubahan",
+        "p1": "Bila kami mengubah pemberitahuan ini, kami memperbarui tanggal di atas, dan untuk perubahan penting kami memberi tahu pemegang akun lewat email atau di aplikasi."
+      },
+      "contact": {
+        "title": "Kontak",
+        "p1": "Pertanyaan, permintaan, atau keluhan tentang data pribadi: tulis kepada {operator}.",
+        "p2": "Anda juga dapat mengadu kepada otoritas pelindungan data pribadi Indonesia."
+      }
+    },
+    "termsDoc": {
+      "title": "Ketentuan penggunaan",
+      "intro": "Ketentuan ini mengatur penggunaan FTS Workspace oleh Anda, yang dijalankan oleh {operator} (kami). Dengan membuat akun atau memakai layanan, Anda menyetujuinya. Jika Anda memakainya untuk sebuah organisasi, Anda menyatakan berwenang menerimanya atas nama organisasi itu.",
+      "service": {
+        "title": "Layanan",
+        "p1": "FTS Workspace adalah ruang kerja untuk sasaran, tugas, obrolan, berkas, catatan pelanggan, penjadwalan, dan formulir. Layanan ini masih tahap uji coba (pilot): fitur dapat berubah atau dihapus, dan kami tidak menjanjikan tingkat ketersediaan tertentu."
+      },
+      "accounts": {
+        "title": "Akun",
+        "p1": "Anda harus berusia 18 tahun atau lebih dan memberikan alamat email asli yang dapat Anda baca. Jaga kerahasiaan kata sandi dan beri tahu kami bila Anda mengira orang lain memakai akun Anda. Anda bertanggung jawab atas apa yang terjadi di bawah akun Anda."
+      },
+      "workspaces": {
+        "title": "Workspace dan pemilik",
+        "p1": "Orang yang membuat workspace adalah pemiliknya. Pemilik menentukan siapa yang bergabung dan dengan peran apa, dan dapat meminta kami menghapus workspace. Pemilik dan organisasi di balik workspace bertanggung jawab atas isinya, termasuk memiliki dasar hukum, seperti persetujuan, untuk data pribadi pelanggan, kontak, dan pengunjung formulir yang dimasukkan atau dikumpulkan anggota."
+      },
+      "content": {
+        "title": "Konten Anda",
+        "p1": "Konten Anda tetap milik Anda. Anda mengizinkan kami menyimpan, memproses, dan menampilkannya seperlunya untuk menjalankan layanan bagi Anda, dan tidak untuk hal lain. Rancangan dari AI, bila AI dinyalakan, bisa keliru: seseorang harus meninjaunya sebelum dipakai."
+      },
+      "use": {
+        "title": "Penggunaan yang diperbolehkan",
+        "p1": "Jangan memakai layanan untuk:",
+        "i1": "melanggar hukum atau hak orang lain;",
+        "i2": "mengunggah malware atau konten yang tidak berhak Anda bagikan;",
+        "i3": "mengirim spam atau mengumpulkan data pribadi tanpa dasar hukum;",
+        "i4": "menyelidiki, menyerang, membebani, atau menghindari batasan maupun keamanan layanan;",
+        "i5": "memakai formulir publik atau halaman pemesanan untuk melecehkan atau membanjiri orang."
+      },
+      "plans": {
+        "title": "Paket dan biaya",
+        "p1": "Saat ini kami tidak memungut biaya untuk layanan. Paket menetapkan batasan, seperti anggota, penyimpanan, dan penggunaan AI. Bila kami mulai memungut biaya, kami akan memberi tahu harganya sebelum ada penagihan, dan Anda dapat berhenti lebih dulu."
+      },
+      "availability": {
+        "title": "Ketersediaan dan cadangan",
+        "p1": "Layanan disediakan apa adanya. Kami membuat cadangan setiap hari dan menyimpannya 14 hari di server kami, tetapi cadangan bukan jaminan. Simpan salinan Anda sendiri untuk apa pun yang tidak boleh hilang."
+      },
+      "termination": {
+        "title": "Mengakhiri layanan",
+        "p1": "Anda dapat berhenti memakai layanan kapan saja. Pemilik dapat meminta penghapusan workspace, seperti dijelaskan dalam Pemberitahuan privasi. Kami dapat menangguhkan atau menutup akun atau workspace yang melanggar ketentuan ini, merugikan orang lain, atau membahayakan layanan, dan kami akan menyebutkan alasannya bila bisa."
+      },
+      "liability": {
+        "title": "Tanggung jawab",
+        "p1": "Sejauh diizinkan hukum, kami tidak bertanggung jawab atas kerugian tidak langsung, hilangnya keuntungan, atau hilangnya data, dan total tanggung jawab kami atas klaim apa pun dibatasi sebesar yang Anda bayarkan kepada kami untuk layanan dalam 12 bulan sebelum klaim (tidak ada, bila Anda tidak membayar). Ini tidak membatasi tanggung jawab yang menurut hukum tidak boleh dibatasi."
+      },
+      "law": {
+        "title": "Hukum yang berlaku",
+        "p1": "Ketentuan ini tunduk pada hukum Republik Indonesia. Kami akan lebih dulu mencoba menyelesaikan sengketa lewat pembicaraan; bila gagal, pengadilan yang berwenang di Indonesia memutuskan."
+      },
+      "changes": {
+        "title": "Perubahan",
+        "p1": "Kami dapat memperbarui ketentuan ini. Tanggal di atas menunjukkan versi terbaru, dan kami memberi tahu pemegang akun tentang perubahan penting. Memakai layanan setelah perubahan berarti Anda menerimanya."
+      },
+      "contact": {
+        "title": "Kontak",
+        "p1": "Pertanyaan tentang ketentuan ini: tulis kepada {operator}."
+      }
+    }
+  },
+  "Settings": {
+    "title": "Pengaturan workspace",
+    "deleteTitle": "Hapus workspace ini",
+    "deleteIntro": "Penghapusan menghapus semua isi workspace ini: sasaran, tugas, pesan, berkas, catatan pelanggan, dan anggota. Tidak ada yang dihapus selama 14 hari, dan Anda dapat membatalkan sampai saat itu. Setelah itu kami menghapusnya, dan tidak dapat dikembalikan. Cadangan dapat menyimpan datanya hingga 14 hari berikutnya.",
+    "deleteNoCopy": "Belum ada tombol ekspor. Bila Anda perlu salinan data lebih dulu, tulis kepada kami sebelum 14 hari berlalu.",
+    "confirmLabel": "Ketik alamat workspace ({slug}) untuk mengonfirmasi",
+    "requestButton": "Minta penghapusan",
+    "pendingTitle": "Penghapusan dijadwalkan",
+    "pendingBody": "Anda meminta workspace ini dihapus pada {requested}. Workspace dihapus setelah {due}. Sampai saat itu ia tetap berfungsi.",
+    "cancelButton": "Batalkan penghapusan",
+    "privacyLink": "Cara kami menangani data pribadi"
   }
 }

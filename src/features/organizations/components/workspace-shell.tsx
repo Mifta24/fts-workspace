@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { RealtimeBridge } from "@/features/realtime/components/realtime-bridge";
 import { countUnread } from "@/features/notifications/server/notification-service";
 import { db } from "@/lib/db";
@@ -13,6 +13,7 @@ import {
   parseNavMode,
   visibleSections,
 } from "@/features/organizations/schemas/nav-mode";
+import { dueAfter } from "@/features/organizations/schemas/deletion";
 import { setNavModeAction } from "@/features/organizations/server/nav-mode-action";
 import type { Permission } from "@/lib/permissions/matrix";
 import { cn } from "@/lib/utils";
@@ -34,7 +35,8 @@ type Section =
   | "insights"
   | "automations"
   | "members"
-  | "billing";
+  | "billing"
+  | "settings";
 
 const SECTIONS: { key: Section; path: string; permission?: Permission }[] = [
   { key: "overview", path: "" },
@@ -54,6 +56,7 @@ const SECTIONS: { key: Section; path: string; permission?: Permission }[] = [
   { key: "automations", path: "/automations", permission: "automation:manage" },
   { key: "members", path: "/members" },
   { key: "billing", path: "/billing", permission: "billing:read" },
+  { key: "settings", path: "/settings", permission: "organization:delete" },
 ];
 
 export async function WorkspaceShell({
@@ -68,13 +71,15 @@ export async function WorkspaceShell({
   channelId?: string;
   children: ReactNode;
 }) {
-  const [t, roles, unread, cookieStore] = await Promise.all([
+  const [t, roles, unread, cookieStore, locale] = await Promise.all([
     getTranslations("Workspace"),
     getTranslations("Roles"),
     countUnread({ prisma: db() }, context),
     cookies(),
+    getLocale(),
   ]);
   const base = `/w/${context.organization.slug}`;
+  const deletionRequestedAt = context.organization.deletionRequestedAt ?? null;
   const mode = parseNavMode(cookieStore.get(NAV_MODE_COOKIE)?.value);
   // Permission decides what exists for this person; the view mode only decides what is listed.
   const allowed = SECTIONS.filter(
@@ -144,6 +149,19 @@ export async function WorkspaceShell({
             <SignOutButton />
           </div>
         </header>
+        {deletionRequestedAt && (
+          <p
+            role="status"
+            data-testid="deletion-banner"
+            className="rounded-md border border-border bg-card px-4 py-3 text-sm"
+          >
+            {t("deletionBanner", {
+              date: new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
+                dueAfter(deletionRequestedAt),
+              ),
+            })}
+          </p>
+        )}
         {children}
       </main>
       <RealtimeBridge

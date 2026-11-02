@@ -6,6 +6,7 @@ const BASE = {
   BETTER_AUTH_SECRET: "x".repeat(40),
   BETTER_AUTH_URL: "http://localhost:3000",
 };
+const LEGAL = { LEGAL_OPERATOR_NAME: "Example Ltd", LEGAL_CONTACT_EMAIL: "privacy@example.test" };
 const KEY = Buffer.alloc(32, 7).toString("base64");
 
 /** Loads a fresh copy of the module under the given environment (it caches the first result). */
@@ -13,7 +14,7 @@ async function load(values: Record<string, string | undefined>) {
   vi.resetModules();
   vi.unstubAllEnvs();
   for (const name of Object.keys(process.env)) {
-    if (/^(GOOGLE_|SMTP_|EMAIL_|CALENDAR_|TURNSTILE_)/.test(name))
+    if (/^(GOOGLE_|SMTP_|EMAIL_|CALENDAR_|TURNSTILE_|LEGAL_)/.test(name))
       vi.stubEnv(name, undefined as never);
   }
   for (const [name, value] of Object.entries({ ...BASE, ...values })) {
@@ -48,6 +49,7 @@ describe("environment validation", () => {
       const logged = await load({ NODE_ENV: "production", EMAIL_TRANSPORT: "log" });
       expect(() => logged()).toThrow(/not allowed in production/);
       const smtp = await load({
+        ...LEGAL,
         NODE_ENV: "production",
         EMAIL_TRANSPORT: "smtp",
         SMTP_URL: "smtps://user:secret@smtp.example.test:465",
@@ -63,6 +65,29 @@ describe("environment validation", () => {
       } catch (error) {
         expect(String(error)).not.toContain("hunter2");
       }
+    });
+  });
+
+  describe("legal pages", () => {
+    it("needs an operator name and a contact email in production, and nowhere else", async () => {
+      const smtp = {
+        NODE_ENV: "production",
+        EMAIL_TRANSPORT: "smtp",
+        SMTP_URL: "smtps://user:secret@smtp.example.test:465",
+      };
+      const none = await load(smtp);
+      expect(() => none()).toThrow(/LEGAL_OPERATOR_NAME/);
+      const half = await load({ ...smtp, LEGAL_OPERATOR_NAME: "Example Ltd" });
+      expect(() => half()).toThrow(/LEGAL_CONTACT_EMAIL/);
+      const ok = await load({ ...smtp, ...LEGAL });
+      expect(ok().LEGAL_CONTACT_EMAIL).toBe("privacy@example.test");
+      const dev = await load({});
+      expect(dev().LEGAL_OPERATOR_NAME).toBeUndefined();
+    });
+
+    it("rejects a contact that is not an email address", async () => {
+      const bad = await load({ LEGAL_CONTACT_EMAIL: "not-an-email" });
+      expect(() => bad()).toThrow(/LEGAL_CONTACT_EMAIL/);
     });
   });
 

@@ -109,6 +109,12 @@ model Organization {
   /// Set by a platform operator to switch the workspace off (abuse, incident). While set, nobody
   /// can open it and its public links and feeds stop answering; nothing is deleted.
   suspendedAt           DateTime?
+  /// Set when the owner asks to delete the whole workspace. Nothing is removed at that point: the
+  /// workspace keeps working, the owner can cancel, and an operator removes the data once the waiting
+  /// period (`DELETION_GRACE_DAYS`) has passed.
+  deletionRequestedAt   DateTime?
+  /// The owner who asked (a user id, kept without a foreign key so it survives that account).
+  deletionRequestedBy   String?             @db.Uuid
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 

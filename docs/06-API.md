@@ -57,6 +57,9 @@
 | Page | `/[locale]/w/[slug]/assistant` | Question box, answer with sources, today's usage | `ai:use` |
 
 | Server action | `createContactAction`, `updateContactAction`, `recordConsentAction`, `setJourneyStageAction`, `createDealAction`, `moveDealAction`, `addActivityAction` | CRM writes | `crm:write` (+ contact access) |
+| Page | `/[locale]/privacy`, `/[locale]/terms` | Public privacy notice and terms (en, id, ja) | public |
+| Page | `/[locale]/w/[slug]/settings` | Request or cancel deletion of the workspace | `organization:delete` (owner) |
+| Server action | `requestDeletionAction`, `cancelDeletionAction` | Record or withdraw the owner's request to delete the workspace (14-day waiting period, idempotent, audited) | `organization:delete` |
 | Server action | `eraseContactAction` | Erase a contact's personal data | `crm:erase` |
 | Page | `/[locale]/w/[slug]/crm`, `/crm/[contactId]`, `/crm/pipeline` | Contacts, detail with consent/deals/activity, pipeline report | `crm:read` |
 

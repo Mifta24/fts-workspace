@@ -25,7 +25,13 @@ export type OrganizationSummary = {
 /** Server-resolved tenant context. Never build this from client-supplied ids. */
 export type OrganizationContext = {
   userId: string;
-  organization: { id: string; name: string; slug: string };
+  organization: {
+    id: string;
+    name: string;
+    slug: string;
+    /** Set while the owner's request to delete the workspace is waiting. */
+    deletionRequestedAt?: Date | null;
+  };
   membershipId: string;
   role: OrganizationRole;
   permissions: Permission[];
@@ -126,7 +132,9 @@ export async function getAuthorizedOrganization(
       status: "ACTIVE",
       organization: { slug: slug.data, suspendedAt: null },
     },
-    include: { organization: { select: { id: true, name: true, slug: true } } },
+    include: {
+      organization: { select: { id: true, name: true, slug: true, deletionRequestedAt: true } },
+    },
   });
   if (!membership || !isOrganizationRole(membership.role)) {
     throw new AppError("NOT_FOUND", "Organization not found.");

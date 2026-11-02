@@ -44,7 +44,8 @@
     "resetDone": "Password updated. You can sign in now.",
     "verifyTitle": "Check your inbox",
     "verifyBody": "We sent a verification link to your email. Open it to activate your account.",
-    "backToSignIn": "Back to sign in"
+    "backToSignIn": "Back to sign in",
+    "signUpTerms": "By creating an account you agree to the <terms>Terms of use</terms> and the <privacy>Privacy notice</privacy>."
   },
   "Workspaces": {
     "title": "Your workspaces",
@@ -81,7 +82,9 @@
     "forms": "Forms",
     "insights": "Insights",
     "automations": "Automations",
-    "billing": "Plan"
+    "billing": "Plan",
+    "settings": "Settings",
+    "deletionBanner": "This workspace is scheduled for deletion after {date}. The owner can cancel this in Settings."
   },
   "Roles": {
     "OWNER": "Owner",
@@ -839,7 +842,8 @@
     "setPlan": "Set plan",
     "suspend": "Suspend workspace",
     "unsuspend": "Restore workspace",
-    "limit": "Showing at most {count} workspaces; narrow the search to find others."
+    "limit": "Showing at most {count} workspaces; narrow the search to find others.",
+    "deletionRequested": "Deletion requested {requested}, can be removed after {due}"
   },
   "Automations": {
     "title": "Automations",
@@ -863,5 +867,150 @@
     "turnOn": "Turn on",
     "turnOff": "Turn off",
     "note": "A change applies to new events only: earlier form submissions and bookings are not processed."
+  },
+  "Legal": {
+    "footerLabel": "Legal",
+    "privacy": "Privacy notice",
+    "terms": "Terms of use",
+    "updated": "Last updated: {date}",
+    "back": "Back to FTS Workspace",
+    "contactEmail": "Email",
+    "privacyDoc": {
+      "title": "Privacy notice",
+      "intro": "This notice explains which personal data FTS Workspace handles, why, who else handles it, and what you can ask of us. FTS Workspace is run by {operator} (we) at workspace.fts-tech.co.id.",
+      "who": {
+        "title": "Who is responsible",
+        "p1": "For your account and for the security of the service, we decide why and how personal data is used. For what is written inside a workspace (tasks, messages, files, contacts and so on), the organization that owns the workspace decides, and we process it on its behalf. If your data is in the workspace of your employer or a client, ask them first."
+      },
+      "data": {
+        "title": "What we hold",
+        "p1": "Depending on how you use the service:",
+        "i1": "Account: name, email address, a hashed password (we cannot read it), your time zone, and whether your email is verified.",
+        "i2": "Sign-in sessions: when you signed in and from which IP address and browser, so that your account can be protected and sessions can be ended.",
+        "i3": "Workspace content that members add: goals, projects, tasks, comments, chat messages, files, knowledge documents, meetings, and customer records (contacts, deals, notes and consent history).",
+        "i4": "Visitors: what a person types into a public form or booking page, the consent they gave, and the result of a captcha check.",
+        "i5": "Records of actions: an audit trail of who did what in a workspace and when (without the content itself), and server logs with request addresses that we use for security and abuse limits.",
+        "i6": "Cookies: one that keeps you signed in, and small ones for your language and menu view. We use no advertising or analytics cookies."
+      },
+      "why": {
+        "title": "Why we use it",
+        "p1": "To provide the service you asked for; to keep it secure and stop abuse; to send the messages you need, such as verification and invitation emails; where you agreed, for example when a member connects a calendar or a visitor ticks a consent box; and where the law requires. We do not sell personal data and do not use it for advertising."
+      },
+      "ai": {
+        "title": "AI features",
+        "p1": "AI assistance is switched off on this service at the moment. Before we switch it on, we will name the provider on this page. What is sent to a model is limited to the request and the documents that member is allowed to see, and a person reviews what it drafts before anything is applied."
+      },
+      "sharing": {
+        "title": "Who else handles data",
+        "p1": "We use these services to run FTS Workspace:",
+        "p2": "We may also disclose data when a law or a court requires it. In the operator console we see counts, workspace names and plan data to run the service; we do not read workspace content except when that is needed to fix a problem you reported.",
+        "i1": "Cloudflare sits in front of the website to deliver it and block attacks, so it sees requests to it (including IP addresses), and it runs the Turnstile captcha on public forms and booking pages. It may set its own security cookies.",
+        "i2": "Our hosting provider runs the server that stores the database, the files and the backups.",
+        "i3": "Google, only when a member connects a Google calendar. We read busy times only and never write to the calendar.",
+        "i4": "Email is sent from our own mail server, which runs on the same hosting."
+      },
+      "transfers": {
+        "title": "Transfers abroad",
+        "p1": "Cloudflare and Google process data in several countries. When personal data leaves Indonesia we rely on the safeguards that Law No. 27 of 2022 on Personal Data Protection requires, such as the provider's data processing terms."
+      },
+      "retention": {
+        "title": "How long we keep it",
+        "i1": "Account data: while the account exists. Ask us to delete it and we will, unless the law requires us to keep something.",
+        "i2": "Workspace content: until a member deletes it or the workspace is deleted.",
+        "i3": "Deleting a workspace: the owner asks for it in the workspace settings. Nothing is removed for 14 days, and the owner can cancel during that time. After that we delete the workspace's content and files from the live system, and its audit records are removed or reduced to a minimal record that the workspace existed and was deleted.",
+        "i4": "Backups: the service is backed up every day and each backup is kept for 14 days, so deleted data can remain in a backup for up to 14 days more.",
+        "i5": "Logs: kept only as long as needed for security, and rotated."
+      },
+      "rights": {
+        "title": "Your rights",
+        "p1": "You can ask us to show you the personal data we hold about you, correct it, delete it, limit or object to how it is used, withdraw a consent you gave, and give you a copy you can take elsewhere. Write to the contact below. We answer as soon as we can and no later than 30 days. We may need to confirm who you are first. If your data is in someone else's workspace, we may pass your request to its owner."
+      },
+      "security": {
+        "title": "How we protect it",
+        "p1": "Connections use HTTPS. Every request is checked against the signed-in person's workspace and role, so one workspace cannot see another's data. Passwords are stored as hashes, sign-in attempts are rate limited, and the service is backed up every day. No system is perfectly safe: if a breach affects your data, we tell the affected workspace owners and, where the law requires, the authority and the people concerned, within the time the law sets."
+      },
+      "children": {
+        "title": "Children",
+        "p1": "FTS Workspace is for people aged 18 and over. We do not knowingly collect data from children."
+      },
+      "changes": {
+        "title": "Changes",
+        "p1": "If we change this notice we update the date above, and for important changes we tell account holders by email or in the app."
+      },
+      "contact": {
+        "title": "Contact",
+        "p1": "Questions, requests or complaints about personal data: write to {operator}.",
+        "p2": "You may also complain to the Indonesian personal data protection authority."
+      }
+    },
+    "termsDoc": {
+      "title": "Terms of use",
+      "intro": "These terms govern your use of FTS Workspace, run by {operator} (we). By creating an account or using the service you agree to them. If you use it for an organization, you confirm that you may accept them for that organization.",
+      "service": {
+        "title": "The service",
+        "p1": "FTS Workspace is a workspace for goals, tasks, chat, files, customer records, scheduling and forms. The service is in a pilot: features can change or be removed, and we do not promise a particular level of availability."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "p1": "You must be 18 or older and give a real email address that you can read. Keep your password private and tell us if you think someone else used your account. You are responsible for what happens under your account."
+      },
+      "workspaces": {
+        "title": "Workspaces and owners",
+        "p1": "The person who creates a workspace is its owner. The owner decides who joins and with which role, and can ask us to delete the workspace. The owner and the organization behind the workspace are responsible for the content in it, including having a lawful basis, such as consent, for the personal data of customers, contacts and form visitors that members put in or collect."
+      },
+      "content": {
+        "title": "Your content",
+        "p1": "Your content stays yours. You allow us to store, process and show it as needed to run the service for you, and for nothing else. Drafts made by AI, where AI is switched on, can be wrong: a person must review them before they are used."
+      },
+      "use": {
+        "title": "Acceptable use",
+        "p1": "Do not use the service to:",
+        "i1": "break the law or the rights of others;",
+        "i2": "upload malware or content you have no right to share;",
+        "i3": "send spam or collect personal data without a lawful basis;",
+        "i4": "probe, attack, overload or get around the limits or the security of the service;",
+        "i5": "use public forms or booking pages to harass or flood people."
+      },
+      "plans": {
+        "title": "Plans and fees",
+        "p1": "At present we do not charge for the service. Plans set limits, such as members, storage and AI use. If we start charging, we will tell you the price before any charge, and you can stop first."
+      },
+      "availability": {
+        "title": "Availability and backups",
+        "p1": "The service is provided as it is. We take a backup every day and keep it for 14 days on our server, but a backup is not a guarantee. Keep your own copy of anything you cannot lose."
+      },
+      "termination": {
+        "title": "Ending the service",
+        "p1": "You can stop using the service at any time. An owner can ask to delete a workspace, as described in the Privacy notice. We may suspend or close an account or workspace that breaks these terms, harms others or puts the service at risk, and we will say why when we can."
+      },
+      "liability": {
+        "title": "Liability",
+        "p1": "As far as the law allows, we are not liable for indirect loss, lost profit or lost data, and our total liability for any claim is limited to what you paid us for the service in the 12 months before the claim (nothing, if you paid nothing). This does not limit any liability that the law does not allow to be limited."
+      },
+      "law": {
+        "title": "Governing law",
+        "p1": "These terms follow the laws of the Republic of Indonesia. We will first try to settle a dispute by talking; if that fails, the competent courts in Indonesia decide."
+      },
+      "changes": {
+        "title": "Changes",
+        "p1": "We may update these terms. The date above shows the latest version, and we tell account holders about important changes. Using the service after a change means you accept it."
+      },
+      "contact": {
+        "title": "Contact",
+        "p1": "Questions about these terms: write to {operator}."
+      }
+    }
+  },
+  "Settings": {
+    "title": "Workspace settings",
+    "deleteTitle": "Delete this workspace",
+    "deleteIntro": "Deleting removes all of this workspace's content: goals, tasks, messages, files, customer records and members. Nothing is removed for 14 days, and you can cancel until then. After that we delete it, and it cannot be brought back. Backups can hold the data for up to 14 days more.",
+    "deleteNoCopy": "There is no export button yet. If you need a copy of your data first, write to us before the 14 days pass.",
+    "confirmLabel": "Type the workspace address ({slug}) to confirm",
+    "requestButton": "Request deletion",
+    "pendingTitle": "Deletion is scheduled",
+    "pendingBody": "You asked for this workspace to be deleted on {requested}. It is removed after {due}. Until then it keeps working.",
+    "cancelButton": "Cancel the deletion",
+    "privacyLink": "How we handle personal data"
   }
 }

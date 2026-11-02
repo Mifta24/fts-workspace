@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
+import { LegalFooter } from "@/components/legal-footer";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
@@ -30,7 +31,10 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   return (
     <html lang={locale} className={`${jakarta.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          {children}
+          <LegalFooter />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

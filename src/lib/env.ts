@@ -57,6 +57,10 @@ const envSchema = z
           .map((email) => email.trim().toLowerCase())
           .filter(Boolean),
       ),
+    // Who runs the service, as written on the public privacy and terms pages. Required in
+    // production so those pages never go live without a name and a contact.
+    LEGAL_OPERATOR_NAME: z.string().trim().min(1).optional(),
+    LEGAL_CONTACT_EMAIL: z.email().optional(),
     LOG_LEVEL: z
       .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
       .default("info"),
@@ -104,6 +108,12 @@ export function env(): Env {
   }
   if (parsed.data.NODE_ENV === "production" && parsed.data.EMAIL_TRANSPORT === "log") {
     throw new Error("EMAIL_TRANSPORT=log is not allowed in production");
+  }
+  if (
+    parsed.data.NODE_ENV === "production" &&
+    !(parsed.data.LEGAL_OPERATOR_NAME && parsed.data.LEGAL_CONTACT_EMAIL)
+  ) {
+    throw new Error("LEGAL_OPERATOR_NAME and LEGAL_CONTACT_EMAIL are required in production");
   }
   cached = parsed.data;
   return cached;
