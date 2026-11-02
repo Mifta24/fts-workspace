@@ -33,7 +33,7 @@ Method: automated checks above, then a read-through of the Phase 5 changes again
 | 5 | Operator accounts have no MFA; one stolen operator session can suspend any workspace or change any plan (no member content is reachable). | **Open, accepted for a pilot** with a short allow-list; MFA is a launch item. |
 | 6 | Authentication rate limits are per process and in memory (Better Auth default). | **Fixed** (ADR-019): counters are kept in the database (`rate_limits`), so every instance shares them; tested with two separate Better Auth instances. Still on only in production. |
 | 7 | Entitlement checks cost one extra query per guarded call. | Accepted; no caching, so a plan change takes effect immediately. |
-| 8 | Public forms and booking pages still rely on Turnstile (optional) plus volume caps. | **Open**: enable Turnstile in production. |
+| 8 | Public forms and booking pages still rely on Turnstile (optional) plus volume caps. | **Mostly fixed (2026-11-02)**: Turnstile keys are set on the VPS and the secret is accepted by Cloudflare; the widget on a live public page was not seen yet because no form or booking page is published. |
 
 Not done: an independent penetration test, a threat model for the operator surface beyond the notes in `07-SECURITY.md`, secret scanning and the dependency audit as CI steps (added to the workflow, not yet run there), RLS (OD-02).
 
