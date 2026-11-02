@@ -80,6 +80,7 @@ Form field borders (`--input`, `#78877F` light and `#66796F` dark) reach the 3:1
 A new user can create an organization, create a goal, add tasks, invite a member and review an AI task plan without guidance.
 
 ## Visual refresh status
-- **Done:** input border contrast, colour tokens (light and dark), Plus Jakarta Sans, the progress thread on goals, challenges and the dashboard, the landing page with an example goal (en, id, ja), the light sidebar and cards without shadows.
-- **Not done:** restyling the topbar area, a branded header on the sign-in and sign-up pages, and a Japanese-font choice (system fonts are used for Japanese).
-- **Not checked yet:** the logged-in pages were not viewed in a browser after the refresh (they need a signed-in account); the landing page was checked in light and dark and at 390 px width.
+- **Done:** colour tokens (light and dark), Plus Jakarta Sans, the progress thread on goals, challenges and the dashboard, the landing page with an example goal (en, id, ja), the light sidebar (the current page also has a thin ring so it stays visible in dark mode), cards without shadows, input border contrast, a bottom line under the workspace top bar (the organization name appears there only on narrow screens, where the sidebar hides it), and a wordmark above the sign-in, sign-up and password pages.
+- **Checked in a browser (2026-11-02):** the landing page, sign-in, the workspaces list, the dashboard and the goals page in light and dark at 1280 px, and the dashboard at 390 px, using the seeded end-to-end database.
+- **Not viewed yet:** the dashboard progress card with a value (it needs a task-based goal with tasks), and the tasks, progress, chat, CRM, forms, schedule, billing and admin pages.
+- **Not done:** a Japanese-font choice (system fonts are used for Japanese).

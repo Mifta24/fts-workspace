@@ -104,7 +104,8 @@ export async function WorkspaceShell({
               aria-current={key === active ? "page" : undefined}
               className={cn(
                 "rounded-md px-2 py-1.5 text-sm whitespace-nowrap hover:bg-foreground/5 focus-visible:outline-2",
-                key === active && "bg-card font-semibold text-primary hover:bg-card",
+                key === active &&
+                  "bg-card font-semibold text-primary ring-1 ring-border hover:bg-card",
               )}
             >
               {t(key)}
@@ -129,12 +130,13 @@ export async function WorkspaceShell({
         </form>
       </nav>
       <main className="flex-1 space-y-6 px-4 py-8 md:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              {context.organization.name} · {t("role", { role: roles(context.role) })}
-            </p>
-          </div>
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
+          <p className="text-sm text-muted-foreground">
+            <span className="mr-2 font-semibold text-foreground md:hidden">
+              {context.organization.name}
+            </span>
+            {t("role", { role: roles(context.role) })}
+          </p>
           <div className="flex items-center gap-3">
             <Link href="/workspaces" className="text-sm font-medium text-primary hover:underline">
               {t("switch")}

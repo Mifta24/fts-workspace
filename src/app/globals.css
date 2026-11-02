@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Semantic design tokens (docs/05-UI-UX.md). Contrast still needs formal review. */
+/* Semantic design tokens (docs/05-UI-UX.md, ADR-021). Contrast ratios are listed in the docs. */
 :root {
   --background: #f6f7f5;
   --foreground: #16211d;
