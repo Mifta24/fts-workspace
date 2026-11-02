@@ -851,7 +851,7 @@
       },
       "FORM_SUBMITTED_TASK": {
         "title": "Create a follow-up task for each submission",
-        "description": "The form’s owner gets a task, “Follow up: <form name>”, due in two days. It does not contain what the visitor wrote."
+        "description": "The form’s owner gets a task, “Follow up: '<form name>'”, due in two days. It does not contain what the visitor wrote."
       },
       "BOOKING_RECEIVED_NOTE": {
         "title": "Note new bookings on the contact",

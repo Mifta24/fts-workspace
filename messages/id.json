@@ -851,7 +851,7 @@
       },
       "FORM_SUBMITTED_TASK": {
         "title": "Buat tugas tindak lanjut untuk setiap isian",
-        "description": "Pemilik formulir mendapat tugas “Tindak lanjut: <nama formulir>” yang jatuh tempo dua hari lagi. Isinya tidak memuat apa yang ditulis pengunjung."
+        "description": "Pemilik formulir mendapat tugas “Tindak lanjut: '<nama formulir>'” yang jatuh tempo dua hari lagi. Isinya tidak memuat apa yang ditulis pengunjung."
       },
       "BOOKING_RECEIVED_NOTE": {
         "title": "Catat pemesanan baru di kontak",
