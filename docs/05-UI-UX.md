@@ -10,15 +10,19 @@ Professional, calm, responsive, efficient for power users; original identity rat
 - Topbar: organization switcher, global search, notifications, create action, profile menu.
 - Breadcrumbs on nested pages; persistent accessible primary navigation.
 
-## Visual tokens (initial proposal)
-| Token | Value |
-| --- | --- |
-| `--brand` | `#4F46E5` |
-| `--sidebar` | `#111827` |
-| `--surface` | `#F8FAFC` |
-| `--border` | `#E2E8F0` |
-| `--success` | `#10B981` |
-| `--warning` | `#F59E0B` |
+## Visual tokens (as built)
+Calm, light and focused on progress. The one signature element is the progress thread (`ProgressThread`): a slim four-segment bar used for goals, challenges and the dashboard. Everything else stays quiet.
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| `--background` | `#F6F7F5` | `#0E1512` |
+| `--foreground` | `#16211D` | `#E4EAE6` |
+| `--primary` | `#0F6B5C` | `#3DB8A0` |
+| `--border` | `#DDE3DE` | `#25322C` |
+| `--warning` | `#9A5F08` | `#FDB022` |
+| `--sidebar` | `#14201C` | `#14201C` |
+
+Typeface: Plus Jakarta Sans (self-hosted through `next/font`), with system Japanese fonts as fallback. Numbers use tabular figures.
 
 Use semantic tokens for light/dark themes. Verify contrast ratios; colors above are a starting proposal, not finished accessibility certification.
 

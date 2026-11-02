@@ -13,7 +13,13 @@
     "title": "目標を計画し、仕事を進め、チームの足並みをそろえる。",
     "subtitle": "AIが下書きし、人が決める。安全なマルチテナントのワークスペース。",
     "signIn": "ログイン",
-    "signUp": "アカウントを作成"
+    "signUp": "アカウントを作成",
+    "sampleCaption": "目標の例",
+    "sampleGoal": "オンラインショップを開く",
+    "sampleM1": "商品と仕入れ先を決める",
+    "sampleM2": "ストアを作る",
+    "sampleM3": "公開して告知する",
+    "sampleProgress": "進捗: {title}"
   },
   "Auth": {
     "email": "メールアドレス",

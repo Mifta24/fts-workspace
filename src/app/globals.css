@@ -2,41 +2,41 @@
 
 /* Semantic design tokens (docs/05-UI-UX.md). Contrast still needs formal review. */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f6f7f5;
+  --foreground: #16211d;
   --card: #ffffff;
-  --card-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #475569;
-  --border: #e2e8f0;
-  --input: #cbd5e1;
-  --ring: #4f46e5;
-  --primary: #4f46e5;
+  --card-foreground: #16211d;
+  --muted: #edf0ec;
+  --muted-foreground: #4b5a54;
+  --border: #dde3de;
+  --input: #c3ccc6;
+  --ring: #0f6b5c;
+  --primary: #0f6b5c;
   --primary-foreground: #ffffff;
-  --destructive: #b91c1c;
-  --success: #047857;
-  --warning: #b45309;
-  --sidebar: #111827;
-  --sidebar-foreground: #f9fafb;
+  --destructive: #b42318;
+  --success: #067647;
+  --warning: #9a5f08;
+  --sidebar: #14201c;
+  --sidebar-foreground: #f1f5f2;
   --radius: 0.5rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0b1120;
-    --foreground: #e2e8f0;
-    --card: #111827;
-    --card-foreground: #e2e8f0;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --border: #1e293b;
-    --input: #334155;
-    --ring: #818cf8;
-    --primary: #6366f1;
-    --primary-foreground: #ffffff;
-    --destructive: #f87171;
-    --success: #34d399;
-    --warning: #fbbf24;
+    --background: #0e1512;
+    --foreground: #e4eae6;
+    --card: #151e1a;
+    --card-foreground: #e4eae6;
+    --muted: #1d2823;
+    --muted-foreground: #9dada5;
+    --border: #25322c;
+    --input: #34443c;
+    --ring: #4fb8a3;
+    --primary: #3db8a0;
+    --primary-foreground: #0a1411;
+    --destructive: #f97066;
+    --success: #47cd89;
+    --warning: #fdb022;
   }
 }
 
@@ -59,12 +59,30 @@
   --color-sidebar-foreground: var(--sidebar-foreground);
   --radius-md: var(--radius);
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Sans",
+    "Noto Sans JP", sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Four equal segments with a small gap; the mask keeps it independent of the page background. */
+.progress-thread {
+  mask-image: repeating-linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(25% - 3px),
+    transparent calc(25% - 3px),
+    transparent 25%
+  );
+}
+
+@keyframes thread-fill {
+  from {
+    transform: scaleX(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

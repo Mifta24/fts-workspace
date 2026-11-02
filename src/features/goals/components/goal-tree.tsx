@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { ArchiveButton } from "@/components/archive-button";
+import { ProgressThread } from "@/components/ui/progress-thread";
 import { archiveGoalAction } from "@/features/goals/server/actions";
 import { Link } from "@/i18n/navigation";
 import type { GoalNode } from "@/features/goals/server/tree";
@@ -55,11 +56,10 @@ export async function GoalTree({
                 <p className="text-xs text-muted-foreground">{t("progressPending")}</p>
               ) : (
                 <div className="flex items-center gap-2">
-                  <progress
+                  <ProgressThread
                     value={goal.progress}
-                    max={100}
-                    aria-label={t("progressLabel", { title: goal.title })}
-                    className="h-2 w-40"
+                    label={t("progressLabel", { title: goal.title })}
+                    className="w-40"
                   />
                   <span className="text-xs tabular-nums">{goal.progress}%</span>
                 </div>

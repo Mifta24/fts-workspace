@@ -13,7 +13,13 @@
     "title": "Rencanakan tujuan, jalankan pekerjaan, selaraskan tim.",
     "subtitle": "Workspace multi-tenant yang aman: AI membuat draf, manusia yang memutuskan.",
     "signIn": "Masuk",
-    "signUp": "Buat akun"
+    "signUp": "Buat akun",
+    "sampleCaption": "Contoh tujuan",
+    "sampleGoal": "Buka toko online",
+    "sampleM1": "Pilih produk dan pemasok",
+    "sampleM2": "Bangun etalase toko",
+    "sampleM3": "Luncurkan dan umumkan",
+    "sampleProgress": "Progres: {title}"
   },
   "Auth": {
     "email": "Email",

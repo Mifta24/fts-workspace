@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/action-button";
 import { ArchiveButton } from "@/components/archive-button";
 import { Card, CardTitle } from "@/components/ui/card";
+import { ProgressThread } from "@/components/ui/progress-thread";
 import { CreateChallengeForm } from "@/features/gamification/components/create-challenge-form";
 import {
   archiveChallengeAction,
@@ -91,11 +92,10 @@ export default async function ProgressPage({
                     {challenge.endsAt.toISOString().slice(0, 10)}
                   </p>
                   <div className="flex items-center gap-2">
-                    <progress
-                      value={challenge.progress}
-                      max={challenge.target}
-                      aria-label={t("challengeProgress", { title: challenge.title })}
-                      className="h-2 w-40"
+                    <ProgressThread
+                      value={(challenge.progress / Math.max(1, challenge.target)) * 100}
+                      label={t("challengeProgress", { title: challenge.title })}
+                      className="w-40"
                     />
                     <span className="text-xs tabular-nums">
                       {challenge.progress} / {challenge.target}

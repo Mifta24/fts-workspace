@@ -13,7 +13,13 @@
     "title": "Plan goals, run work, keep teams aligned.",
     "subtitle": "A secure, multi-tenant workspace with AI that drafts and people who decide.",
     "signIn": "Sign in",
-    "signUp": "Create an account"
+    "signUp": "Create an account",
+    "sampleCaption": "An example goal",
+    "sampleGoal": "Open the online shop",
+    "sampleM1": "Choose products and suppliers",
+    "sampleM2": "Build the storefront",
+    "sampleM3": "Launch and announce",
+    "sampleProgress": "Progress: {title}"
   },
   "Auth": {
     "email": "Email",

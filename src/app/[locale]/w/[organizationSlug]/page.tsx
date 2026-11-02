@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ProgressThread } from "@/components/ui/progress-thread";
 import { Label } from "@/components/ui/label";
 import { DASHBOARD_RANGES, dashboardFilterSchema } from "@/features/dashboard/schemas/dashboard";
 import { getDashboard } from "@/features/dashboard/server/dashboard-service";
@@ -125,6 +126,9 @@ export default async function WorkspacePage({
             <Card key={card.key} className="space-y-1 p-4">
               <dt className="text-sm text-muted-foreground">{t(`cards.${card.key}`)}</dt>
               <dd className="text-3xl font-semibold tabular-nums">{card.value}</dd>
+              {card.key === "progress" && data.progress !== null && (
+                <ProgressThread value={data.progress} label={t("cards.progress")} />
+              )}
             </Card>
           ))}
         </dl>
