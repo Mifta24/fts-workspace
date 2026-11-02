@@ -23,6 +23,8 @@ const nextConfig: NextConfig = {
   // E2E runs its own dev server beside a developer's (separate build dir, separate lock).
   distDir: process.env.NEXT_DIST_DIR ?? ".next",
   poweredByHeader: false,
+  // Hides the Next.js logo badge in development; compile and runtime errors still show.
+  devIndicators: false,
   turbopack: {
     rules: {
       "*.css": {
