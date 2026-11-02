@@ -54,6 +54,11 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] Pilot onboarding and feedback prioritization (`docs/14-PILOT.md`: process only, there is no in-app feedback form)
 **Exit gate:** production-readiness checklist approved. **Not approved:** the checklist (`docs/13-PRODUCTION-READINESS.md`) lists what was verified on 2026-10-30 (lint, format, typecheck, 414 Vitest tests, build, 42 Playwright tests with 1 opt-in skipped; the CI workflow has not run on these commits) and ten launch blockers, the first being that there is no production email provider.
 
+## Interface refresh (ADR-021)
+- [x] Colour tokens in light and dark, Plus Jakarta Sans, progress thread, landing page with an example goal, light sidebar (commits `555933f` and `87ff39c`)
+- [ ] Topbar restyle, a branded header on sign-in and sign-up, input border contrast (below 3:1), and a view of the signed-in pages in a browser after the refresh
+- [ ] Fix the date-dependent `insights` form tests (they use a fixed "now" of 2026-11-30 and fail now that the real date is inside that period)
+
 ## Suggested first implementation tickets
 1. Bootstrap Next.js TypeScript repo and scripts.
 2. Create auth adapter and organization schema.

@@ -19,7 +19,7 @@ Last updated 2026-10-30. Verified locally on that date; the CI workflow has not 
 | Realtime load | 2,000 sockets, 200,000 deliveries, 0 lost, p95 37 ms in one process (Phase 2 result); CI runs 300 sockets | `pnpm test:load` |
 | HTTP load (smoke) | `/api/health` p95 51 ms and `/en/sign-in` p95 523 ms at concurrency 20 (400 requests each, 0 failures) **against `next dev` on a laptop**, so it proves the script works, not production capacity | `pnpm test:load:http` |
 | Backup/restore | cold backup of database and files restored with identical rows, migrations, file hashes and per-tenant counts | `pnpm rehearse:restore` (see `12-OPERATIONS.md` for what it does not cover) |
-| Accessibility basics | billing and admin pages use headings, labels, `progress` with a label, no horizontal scroll at 375 px | `e2e/responsive.spec.ts` |
+| Accessibility basics | billing and admin pages use headings, labels, progress bars with a label (`role="progressbar"` for the progress thread, native `progress` for billing usage), no horizontal scroll at 375 px | `e2e/responsive.spec.ts` |
 
 ## Security review (Phase 5)
 Method: automated checks above, then a read-through of the Phase 5 changes against `07-SECURITY.md` and `AGENTS.md` (authorization on every server path, tenant scoping, input validation, audit, idempotency). Done by the implementing engineer, so it is a self-review: it is not independent.

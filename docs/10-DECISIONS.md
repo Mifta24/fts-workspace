@@ -133,6 +133,13 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Alternatives:** a job per task with a run-at time (precise, but every edit path must replace the job), reminders at several offsets (more noise; "keep it simple", ADR-017), email reminders (waits for a real provider).  
 **Consequences:** a reminder can arrive up to five minutes late. If the worker is down, reminders resume when it returns, and a task that has already become overdue is not announced. Mentions in chat and comments are still not built.
 
+## ADR-021 — Visual identity: green palette, one family, and a progress thread
+**Status:** Accepted (2026-11-02), at the owner's request for a simple, good-looking design.  
+**Context:** the interface was the stock shadcn look: indigo on slate, system font, dark sidebar. It worked but had no identity, and the product's central idea (a big goal becomes small, tracked steps) was not visible in it. The direction must stay simple (ADR-017) and keep the existing component library and semantic tokens.  
+**Decision:** (1) change the semantic tokens only: a cool off-white background, a green-black ink, a deep green primary (`#0F6B5C` light, `#3DB8A0` dark), amber for "due soon", and a light tinted sidebar. (2) Use one typeface, Plus Jakarta Sans through `next/font/google` (self-hosted at build, no request to Google from the browser), with the system Japanese fonts as fallback. (3) Add a single signature element, the progress thread, and use it only for progress toward something. (4) Cards lose their shadow; the landing page shows an example goal instead of a marketing hero. Written rules are in `05-UI-UX.md`.  
+**Alternatives:** keeping indigo and changing only spacing (no identity), a cream and terracotta or a black and neon look (common defaults, not tied to the product), bundling a Japanese web font (large download for one locale), a custom component library (cost without need).  
+**Consequences:** all colour comes from tokens, so a later palette change is one file. The font is fetched from Google at build time, so an offline build needs the font cached. The contrast of form field borders is below 3:1 and is recorded as a known gap. Features still reach every page through the same components; no behaviour, permission or data changed.
+
 ## Open decisions
 - **OD-01:** Which deploy environment/hosting region and target scale?
 - **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?
