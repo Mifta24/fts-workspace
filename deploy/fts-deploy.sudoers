@@ -1,0 +1,6 @@
+# /etc/sudoers.d/fts-deploy (mode 440, owned by root; validate with `visudo -c`).
+# Lets the Plesk subscription's system user run the deploy script as root, and nothing else.
+# Replace <plesk-subscription-user> with that user's login (shown in Plesk, Websites & Domains).
+# Do not put the script in a folder the app user (fts) can write to: the app must not be able to
+# change what runs as root.
+<plesk-subscription-user> ALL=(root) NOPASSWD: /usr/local/sbin/fts-deploy.sh
