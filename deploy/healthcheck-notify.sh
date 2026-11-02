@@ -9,6 +9,7 @@
 #
 #   healthcheck-notify.sh                run the check (what the timer does)
 #   healthcheck-notify.sh --unit NAME    mail at once that a systemd unit failed (OnFailure= hook)
+#   healthcheck-notify.sh --test         send one test mail to the recipient
 #
 # Limit: if the whole server or its mail server is down, nothing can be sent from here. Use an outside
 # monitor (for example an uptime service on /api/health) for that case.
@@ -50,6 +51,11 @@ footer() {
   printf '\nTime (UTC): %s\nHost: %s\nSite: https://workspace.fts-tech.co.id\nLogs: journalctl -u fts-web -u fts-worker -u fts-gateway -n 50\nUnits: systemctl list-units --failed\n' \
     "$(date -u +%FT%TZ)" "$(hostname)"
 }
+
+if [ "${1:-}" = "--test" ]; then
+  send_mail "[FTS Workspace] test alert" "This is a test. If you can read it, health alerts reach this address.$(footer)"
+  exit $?
+fi
 
 if [ "${1:-}" = "--unit" ]; then
   send_mail "[FTS Workspace] unit $2 failed" "The systemd unit $2 ended with an error.$(footer)"
