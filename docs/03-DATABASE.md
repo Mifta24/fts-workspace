@@ -67,6 +67,7 @@ Executable schema: `prisma/schema.prisma`; migrations in `prisma/migrations/`.
 | --- | --- | --- |
 | `users`, `sessions`, `accounts`, `verifications` | Better Auth (Prisma adapter) | UUIDv7 ids (Prisma default); passwords hashed in `accounts.password` |
 | `organizations` | `src/features/organizations` | globally unique `slug`; `suspendedAt` (operator switch); `deletionRequestedAt` / `deletionRequestedBy` (owner's request to delete the workspace, 14-day wait; nothing is removed by the request); `purgedAt` (set when the data was removed after the wait, ADR-024: the row stays as a tombstone named `deleted-<id>` with no personal data, so the final audit event keeps its key and the slug is free again). The triggers on `point_events`, `consent_events` and `contact_stage_changes` still reject every UPDATE and DELETE except a DELETE of the organization named in the transaction-local setting `app.purge_org`, which only the purge sets |
+| `two_factors` | `src/lib/auth` (Better Auth) | one row per user who set up an authenticator app: encrypted `secret` and `backupCodes`, `verified` (false until the first code), lockout counters; `users.twoFactorEnabled` mirrors it |
 | `members` | `src/features/organizations` | unique `(organizationId, userId)`; `role` enum `OWNER/ADMIN/MANAGER/MEMBER/VIEWER`; `status` `ACTIVE/DISABLED` |
 | `audit_logs` | `src/server/services/audit.ts` | append-only; `organizationId` FK is `RESTRICT` so tenant deletion cannot silently drop audit history |
 

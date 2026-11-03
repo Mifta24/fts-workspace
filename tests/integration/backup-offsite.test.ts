@@ -36,7 +36,7 @@ const backup = (name: string, ageDays = 0) => {
 };
 const run = (env: Record<string, string> = {}) =>
   spawnSync("bash", [SCRIPT], {
-    env: { PATH: process.env.PATH ?? "", FTS_ROOT: root, RCLONE: FAKE, ...env },
+    env: { ...process.env, FTS_ROOT: root, RCLONE: FAKE, ...env },
     encoding: "utf8",
   });
 const state = () => path.join(root, "state", "offsite.state");
