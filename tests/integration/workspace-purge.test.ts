@@ -1,3 +1,4 @@
+import { runPurgeCli } from "../../scripts/purge-workspace";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -669,5 +670,42 @@ describe("operator trigger", () => {
     );
     const rows = await listWorkspaces(deps(), who, "");
     expect(rows.find((row) => row.id === a.organization.id)?.purgedAt).toEqual(NOW);
+  });
+});
+
+describe("cli", () => {
+  beforeEach(resetDatabase);
+
+  const run = (args: string[], now: Date = NOW) => {
+    const lines: string[] = [];
+    return runPurgeCli(args, { ...deps(), log: (line) => lines.push(line) }, now).then((code) => ({
+      code,
+      lines,
+    }));
+  };
+
+  it("purges a due workspace and prints the counts", async () => {
+    const a = await seedWorkspace("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    const { code, lines } = await run(["acme", "--confirm", "acme"]);
+    expect(code).toBe(0);
+    expect(lines.join("\n")).toContain("tasks");
+    const event = await db().auditLog.findFirstOrThrow({
+      where: { organizationId: a.organization.id, action: "organization.purged" },
+    });
+    expect(event.actorId).toBeNull();
+    expect((event.metadata as { trigger: string }).trigger).toBe("cli");
+  });
+
+  it("refuses without a matching --confirm, for an unknown slug, and before the date", async () => {
+    const a = await seedWorkspace("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    const before = await countRows(a.organization.id);
+    expect((await run([])).code).toBe(1);
+    expect((await run(["acme"])).code).toBe(1);
+    expect((await run(["acme", "--confirm", "beta"])).code).toBe(1);
+    expect((await run(["nothing", "--confirm", "nothing"])).code).toBe(1);
+    expect((await run(["acme", "--confirm", "acme"], new Date(NOW.getTime() - DAY))).code).toBe(1);
+    expect(await countRows(a.organization.id)).toEqual(before);
   });
 });

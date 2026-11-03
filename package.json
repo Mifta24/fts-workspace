@@ -29,6 +29,7 @@
     "test:load": "tsx scripts/realtime-load.ts",
     "worker": "tsx --conditions=react-server worker/main.ts",
     "rehearse:restore": "tsx scripts/restore-rehearsal.ts",
+    "purge:workspace": "tsx --conditions=react-server scripts/purge-workspace.ts",
     "test:load:http": "tsx scripts/http-load.ts"
   },
   "dependencies": {
