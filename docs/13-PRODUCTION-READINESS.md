@@ -19,15 +19,16 @@ Last updated 2026-11-03. CI passes on `main` (run 41601317852).
 | Backup every day on the server; restore with data and files | rehearsal on the server on 2026-11-03: 45 tables equal, files identical |
 | Load test with login | public site, 2026-11-03: 800 requests, no failures |
 | Email (sign-up, password reset) | reset mail signed with DKIM and accepted by Gmail on 2026-11-03 |
+| Outside uptime check of `/api/health` every 10 minutes | GitHub Actions workflow `Uptime`, run once on 2026-11-03: ok |
+| Health alerts by email to the operator address | test alert sent and accepted by Gmail on 2026-11-03 |
 | Public privacy and terms pages (en, id, ja) | live |
 | Realtime chat | 2,000-socket test, and in a browser on the server |
 
 ## Before real customers
 
-1. **Copy backups off the server.** `deploy/backup-offsite.sh` is ready; it needs a destination (steps in `12-OPERATIONS.md`). Until then a lost server loses its backups.
+1. **Install the daily backup copy on the Mac.** `deploy/backup-pull.sh` pulls the server's backups to `~/fts-backups` and checks them; it was run by hand on 2026-11-03 (13 backups, newest verified) and fails loudly on a damaged copy or an unreachable server. The daily launchd job (`deploy/com.fts.backup-pull.plist`) is not installed yet: copy it to `~/Library/LaunchAgents/`, replace `__REPO__` and `__HOME__`, and run the `launchctl bootstrap` line written in the file. The Mac must be on and its disk encrypted (FileVault); a cloud bucket through `deploy/backup-offsite.sh` is the better long-term home.
 2. **Lawyer review of the privacy notice and terms** (today a draft). Also a short data-processing agreement for customers.
-3. **Notice outages from outside.** Add a second alert address and an outside uptime check on `/api/health` (a free uptime service is enough). Today a dead server cannot mail anyone.
-4. **Try the purge and the restore once more with a real customer's data volume** before the first deletion request is due.
+3. **Try the purge and the restore once more with a real customer's data volume** before the first deletion request is due.
 
 ## Later (not needed for the pilot)
 

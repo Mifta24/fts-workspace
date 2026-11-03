@@ -49,20 +49,20 @@ No durations are commitments; estimate after technical discovery and staffing as
 
 ## Phase 5 — SaaS & Production
 - [x] Plans, limits, trials and the operator console `/admin` (ADR-015; prices and checkout are later, OD-05)
-- [~] Monitoring: health check mails one address from the server; **still needed before real customers: a second address and an outside uptime check**
+- [x] Monitoring: the server mails the operator when its health check fails, and an outside check (GitHub Actions, every 10 minutes) watches `/api/health`; error tracking and paging are later
 - [x] Two-step sign-in with an authenticator app, required for operators (ADR-025); the operator account has it on
 - [x] Workspace deletion: the owner asks, 14 days wait, then removal by operator button, `pnpm purge:workspace` or an opt-in worker sweep (ADR-024); tried on the server on 2026-11-03
 - [x] Virus scan of uploads with ClamAV (ADR-025); installed on the server, `MALWARE_SCAN=optional`; a clean file was stored and the test virus refused through the public site
 - [x] Restore rehearsal with data and files on the server (2026-11-03: 45 tables equal, files identical)
 - [x] Load test with login (`pnpm test:load:http`); run against the public site on 2026-11-03: 800 requests, no failures
 - [x] Security review (self-review and dependency/secret checks; an independent review and CSP `script-src` are later)
-- [~] Off-server backup copy (`deploy/backup-offsite.sh` is ready and tested against a stand-in; **no destination chosen, never run on the server**)
+- [~] Backups copied off the server: `deploy/backup-pull.sh` pulls them to the owner's Mac and verifies them (run by hand, works); **the daily job is not installed yet**; a cloud bucket (`deploy/backup-offsite.sh`) is later
 - [x] Email through our own mail server: the password-reset mail was signed and accepted by Gmail (2026-11-03)
 - [x] Pilot onboarding and feedback prioritization (`docs/14-PILOT.md`: process only, there is no in-app feedback form)
-**Exit gate:** `13-PRODUCTION-READINESS.md` signed off. **Pilot-ready, not signed off.** Before real customers: backups copied off the server, a lawyer's review of privacy and terms, an outside uptime check with a second alert address. Everything else is listed there under *Later*.
+**Exit gate:** `13-PRODUCTION-READINESS.md` signed off. **Pilot-ready, not signed off.** Before real customers: the daily backup copy installed on the Mac, and a lawyer's review of privacy and terms. Everything else is listed there under *Later*.
 
 ## Interface refresh (ADR-021)
-- [x] Colour tokens in light and dark, Plus Jakarta Sans, progress thread, landing page with an example goal, light sidebar (commits `555933f` and `87ff39c`)
+- [x] Colour tokens in light and dark, Plus Jakarta Sans, progress thread, complete product landing page with an illustrative workspace preview (en/id/ja), light sidebar (commits `555933f` and `87ff39c`; landing-page refresh verified 2026-11-03)
 - [x] Input border contrast raised to 3:1 on cards
 - [x] Font self-hosted (committed file, no Google fetch at compile time) and the Schedule page link spacing fixed
 - [x] Raw message key on the Automations page fixed, with a test that every message in en, id and ja parses and that the three languages have the same keys
