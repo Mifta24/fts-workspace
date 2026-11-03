@@ -170,11 +170,18 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 **Alternatives:** TOTP code written by hand (rejected: the plugin is maintained and covers lockout and recovery codes); requiring MFA for owners at once (rejected: it would lock out every existing owner before they can set it up); a QR library (deferred: adds a dependency to audit); scanning inside the app process with a JavaScript engine (rejected: no maintained engine with real signature coverage); a cloud scanning API (rejected: sends customer files to another sub-processor); backing up with `rsync` to another host (possible, but rclone covers more destinations and gives encryption and checksums).  
 **Consequences:** the operator on the pilot server is locked out of `/admin` until they turn two-step sign-in on at `/security`; losing both the phone and the recovery codes needs a manual reset in the database. Password reset does not ask for the second step. ClamAV needs about 1 GB of memory and signature updates on the VPS, which is shared with other sites. The off-server copy holds customer data: the crypt password must be kept somewhere other than this server, and a restore from it must be rehearsed. These controls are tested against stand-ins (a fake clamd, a fake rclone); the real daemon and a real destination are untried.
 
+## ADR-026 — Indicative pilot prices on the public landing page
+**Status:** Accepted (2026-11-03), with the owner delegating the proposed prices and asking to show them on the landing page.
+**Context:** Plan limits exist (ADR-015), but checkout and payment processing do not. The public landing page needed a simple price guide, and the published numbers must not imply that customers can already subscribe.
+**Decision:** Show IDR 0 for Free, IDR 39,000 per member per month for Team, and IDR 99,000 per member per month for Business. Team and Business cards describe only existing seat, storage and feature limits. Label all prices as indicative pilot proposals, state that online checkout is unavailable and final prices will be confirmed before subscriptions open, and direct every card to free signup.
+**Alternatives:** Keep the prices hidden until checkout exists (leaves the requested price section empty); show live commercial offers and paid-plan signup (misrepresents billing availability); use USD competitor pricing (poor fit for the Indonesian pilot audience).
+**Consequences:** These are planning prices, not a commercial offer or commitment. No payment, subscription selection or entitlement changes are made by the pricing UI. Final pricing, taxes, AI quota/overage policy, annual discounts and payment provider remain open.
+
 ## Open decisions
 - **OD-01:** Which deploy environment/hosting region and target scale? (Partly answered by ADR-022: the pilot runs on the owner's Plesk VPS behind Cloudflare; region, sizing for real load and any second host are still open.)
 - **OD-02:** Native PostgreSQL RLS in first release or only after formal verification?
 - **OD-04:** Storage provider and retention limits?
-- **OD-05:** Pricing model and AI quota/overage policy? (Partly answered by ADR-015: plan limits and a hard AI stop exist; prices, a payment provider and any overage policy are still open.)
+- **OD-05:** Pricing model and AI quota/overage policy? (Partly answered by ADR-015 and ADR-026: seat-based indicative monthly pilot prices are displayed; final prices, taxes, a payment provider, annual discounts and any overage policy remain open.)
 - **OD-06:** Is personal workspace a special organization?
 - **OD-07:** Preferred rich text package? (i18n decided: next-intl, ADR-009)
 - **OD-08:** Which AI model providers and residency constraints apply?

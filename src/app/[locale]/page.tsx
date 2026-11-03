@@ -18,6 +18,27 @@ const FEATURES = [
   { title: "featureCustomersTitle", body: "featureCustomersBody" },
   { title: "featureScheduleTitle", body: "featureScheduleBody" },
 ] as const;
+const PRICING_PLANS = [
+  {
+    name: "free",
+    title: "planFree",
+    price: "priceFreeAmount",
+    features: ["priceFreeFeature1", "priceFreeFeature2", "priceFreeFeature3"],
+  },
+  {
+    name: "team",
+    title: "planTeam",
+    price: "priceTeamAmount",
+    features: ["priceTeamFeature1", "priceTeamFeature2", "priceTeamFeature3"],
+    featured: true,
+  },
+  {
+    name: "business",
+    title: "planBusiness",
+    price: "priceBusinessAmount",
+    features: ["priceBusinessFeature1", "priceBusinessFeature2", "priceBusinessFeature3"],
+  },
+] as const;
 const PRIVACY_POINTS = ["privacyPoint1", "privacyPoint2", "privacyPoint3"] as const;
 const USE_CASES = [
   { title: "individualTitle", body: "individualBody", example: "individualExample" },
@@ -73,6 +94,9 @@ export default async function HomePage() {
             </a>
             <a className="whitespace-nowrap hover:text-foreground" href="#features">
               {t("capabilities")}
+            </a>
+            <a className="whitespace-nowrap hover:text-foreground" href="#pricing">
+              {t("pricingNav")}
             </a>
             <a className="whitespace-nowrap hover:text-foreground" href="#privacy">
               {t("privacyNav")}
@@ -279,6 +303,67 @@ export default async function HomePage() {
                 </article>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section
+          id="pricing"
+          aria-labelledby="pricing-title"
+          className="scroll-mt-8 border-y border-border bg-muted/40"
+        >
+          <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
+            <div className="mx-auto max-w-2xl space-y-4 text-center">
+              <p className="text-sm font-semibold text-primary">{t("pricingEyebrow")}</p>
+              <h2
+                id="pricing-title"
+                className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
+              >
+                {t("pricingTitle")}
+              </h2>
+              <p className="text-lg leading-8 text-muted-foreground">{t("pricingBody")}</p>
+            </div>
+            <div className="mt-10 grid gap-5 lg:grid-cols-3">
+              {PRICING_PLANS.map((plan) => (
+                <article
+                  key={plan.name}
+                  className={`flex flex-col rounded-2xl border bg-card p-6 sm:p-8 ${"featured" in plan && plan.featured ? "border-primary shadow-md" : "border-border"}`}
+                >
+                  <div className="flex min-h-7 items-center justify-between gap-3">
+                    <h3 className="text-xl font-semibold">{t(plan.title)}</h3>
+                    {"featured" in plan && plan.featured && (
+                      <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                        {t("pricingPopular")}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-5 text-4xl font-semibold tracking-tight tabular-nums">
+                    {t(plan.price)}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">{t("pricePerMember")}</p>
+                  <ul className="my-7 flex-1 space-y-3 border-t border-border pt-6">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex gap-3 text-sm leading-6">
+                        <span aria-hidden="true" className="text-primary">
+                          ✓
+                        </span>
+                        <span>{t(feature)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/sign-up"
+                    className={buttonVariants({
+                      variant: plan.name === "team" ? "default" : "outline",
+                    })}
+                  >
+                    {t("pricingCta")}
+                  </Link>
+                </article>
+              ))}
+            </div>
+            <p className="mx-auto mt-6 max-w-3xl text-center text-sm leading-6 text-muted-foreground">
+              {t("pricingNote")}
+            </p>
           </div>
         </section>
 
