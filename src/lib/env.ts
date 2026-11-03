@@ -64,6 +64,12 @@ const envSchema = z
       .enum(["true", "false"])
       .default("false")
       .transform((value) => value === "true"),
+    // Virus scan of uploaded files with a ClamAV daemon (ADR-025). "off": no scan. "optional": scan
+    // when the daemon answers, accept the file when it does not. "required": a file that cannot be
+    // scanned is refused. An infected file is always refused when scanning is on.
+    MALWARE_SCAN: z.enum(["off", "optional", "required"]).default("off"),
+    CLAMD_HOST: z.string().min(1).default("127.0.0.1"),
+    CLAMD_PORT: z.coerce.number().int().min(1).max(65535).default(3310),
     // Who runs the service, as written on the public privacy and terms pages. Required in
     // production so those pages never go live without a name and a contact.
     LEGAL_OPERATOR_NAME: z.string().trim().min(1).optional(),

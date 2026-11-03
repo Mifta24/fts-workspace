@@ -14,12 +14,19 @@ import {
   requirePermission,
   type OrganizationContext,
 } from "@/features/organizations/server/organization-service";
+import type { MalwareScanner } from "@/server/security/malware-scan";
 import type { StoragePort } from "@/server/storage/storage";
 import { getEntitlements } from "@/features/billing/server/entitlements";
 import { recordAuditEvent } from "@/server/services/audit";
 import { assertActiveMember } from "@/server/services/tenant-refs";
 
-type Deps = { prisma: PrismaClient; storage: StoragePort; correlationId?: string };
+type Deps = {
+  prisma: PrismaClient;
+  storage: StoragePort;
+  correlationId?: string;
+  /** Virus scan for uploads; `required` refuses files that could not be scanned. Absent: no scan. */
+  scan?: { scanner: MalwareScanner; required: boolean } | null;
+};
 type DbDeps = Pick<Deps, "prisma">;
 
 export type FileView = {
@@ -88,7 +95,7 @@ async function toViews(
 }
 
 export async function uploadFile(
-  { prisma, storage, correlationId }: Deps,
+  { prisma, storage, correlationId, scan }: Deps,
   context: OrganizationContext,
   input: { name: string; mimeType: string; bytes: Uint8Array; visibility: unknown },
 ): Promise<FileView> {
@@ -102,6 +109,7 @@ export async function uploadFile(
   const mimeType = verifyContent(input.mimeType, input.bytes);
   if (!mimeType) throw new AppError("UNPROCESSABLE", "This file type is not allowed.");
   const organizationId = context.organization.id;
+  if (scan) await assertScanned(prisma, scan, context, input.bytes, correlationId);
 
   const used = await prisma.fileObject.aggregate({
     where: { organizationId, status: "READY" },
@@ -148,6 +156,46 @@ export async function uploadFile(
     // Never leave bytes behind without a row that accounts for them.
     await storage.delete(storageKey).catch(() => {});
     throw error;
+  }
+}
+
+/**
+ * Refuses an infected file, and (when scanning is required) one that could not be scanned. Both are
+ * audited with sizes and the signature only: never the file name or content.
+ */
+async function assertScanned(
+  prisma: PrismaClient,
+  scan: NonNullable<Deps["scan"]>,
+  context: OrganizationContext,
+  bytes: Uint8Array,
+  correlationId: string | undefined,
+): Promise<void> {
+  const result = await scan.scanner.scan(bytes);
+  if (result.status === "clean") return;
+  const base = {
+    organizationId: context.organization.id,
+    actorId: context.userId,
+    resourceType: "file",
+    correlationId,
+  };
+  if (result.status === "infected") {
+    await recordAuditEvent(prisma, {
+      ...base,
+      action: "file.rejected_malware",
+      metadata: { signature: result.signature, sizeBytes: bytes.length },
+    });
+    throw new AppError("UNPROCESSABLE", "The file was rejected by the virus scan.");
+  }
+  await recordAuditEvent(prisma, {
+    ...base,
+    action: "file.scan_unavailable",
+    metadata: { sizeBytes: bytes.length, required: scan.required },
+  });
+  if (scan.required) {
+    throw new AppError(
+      "UNPROCESSABLE",
+      "The file could not be checked for viruses. Try again later.",
+    );
   }
 }
 

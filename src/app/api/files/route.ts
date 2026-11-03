@@ -8,6 +8,7 @@ import { logger } from "@/lib/logger";
 import { MAX_FILE_BYTES } from "@/features/files/schemas/file";
 import { uploadFile } from "@/features/files/server/file-service";
 import { getAuthorizedOrganization } from "@/features/organizations/server/organization-service";
+import { getMalwareScanner } from "@/server/security/malware-scan";
 import { getStorage } from "@/server/storage/storage";
 
 const fail = (status: number, code: string) =>
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
       },
     );
     const uploaded = await uploadFile(
-      { prisma: db(), storage: getStorage(), correlationId },
+      { prisma: db(), storage: getStorage(), correlationId, scan: getMalwareScanner() },
       context,
       {
         name: file.name,

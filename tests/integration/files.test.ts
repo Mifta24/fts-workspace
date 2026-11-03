@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import {
   deleteFile,
   getFile,
@@ -21,7 +21,9 @@ import {
 } from "@/features/organizations/server/organization-service";
 import { db } from "@/lib/db";
 import { AppError } from "@/lib/errors";
+import { createClamdScanner } from "@/server/security/malware-scan";
 import { createLocalStorage, type StoragePort } from "@/server/storage/storage";
+import { FAKE_VIRUS, startFakeClamd, type FakeClamd } from "../helpers/fake-clamd";
 import { createTestOrganization, resetDatabase } from "../helpers/db";
 
 let dir: string;
@@ -273,5 +275,80 @@ describe("files", () => {
         }),
       ).rejects.toThrow();
     });
+  });
+});
+
+describe("virus scan on upload", () => {
+  beforeEach(resetDatabase);
+  let clamd: FakeClamd | undefined;
+  afterEach(async () => {
+    await clamd?.close();
+    clamd = undefined;
+  });
+
+  const scanning = async (required: boolean, mode: "normal" | "error" = "normal") => {
+    clamd = await startFakeClamd(mode);
+    return {
+      ...deps(),
+      scan: { scanner: createClamdScanner({ host: "127.0.0.1", port: clamd.port }), required },
+    };
+  };
+  const stored = async (organizationId: string) => ({
+    rows: await db().fileObject.count({ where: { organizationId } }),
+    onDisk: (await readdir(path.join(dir, organizationId)).catch(() => [])).length,
+  });
+
+  it("stores a clean file as before", async () => {
+    const { alice } = await setup();
+    const file = await uploadFile(await scanning(true), alice, note("fine"));
+    expect(file.sizeBytes).toBe(4);
+  });
+
+  it("refuses an infected file: no row, no bytes, an audit event without the file name", async () => {
+    const { alice, acme } = await setup();
+    await expectCode(
+      uploadFile(await scanning(false), alice, {
+        ...note(`text ${FAKE_VIRUS}`),
+        name: "secret-plans.txt",
+      }),
+      "UNPROCESSABLE",
+    );
+    expect(await stored(acme.organization.id)).toEqual({ rows: 0, onDisk: 0 });
+    const event = await db().auditLog.findFirstOrThrow({
+      where: { organizationId: acme.organization.id, action: "file.rejected_malware" },
+    });
+    expect(event.actorId).toBe(alice.userId);
+    expect(event.metadata).toEqual({
+      signature: "Fake.Test.Virus",
+      sizeBytes: 5 + FAKE_VIRUS.length,
+    });
+    expect(JSON.stringify(event.metadata)).not.toContain("secret-plans");
+  });
+
+  it("when scanning is required, a file that cannot be scanned is refused", async () => {
+    const { alice, acme } = await setup();
+    await expectCode(uploadFile(await scanning(true, "error"), alice, note()), "UNPROCESSABLE");
+    expect(await stored(acme.organization.id)).toEqual({ rows: 0, onDisk: 0 });
+    expect(
+      await db().auditLog.count({
+        where: { organizationId: acme.organization.id, action: "file.scan_unavailable" },
+      }),
+    ).toBe(1);
+  });
+
+  it("when scanning is optional, a file that cannot be scanned is stored and the gap is audited", async () => {
+    const { alice, acme } = await setup();
+    await uploadFile(await scanning(false, "error"), alice, note());
+    expect((await stored(acme.organization.id)).rows).toBe(1);
+    expect(
+      await db().auditLog.count({
+        where: { organizationId: acme.organization.id, action: "file.scan_unavailable" },
+      }),
+    ).toBe(1);
+  });
+
+  it("an infected file is refused even when scanning is optional", async () => {
+    const { alice } = await setup();
+    await expectCode(uploadFile(await scanning(false), alice, note(FAKE_VIRUS)), "UNPROCESSABLE");
   });
 });
