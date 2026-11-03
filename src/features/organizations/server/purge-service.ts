@@ -104,17 +104,6 @@ export async function purgeWorkspace(
   if (organization.purgedAt) return already;
   assertDue(organization.deletionRequestedAt, now);
 
-  // Bytes go first: if this fails nothing in the database has changed and a retry starts over. The
-  // prefix sweep also removes bytes that no row points at; it runs before the per-file deletes so
-  // its count includes every file on disk.
-  const onDisk = await storage.deletePrefix(organizationId);
-  const files = await prisma.fileObject.findMany({
-    where: { organizationId },
-    select: { storageKey: true },
-  });
-  for (const file of files) await storage.delete(file.storageKey);
-  const filesRemoved = Math.max(files.length, onDisk);
-
   return prisma.$transaction(
     async (tx) => {
       // The lock makes a second purge wait; it then sees the tombstone and does nothing.
@@ -125,6 +114,18 @@ export async function purgeWorkspace(
       });
       if (locked.purgedAt) return already;
       assertDue(locked.deletionRequestedAt, now);
+
+      // Bytes go first, inside the lock: the owner's cancel waits for this transaction, so bytes are
+      // never removed for a request that was just withdrawn. If this fails the transaction ends and
+      // nothing in the database has changed; a retry starts over. The prefix sweep also removes bytes
+      // that no row points at, and runs before the per-file deletes so its count includes every file.
+      const onDisk = await storage.deletePrefix(organizationId);
+      const files = await tx.fileObject.findMany({
+        where: { organizationId },
+        select: { storageKey: true },
+      });
+      for (const file of files) await storage.delete(file.storageKey);
+      const filesRemoved = Math.max(files.length, onDisk);
 
       // Lets the append-only tables delete this organization's rows, and only until the transaction ends.
       await tx.$executeRaw`SELECT set_config('app.purge_org', ${organizationId}, true)`;

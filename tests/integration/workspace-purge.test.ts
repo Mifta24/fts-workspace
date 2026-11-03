@@ -566,6 +566,33 @@ describe("purgeWorkspace files and failures", () => {
     expect(result.alreadyPurged).toBe(false);
   });
 
+  it("a cancel that arrives while files are being removed cannot leave a half-purged workspace", async () => {
+    const a = await createTestOrganization("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    let cancelled: Promise<{ count: number }> | undefined;
+    const racing: StoragePort = {
+      ...storage,
+      deletePrefix: async () => {
+        // The owner cancels right now (not awaited: the purge may hold the row until it commits).
+        cancelled = db()
+          .organization.updateMany({
+            where: { id: a.organization.id, deletionRequestedAt: { not: null } },
+            data: { deletionRequestedAt: null },
+          })
+          .then((r) => r); // Prisma queries are lazy; .then starts this one
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        return 0;
+      },
+    };
+    const result = await purgeWorkspace(
+      { prisma: db(), storage: racing },
+      { organizationId: a.organization.id, actor },
+      NOW,
+    );
+    expect(result.alreadyPurged).toBe(false);
+    expect((await cancelled)?.count).toBe(0);
+  });
+
   it("rolls everything back when the database step fails, and finishes on retry", async () => {
     const a = await seedWorkspace("acme");
     await requestAt(a.organization.id, REQUESTED);
