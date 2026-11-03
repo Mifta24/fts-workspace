@@ -23,7 +23,8 @@ import { createTestOrganization, resetDatabase } from "../helpers/db";
 const deps = () => ({ prisma: db() });
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
-const NOW = new Date("2026-11-02T08:00:00Z");
+// Far ahead of the real clock: jobs are created with the database's own time and must be due at this "now".
+const NOW = new Date("2040-01-02T08:00:00Z");
 const at = (hours: number) => new Date(NOW.getTime() + hours * HOUR);
 
 async function expectCode(promise: Promise<unknown>, code: AppError["code"]) {

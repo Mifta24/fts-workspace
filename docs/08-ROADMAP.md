@@ -60,7 +60,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] Font self-hosted (committed file, no Google fetch at compile time) and the Schedule page link spacing fixed
 - [x] Raw message key on the Automations page fixed, with a test that every message in en, id and ja parses and that the three languages have the same keys
 - [x] Top bar line, wordmark on the sign-in family of pages, and a browser check of the main signed-in pages (see `05-UI-UX.md` for what was and was not viewed)
-- [x] Date-dependent `insights` form tests fixed (the fixed "now" moved to 2040-06-30; the old 2026-11-30 broke once the real date entered that period). Other tests still use a fixed "now" of 2026-11-02; they pass today and were not changed
+- [x] Date-dependent `insights` form tests fixed (the fixed "now" moved to 2040-06-30; the old 2026-11-30 broke once the real date entered that period). The `automations` and `reminders` tests broke on 2026-11-03 for the same reason (jobs get the database's real time, the tests used 2026-11-02) and now use 2040-01-02, a Monday. Other tests (`booking`, `calendar-feed`, `calendar-sync`, `scheduling`, `task-deadline-reminders`, `billing`) still use a fixed "now" of November 2026; they pass today and were not changed, so they may break the same way
 
 ## Suggested first implementation tickets
 1. Bootstrap Next.js TypeScript repo and scripts.

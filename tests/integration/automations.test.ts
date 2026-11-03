@@ -31,9 +31,10 @@ import { createTestOrganization, resetDatabase } from "../helpers/db";
 
 const deps = () => ({ prisma: db() });
 const DAY = 86_400_000;
-// Monday 2026-11-02 08:00 UTC.
-const NOW = new Date("2026-11-02T08:00:00Z");
-const slotAt = (day: number, hour: number) => new Date(Date.UTC(2026, 10, day, hour));
+// Monday 2040-01-02 08:00 UTC. Far enough ahead that the real clock never passes it: jobs are created
+// with the database's own time and must be due at this fixed "now".
+const NOW = new Date("2040-01-02T08:00:00Z");
+const slotAt = (day: number, hour: number) => new Date(Date.UTC(2040, 0, day, hour));
 
 async function expectCode(promise: Promise<unknown>, code: AppError["code"]) {
   await expect(promise).rejects.toSatisfy(
@@ -355,7 +356,7 @@ describe("automations", () => {
         organizationId: acme.organization.id,
         type: "NOTE",
         authorId: alice.userId,
-        body: "Booked a meeting: Intro call (2026-11-03 09:00 UTC)",
+        body: "Booked a meeting: Intro call (2040-01-03 09:00 UTC)",
       });
       // The visitor's own words and address are not copied into the note or the trail.
       expect(JSON.stringify(note)).not.toMatch(/Private note|booker\.test/);
