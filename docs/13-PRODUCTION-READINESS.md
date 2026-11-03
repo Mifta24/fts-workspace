@@ -2,7 +2,7 @@
 
 This is the Phase 5 exit gate. **It is not approved.** The first section records what has been verified and how; the second lists what stands between the product and a production launch; approval is a decision for the people accountable for the launch and is left blank on purpose.
 
-Last updated 2026-11-03. The table was first verified locally on 2026-10-30; CI has since run on `main` and passes (run 41580645827, commit `bca4f80`, 2026-11-03). Rows dated 2026-11-03 below were run locally on this branch.
+Last updated 2026-11-03. The table was first verified locally on 2026-10-30; CI has since run on `main` and passes (run 41599036120, commit `0d8e41d`, 2026-11-03). Rows dated 2026-11-03 below were run locally on this branch.
 
 ## Verified
 | Area | Result | Evidence |
