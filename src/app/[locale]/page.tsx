@@ -96,10 +96,7 @@ export default async function HomePage() {
                 </Link>
               ))}
             </nav>
-            <Link
-              href="/sign-in"
-              className="hidden text-sm font-medium hover:text-primary sm:inline"
-            >
+            <Link href="/sign-in" className="text-sm font-medium hover:text-primary">
               {t("signIn")}
             </Link>
             <Link href="/sign-up" className={buttonVariants({ size: "sm" })}>
