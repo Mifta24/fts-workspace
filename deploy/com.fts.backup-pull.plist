@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Copy to ~/Library/LaunchAgents/, replace __REPO__ with this repository's path, then
+     launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.fts.backup-pull.plist
+     Runs every day at 04:15 (the server backs up at 02:30 UTC); if the Mac was asleep it runs on wake. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.fts.backup-pull</string>
+  <key>ProgramArguments</key>
+  <array><string>/bin/bash</string><string>__REPO__/deploy/backup-pull.sh</string></array>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>4</integer><key>Minute</key><integer>15</integer></dict>
+  <key>StandardOutPath</key><string>__HOME__/fts-backups/pull.log</string>
+  <key>StandardErrorPath</key><string>__HOME__/fts-backups/pull.log</string>
+</dict>
+</plist>
