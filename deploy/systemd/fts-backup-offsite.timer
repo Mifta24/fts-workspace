@@ -1,0 +1,10 @@
+# /etc/systemd/system/fts-backup-offsite.timer: one hour after the backup timer (about 02:30 UTC).
+[Unit]
+Description=Daily off-server copy of the FTS Workspace backups
+
+[Timer]
+OnCalendar=*-*-* 03:30:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
