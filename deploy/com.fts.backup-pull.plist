@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Copy to ~/Library/LaunchAgents/, replace __REPO__ with this repository's path, then
-     launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.fts.backup-pull.plist
-     Runs every day at 04:15 (the server backs up at 02:30 UTC); if the Mac was asleep it runs on wake. -->
+<!-- macOS does not let launchd jobs read ~/Documents, so the script runs from a copy in ~/fts-backups/bin:
+       mkdir -p ~/fts-backups/bin && cp deploy/backup-pull.sh ~/fts-backups/bin/
+       sed "s#__HOME__#$HOME#g" deploy/com.fts.backup-pull.plist > ~/Library/LaunchAgents/com.fts.backup-pull.plist
+       launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.fts.backup-pull.plist
+     Runs every day at 04:15 (the server backs up at 02:30 UTC); if the Mac was asleep it runs on wake.
+     After changing deploy/backup-pull.sh, copy it to ~/fts-backups/bin again. -->
 <plist version="1.0">
 <dict>
   <key>Label</key><string>com.fts.backup-pull</string>
   <key>ProgramArguments</key>
-  <array><string>/bin/bash</string><string>__REPO__/deploy/backup-pull.sh</string></array>
+  <array><string>/bin/bash</string><string>__HOME__/fts-backups/bin/backup-pull.sh</string></array>
   <key>StartCalendarInterval</key>
   <dict><key>Hour</key><integer>4</integer><key>Minute</key><integer>15</integer></dict>
   <key>StandardOutPath</key><string>__HOME__/fts-backups/pull.log</string>
