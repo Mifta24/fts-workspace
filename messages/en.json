@@ -802,6 +802,9 @@
     "book": "Book this time",
     "booked": "You are booked for {time}. Thank you!",
     "bookedGeneric": "Thank you! Your request was sent.",
+    "cancelBooking": "Cancel this booking",
+    "cancelled": "Your booking is cancelled.",
+    "cancelClosed": "This booking is already cancelled or over.",
     "privacy": "Your details are sent to the organization that published this page."
   },
   "Billing": {

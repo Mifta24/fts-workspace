@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { HONEYPOT_FIELD } from "@/features/booking/schemas/booking";
 import {
   bookPublicSlot,
+  cancelPublicBooking,
   createBookingPage,
   setBookingPageStatus,
   updateBookingPage,
@@ -118,6 +119,8 @@ export async function bookSlotAction(
         note: formData.get("note"),
       },
       formData.get("consent") === "on",
+      new Date(),
+      { locale: await getLocale() },
     );
     return {
       ok: true,
@@ -126,4 +129,18 @@ export async function bookSlotAction(
   } catch (error) {
     return toActionError(error, correlationId, "booking.book");
   }
+}
+
+/** Anonymous endpoint: the secret in the cancel link is the only credential. */
+export async function cancelBookingAction(
+  _p: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const correlationId = await getCorrelationId();
+  try {
+    await cancelPublicBooking({ prisma: db(), correlationId }, text(formData, "token"));
+  } catch (error) {
+    return toActionError(error, correlationId, "booking.cancel");
+  }
+  return { ok: true };
 }

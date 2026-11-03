@@ -68,4 +68,5 @@ test("booking: viewers have no booking pages, and unknown public links are 404",
   await expect(page.getByRole("link", { name: "Booking pages" })).toHaveCount(0);
   expect((await page.goto("/en/w/acme/booking"))?.status()).toBe(404);
   expect((await page.goto(`/en/b/${"a".repeat(22)}`))?.status()).toBe(404);
+  expect((await page.goto(`/en/b/cancel/${"a".repeat(22)}`))?.status()).toBe(404);
 });

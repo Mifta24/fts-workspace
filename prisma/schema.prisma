@@ -918,6 +918,9 @@ model Appointment {
   /// Set when a visitor booked this meeting through a public booking page.
   bookingPageId   String?           @db.Uuid
   bookingPage     BookingPage?      @relation(fields: [bookingPageId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  /// SHA-256 of the secret in the visitor's cancel link (booking confirmation email); the link
+  /// itself is never stored. Only meetings booked through a public page have one.
+  cancelTokenHash String?           @unique
   organizerId     String            @db.Uuid
   contactId       String?           @db.Uuid
   contact         CrmContact?       @relation(fields: [contactId, organizationId], references: [id, organizationId], onDelete: Restrict)

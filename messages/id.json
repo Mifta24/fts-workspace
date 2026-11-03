@@ -802,6 +802,9 @@
     "book": "Pesan waktu ini",
     "booked": "Anda terdaftar untuk {time}. Terima kasih!",
     "bookedGeneric": "Terima kasih! Permintaan Anda telah dikirim.",
+    "cancelBooking": "Batalkan booking ini",
+    "cancelled": "Booking Anda telah dibatalkan.",
+    "cancelClosed": "Booking ini sudah dibatalkan atau sudah lewat.",
     "privacy": "Data Anda dikirim ke organisasi yang menerbitkan halaman ini."
   },
   "Billing": {

@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   bookPublicSlot,
+  cancelPublicBooking,
   createBookingPage,
+  getPublicCancellation,
   getBookingPage,
   getPublicBookingPage,
   listBookingPages,
@@ -21,6 +23,7 @@ import {
   cancelAppointment,
 } from "@/features/scheduling/server/scheduling-service";
 import { db } from "@/lib/db";
+import { testOutbox } from "@/lib/email";
 import { AppError } from "@/lib/errors";
 import { createTestOrganization, resetDatabase } from "../helpers/db";
 
@@ -499,6 +502,113 @@ describe("booking pages", () => {
       const after = await db().appointment.findUniqueOrThrow({ where: { id: meeting.id } });
       expect(after).toMatchObject({ description: null, status: "SCHEDULED" });
       expect((await getContactDetail(deps(), alice, meeting.contactId!)).contact.erased).toBe(true);
+    });
+  });
+
+  describe("confirmation email and visitor cancellation", () => {
+    const tokenFrom = () => {
+      const text = testOutbox.at(-1)!.text;
+      return /\/b\/cancel\/([A-Za-z0-9_-]+)/.exec(text)![1]!;
+    };
+
+    beforeEach(() => {
+      testOutbox.length = 0;
+    });
+
+    it("emails the visitor the time and a cancel link, and stores only its hash", async () => {
+      const { alice } = await setup();
+      const page = await publishedPage(alice);
+      await bookPublicSlot(deps(), page.publicToken, visitor(1, slotAt(3, 10)), true, NOW, {
+        locale: "id",
+      });
+      expect(testOutbox).toHaveLength(1);
+      const mail = testOutbox[0]!;
+      expect(mail.to).toBe("visitor1@example.test");
+      expect(mail.subject).toContain("Intro call");
+      expect(mail.text).toContain("2026-11-03 10:00 (UTC)");
+      expect(mail.text).toContain("Halo Visitor 1");
+      const token = tokenFrom();
+      expect(token).toMatch(/^[A-Za-z0-9_-]{22}$/);
+      const meeting = await db().appointment.findFirstOrThrow();
+      expect(meeting.cancelTokenHash).toMatch(/^[0-9a-f]{64}$/);
+      expect(meeting.cancelTokenHash).not.toContain(token);
+    });
+
+    it("still books when the email cannot be sent", async () => {
+      const { alice } = await setup();
+      const page = await publishedPage(alice);
+      const outboxPush = testOutbox.push.bind(testOutbox);
+      testOutbox.push = () => {
+        throw new Error("smtp down");
+      };
+      try {
+        await book(page.publicToken, visitor(1, slotAt(3, 10)));
+      } finally {
+        testOutbox.push = outboxPush;
+      }
+      expect(await db().appointment.count({ where: { status: "SCHEDULED" } })).toBe(1);
+    });
+
+    it("lets the visitor cancel: slot freed, reminder retired, owner told, no personal data in the audit", async () => {
+      const { alice } = await setup();
+      const page = await publishedPage(alice);
+      await book(page.publicToken, visitor(1, slotAt(3, 10)));
+      const token = tokenFrom();
+      expect(await getPublicCancellation(deps(), token, NOW)).toMatchObject({
+        title: "Intro call",
+        open: true,
+      });
+
+      await cancelPublicBooking(deps(), token, NOW);
+      const meeting = await db().appointment.findFirstOrThrow();
+      expect(meeting.status).toBe("CANCELLED");
+      expect(await getPublicCancellation(deps(), token, NOW)).toMatchObject({ open: false });
+      const slots = (await getPublicBookingPage(deps(), page.publicToken, NOW)).slots;
+      expect(slots.map((s) => s.getTime())).toContain(slotAt(3, 10).getTime());
+
+      const types = (await listNotifications(deps(), alice)).map((n) => n.type);
+      expect(types).toContain("APPOINTMENT_CANCELLED");
+      const audit = await db().auditLog.findFirstOrThrow({
+        where: { action: "booking.cancelled_by_visitor" },
+      });
+      expect(audit).toMatchObject({ actorId: null, resourceId: meeting.id });
+      expect(JSON.stringify(audit)).not.toMatch(/Visitor 1|example\.test/);
+    });
+
+    it("is harmless to repeat, and does not notify twice", async () => {
+      const { alice } = await setup();
+      const page = await publishedPage(alice);
+      await book(page.publicToken, visitor(1, slotAt(3, 10)));
+      const token = tokenFrom();
+      await cancelPublicBooking(deps(), token, NOW);
+      await cancelPublicBooking(deps(), token, NOW);
+      expect(await db().auditLog.count({ where: { action: "booking.cancelled_by_visitor" } })).toBe(
+        1,
+      );
+    });
+
+    it("refuses a meeting that has started, and links that do not match a booking", async () => {
+      const { alice } = await setup();
+      const page = await publishedPage(alice);
+      await book(page.publicToken, visitor(1, slotAt(3, 10)));
+      const token = tokenFrom();
+      await expectCode(cancelPublicBooking(deps(), token, slotAt(3, 10)), "UNPROCESSABLE");
+      expect((await db().appointment.findFirstOrThrow()).status).toBe("SCHEDULED");
+      for (const bad of ["x", "A".repeat(22), page.publicToken, "../" + token]) {
+        await expectCode(cancelPublicBooking(deps(), bad, NOW), "NOT_FOUND");
+        await expectCode(getPublicCancellation(deps(), bad, NOW), "NOT_FOUND");
+      }
+    });
+
+    it("cancels only the booking the link belongs to", async () => {
+      const { alice } = await setup();
+      const page = await publishedPage(alice);
+      await book(page.publicToken, visitor(1, slotAt(3, 10)));
+      const first = tokenFrom();
+      await book(page.publicToken, visitor(2, slotAt(3, 11)));
+      await cancelPublicBooking(deps(), first, NOW);
+      const rows = await db().appointment.findMany({ orderBy: { startsAt: "asc" } });
+      expect(rows.map((r) => r.status)).toEqual(["CANCELLED", "SCHEDULED"]);
     });
   });
 

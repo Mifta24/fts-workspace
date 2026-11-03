@@ -1,7 +1,10 @@
 import "server-only";
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
+import { env } from "@/lib/env";
+import { sendEmail } from "@/lib/email";
 import { AppError } from "@/lib/errors";
+import { logger } from "@/lib/logger";
 import {
   BOOKINGS_PER_DAY,
   BOOKINGS_PER_MINUTE,
@@ -14,6 +17,7 @@ import {
   updateBookingPageSchema,
   visitorBookingSchema,
 } from "@/features/booking/schemas/booking";
+import { bookingConfirmationEmail } from "@/features/booking/server/booking-email";
 import { computeSlots, type SlotRules } from "@/features/booking/schemas/slots";
 import { queueAutomations } from "@/features/automations/server/automation-plan";
 import {
@@ -31,7 +35,7 @@ import {
   requirePermission,
   type OrganizationContext,
 } from "@/features/organizations/server/organization-service";
-import { planReminder } from "@/features/scheduling/server/scheduling-service";
+import { planReminder, retireReminders } from "@/features/scheduling/server/scheduling-service";
 import { recordAuditEvent } from "@/server/services/audit";
 import { assertActiveMember, lockTree } from "@/server/services/tenant-refs";
 
@@ -47,6 +51,7 @@ const MINUTE = 60_000;
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
 const notFound = () => new AppError("NOT_FOUND", "Booking page not found.");
+const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
 
 export type BookingPageView = {
   id: string;
@@ -396,6 +401,9 @@ export async function getPublicBookingPage(
 
 export type BookingConfirmation = { title: string; startsAt: Date; endsAt: Date; timeZone: string };
 
+/** `locale` picks the language of the confirmation email; anything unknown means English. */
+export type BookingOptions = { locale?: string };
+
 /**
  * Books a slot for an anonymous visitor. The page is found by its token only; the organization,
  * owner, duration and the offered slots all come from the stored page, and the chosen start is
@@ -407,6 +415,7 @@ export async function bookPublicSlot(
   rawInput: unknown,
   consentAccepted: boolean,
   now: Date = new Date(),
+  options: BookingOptions = {},
 ): Promise<BookingConfirmation> {
   const { prisma, correlationId } = deps;
   if (JSON.stringify(rawInput ?? null).length > MAX_PUBLIC_BODY_CHARS) {
@@ -453,6 +462,8 @@ export async function bookPublicSlot(
   const googleBusy = external.status === "ok" ? external.busy : [];
 
   const endsAt = new Date(input.startsAt.getTime() + page.durationMinutes * MINUTE);
+  // 128 random bits for the visitor's cancel link; only the hash is stored.
+  const cancelToken = randomBytes(16).toString("base64url");
   const notified = await prisma.$transaction(async (tx) => {
     await lockTree(tx, "schedule", organizationId);
     // Decided again under the lock, so two visitors cannot take the same slot.
@@ -481,6 +492,7 @@ export async function bookPublicSlot(
         organizerId: page.ownerId,
         contactId,
         bookingPageId: page.id,
+        cancelTokenHash: hashToken(cancelToken),
         attendees: { create: [{ userId: page.ownerId, response: "ACCEPTED" }] },
       },
       select: { id: true, reminderMinutes: true },
@@ -521,5 +533,109 @@ export async function bookPublicSlot(
     ]);
   });
   await publishNotifications(notified);
+  // A failed email never undoes a booking that is already made; the visitor still sees the time.
+  try {
+    await sendEmail(
+      bookingConfirmationEmail({
+        to: input.email,
+        name: input.name,
+        title: page.title,
+        startsAt: input.startsAt,
+        timeZone: page.timeZone,
+        locale: options.locale ?? "en",
+        cancelUrl: cancelUrl(cancelToken, options.locale),
+      }),
+    );
+  } catch (error) {
+    logger.warn({ err: error, correlationId }, "booking confirmation email failed");
+  }
   return { title: page.title, startsAt: input.startsAt, endsAt, timeZone: page.timeZone };
+}
+
+const cancelUrl = (token: string, locale = "en") =>
+  `${env().BETTER_AUTH_URL.replace(/\/$/, "")}/${locale}/b/cancel/${token}`;
+
+/* --------------------------- visitor cancellation ------------------------- */
+
+export type PublicCancellation = {
+  title: string;
+  organizationName: string;
+  startsAt: Date;
+  timeZone: string;
+  /** Already cancelled, or already over: nothing left to cancel. */
+  open: boolean;
+};
+
+/** The booking behind a cancel link, found by the hash of the secret alone. */
+async function bookingForCancelToken(prisma: Pick<PrismaClient, "appointment">, rawToken: string) {
+  const token = publicTokenSchema.safeParse(rawToken);
+  if (!token.success) throw notFound();
+  const appointment = await prisma.appointment.findUnique({
+    where: { cancelTokenHash: hashToken(token.data) },
+    include: {
+      bookingPage: { select: { timeZone: true } },
+      organization: { select: { name: true } },
+      attendees: { select: { userId: true } },
+    },
+  });
+  if (!appointment?.bookingPage) throw notFound();
+  return { ...appointment, bookingPage: appointment.bookingPage };
+}
+
+export async function getPublicCancellation(
+  { prisma }: Pick<Deps, "prisma">,
+  rawToken: string,
+  now: Date = new Date(),
+): Promise<PublicCancellation> {
+  const booking = await bookingForCancelToken(prisma, rawToken);
+  return {
+    title: booking.title,
+    organizationName: booking.organization.name,
+    startsAt: booking.startsAt,
+    timeZone: booking.bookingPage.timeZone,
+    open: booking.status === "SCHEDULED" && booking.startsAt.getTime() > now.getTime(),
+  };
+}
+
+/** Cancels the visitor's own booking. Repeating it is harmless; a meeting already over stays. */
+export async function cancelPublicBooking(
+  { prisma, correlationId }: Deps,
+  rawToken: string,
+  now: Date = new Date(),
+): Promise<void> {
+  const booking = await bookingForCancelToken(prisma, rawToken);
+  if (booking.status === "CANCELLED") return;
+  if (booking.startsAt.getTime() <= now.getTime()) {
+    throw new AppError("UNPROCESSABLE", "This meeting has already started.");
+  }
+  const organizationId = booking.organizationId;
+  const notified = await prisma.$transaction(async (tx) => {
+    // Only the first of two simultaneous cancellations notifies.
+    const { count } = await tx.appointment.updateMany({
+      where: { id: booking.id, organizationId, status: "SCHEDULED" },
+      data: { status: "CANCELLED" },
+    });
+    if (count === 0) return [];
+    await retireReminders(tx, organizationId, booking.id, now);
+    await recordAuditEvent(tx, {
+      organizationId,
+      actorId: null,
+      action: "booking.cancelled_by_visitor",
+      resourceType: "appointment",
+      resourceId: booking.id,
+      correlationId,
+    });
+    return createNotifications(
+      tx,
+      booking.attendees.map((attendee) => ({
+        organizationId,
+        userId: attendee.userId,
+        type: "APPOINTMENT_CANCELLED" as const,
+        actorId: null,
+        resourceType: "appointment",
+        resourceId: booking.id,
+      })),
+    );
+  });
+  await publishNotifications(notified);
 }

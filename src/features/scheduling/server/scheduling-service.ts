@@ -115,7 +115,12 @@ export async function planReminder(
 }
 
 /** A reminder for a time that no longer applies is not worth keeping unread. */
-async function retireReminders(tx: Tx, organizationId: string, appointmentId: string, now: Date) {
+export async function retireReminders(
+  tx: Tx,
+  organizationId: string,
+  appointmentId: string,
+  now: Date,
+) {
   await tx.notification.updateMany({
     where: {
       organizationId,
