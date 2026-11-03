@@ -57,7 +57,7 @@ Integration tests against the real database (the existing helpers), including cr
 - Workspace A purged; workspace B's rows in every table (including the three append-only ones) are unchanged, and B's files remain.
 - Every `organizationId` table has zero rows for A afterwards. A test enumerates tables with an `organizationId` column from `information_schema` and fails if the purge list misses one, so new tables cannot be forgotten.
 - Refused: not yet due, request cancelled, never requested, already purged (no-op), unknown id.
-- Operator-only: non-operator gets 404 on the action; the CLI path needs no session but is covered by a service-level test with actor `system:cli`.
+- Operator-only: non-operator gets 404 on the action; the CLI path needs no session but is covered by a service-level test with `actorId` null and `metadata.trigger` `cli`.
 - File bytes removed from the storage directory, including a stray file with no row.
 - The append-only triggers still reject DELETE and UPDATE outside a purge, and a purge for A cannot delete B's rows even with A's setting.
 - Re-run after a simulated failure (storage error in step 1; exception inside step 2 rolls back) completes the purge.
