@@ -55,20 +55,68 @@ export function SignInForm() {
   const common = useTranslations("Common");
   const router = useRouter();
   const state = useSubmit();
+  // After the password, a user with two-step sign-in has no session until the code is accepted.
+  const [codeStep, setCodeStep] = useState(false);
+  const [useRecoveryCode, setUseRecoveryCode] = useState(false);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     state.setPending(true);
     state.setError(undefined);
     const form = event.currentTarget;
-    const { error } = await authClient.signIn.email({
+    const { data, error } = await authClient.signIn.email({
       email: value(form, "email"),
       password: value(form, "password"),
     });
     state.setPending(false);
     if (error) return state.setError(t("signInFailed"));
+    if (data && "twoFactorRedirect" in data && data.twoFactorRedirect) return setCodeStep(true);
     router.push("/workspaces");
     router.refresh();
+  }
+
+  async function onCode(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    state.setPending(true);
+    state.setError(undefined);
+    const code = value(event.currentTarget, "code").replace(/\s/g, "");
+    const { error } = useRecoveryCode
+      ? await authClient.twoFactor.verifyBackupCode({ code })
+      : await authClient.twoFactor.verifyTotp({ code });
+    state.setPending(false);
+    if (error) return state.setError(t("codeFailed"));
+    router.push("/workspaces");
+    router.refresh();
+  }
+
+  if (codeStep) {
+    return (
+      <form onSubmit={onCode} className="space-y-4">
+        <p className="text-sm text-muted-foreground">
+          {useRecoveryCode ? t("recoveryHint") : t("codeHint")}
+        </p>
+        <Field
+          id="code"
+          label={useRecoveryCode ? t("recoveryLabel") : t("codeLabel")}
+          type="text"
+          autoComplete="one-time-code"
+        />
+        <FormMessage tone="error">{state.error}</FormMessage>
+        <Button type="submit" className="w-full" disabled={state.pending}>
+          {state.pending ? common("loading") : t("codeSubmit")}
+        </Button>
+        <button
+          type="button"
+          className="text-sm text-primary hover:underline"
+          onClick={() => {
+            setUseRecoveryCode(!useRecoveryCode);
+            state.setError(undefined);
+          }}
+        >
+          {useRecoveryCode ? t("useAppCode") : t("useRecoveryCode")}
+        </button>
+      </form>
+    );
   }
 
   return (

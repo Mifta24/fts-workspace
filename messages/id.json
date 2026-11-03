@@ -45,7 +45,15 @@
     "verifyTitle": "Periksa kotak masuk Anda",
     "verifyBody": "Kami mengirim tautan verifikasi ke email Anda. Buka tautan itu untuk mengaktifkan akun.",
     "backToSignIn": "Kembali ke halaman masuk",
-    "signUpTerms": "Dengan membuat akun, Anda menyetujui <terms>Ketentuan penggunaan</terms> dan <privacy>Pemberitahuan privasi</privacy>."
+    "signUpTerms": "Dengan membuat akun, Anda menyetujui <terms>Ketentuan penggunaan</terms> dan <privacy>Pemberitahuan privasi</privacy>.",
+    "codeHint": "Masukkan kode enam digit dari aplikasi autentikator Anda.",
+    "codeLabel": "Kode dari aplikasi",
+    "recoveryHint": "Masukkan salah satu kode pemulihan Anda. Setiap kode hanya berlaku sekali.",
+    "recoveryLabel": "Kode pemulihan",
+    "codeSubmit": "Verifikasi",
+    "codeFailed": "Kode itu tidak valid. Coba lagi.",
+    "useRecoveryCode": "Gunakan kode pemulihan",
+    "useAppCode": "Gunakan aplikasi autentikator"
   },
   "Workspaces": {
     "title": "Workspace Anda",
@@ -57,7 +65,30 @@
     "slugHint": "Huruf kecil, angka, dan tanda hubung.",
     "createSubmit": "Buat workspace",
     "invalid": "Periksa nama dan URL workspace.",
-    "conflict": "URL workspace ini sudah dipakai."
+    "conflict": "URL workspace ini sudah dipakai.",
+    "security": "Keamanan"
+  },
+  "Security": {
+    "title": "Keamanan akun",
+    "intro": "Masuk dua langkah meminta kode dari aplikasi autentikator setelah kata sandi Anda.",
+    "back": "Kembali ke workspace Anda",
+    "requiredOperator": "Akses operator memerlukan masuk dua langkah. Aktifkan untuk membuka konsol operator.",
+    "requiredOwner": "Pemilik workspace memerlukan masuk dua langkah. Aktifkan untuk membuka workspace Anda.",
+    "statusOn": "Masuk dua langkah aktif.",
+    "statusOff": "Masuk dua langkah nonaktif.",
+    "passwordLabel": "Kata sandi Anda",
+    "turnOn": "Aktifkan",
+    "setupSteps": "Tambahkan kunci ini ke aplikasi autentikator: pilih “masukkan kunci penyiapan”, tempel kuncinya, lalu ketik kode yang ditampilkan aplikasi.",
+    "keyLabel": "Kunci penyiapan",
+    "openInApp": "Buka di aplikasi autentikator pada perangkat ini",
+    "recoveryTitle": "Kode pemulihan",
+    "recoveryHint": "Simpan di tempat aman. Setiap kode berlaku sekali jika ponsel Anda hilang. Kode hanya ditampilkan sekarang.",
+    "codeLabel": "Kode dari aplikasi",
+    "confirm": "Konfirmasi dan aktifkan",
+    "newRecoveryCodes": "Dapatkan kode pemulihan baru",
+    "turnOff": "Nonaktifkan",
+    "turnOffHint": "Menonaktifkan akan menghapus langkah tambahan. Operator lalu kehilangan akses ke konsol operator.",
+    "failed": "Tidak berhasil. Periksa isian lalu coba lagi."
   },
   "Workspace": {
     "overview": "Ringkasan",

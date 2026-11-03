@@ -57,6 +57,13 @@ const envSchema = z
           .map((email) => email.trim().toLowerCase())
           .filter(Boolean),
       ),
+    // Workspace owners must turn on two-step sign-in before they can open a workspace they own
+    // (ADR-025). Operators always need it for /admin, whatever this says. Off by default so existing
+    // owners are not locked out before they have had a chance to set it up.
+    MFA_REQUIRED_FOR_OWNERS: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((value) => value === "true"),
     // Who runs the service, as written on the public privacy and terms pages. Required in
     // production so those pages never go live without a name and a contact.
     LEGAL_OPERATOR_NAME: z.string().trim().min(1).optional(),

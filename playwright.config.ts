@@ -1,5 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import {
+  E2E_AUTH_SECRET,
   E2E_BASE_URL,
   E2E_DATABASE_URL,
   E2E_PORT,
@@ -34,7 +35,7 @@ export default defineConfig({
       env: {
         NEXT_DIST_DIR: ".next-e2e",
         DATABASE_URL: E2E_DATABASE_URL,
-        BETTER_AUTH_SECRET: "e2e-only-secret-0123456789abcdefghijklmnopqrstu",
+        BETTER_AUTH_SECRET: E2E_AUTH_SECRET,
         BETTER_AUTH_URL: E2E_BASE_URL,
         EMAIL_TRANSPORT: "log",
         LOG_LEVEL: "warn",
@@ -44,7 +45,7 @@ export default defineConfig({
         REALTIME_PUBLIC_URL: `http://localhost:${GATEWAY_PORT}`,
         REALTIME_PUBLISH_SECRET: GATEWAY_SECRET,
         STORAGE_DIR: ".data/files-e2e",
-        PLATFORM_ADMIN_EMAILS: "operator@platform.test",
+        PLATFORM_ADMIN_EMAILS: "operator@platform.test,nomfa-operator@platform.test",
         LEGAL_OPERATOR_NAME: "Example Operator Ltd",
         LEGAL_CONTACT_EMAIL: "privacy@example.test",
         // Dummy Google Calendar setup: the consent round trip can be driven up to Google's

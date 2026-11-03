@@ -1,9 +1,15 @@
 import { execFileSync } from "node:child_process";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { hashPassword } from "better-auth/crypto";
+import { hashPassword, symmetricEncrypt } from "better-auth/crypto";
 import { startLocalPostgres } from "../scripts/local-postgres";
 import { PrismaClient, type MemberRole } from "../src/generated/prisma/client";
-import { E2E_DATABASE_URL, E2E_PASSWORD, USES_LOCAL_DATABASE } from "./e2e-env";
+import {
+  E2E_AUTH_SECRET,
+  E2E_DATABASE_URL,
+  E2E_OPERATOR_TOTP_SECRET,
+  E2E_PASSWORD,
+  USES_LOCAL_DATABASE,
+} from "./e2e-env";
 
 /** Starts the database (locally), applies migrations and seeds two isolated tenants. */
 export default async function globalSetup() {
@@ -63,7 +69,18 @@ export default async function globalSetup() {
     // Has an account but no membership yet; joins acme through an invitation in E2E.
     await user("invitee@acme.test", "Invited Person");
     // Listed in PLATFORM_ADMIN_EMAILS (playwright.config.ts): the only operator, in no workspace.
-    await user("operator@platform.test", "Platform Operator");
+    const operator = await user("operator@platform.test", "Platform Operator");
+    // Operators must have two-step sign-in (ADR-025): this one has it, with a known secret, so the
+    // sign-in helper can type the code. nomfa-operator has none, to test the redirect.
+    await prisma.user.update({ where: { id: operator.id }, data: { twoFactorEnabled: true } });
+    await prisma.twoFactor.create({
+      data: {
+        userId: operator.id,
+        secret: await symmetricEncrypt({ key: E2E_AUTH_SECRET, data: E2E_OPERATOR_TOTP_SECRET }),
+        backupCodes: await symmetricEncrypt({ key: E2E_AUTH_SECRET, data: JSON.stringify([]) }),
+      },
+    });
+    await user("nomfa-operator@platform.test", "Operator Without Two-Step");
     await organization("acme", [
       [acmeOwner.id, "OWNER"],
       [acmeViewer.id, "VIEWER"],

@@ -1,9 +1,11 @@
 import "server-only";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
+import { mfaRequired } from "@/features/auth/server/mfa-policy";
 import { redirect } from "@/i18n/navigation";
 import { getSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { env } from "@/lib/env";
 import { isAppError } from "@/lib/errors";
 import type { Permission } from "@/lib/permissions/matrix";
 import {
@@ -22,8 +24,9 @@ export async function requireWorkspace(
   const locale = await getLocale();
   const user = await getSessionUser();
   if (!user?.emailVerified) return redirect({ href: "/sign-in", locale });
+  let context: OrganizationContext;
   try {
-    return await getAuthorizedOrganization(
+    context = await getAuthorizedOrganization(
       { prisma: db() },
       { userId: user.id, organizationSlug, permission },
     );
@@ -33,4 +36,15 @@ export async function requireWorkspace(
     }
     throw error;
   }
+  // Only after the membership is known, so a stranger still gets a plain 404.
+  if (
+    mfaRequired({
+      twoFactorEnabled: user.twoFactorEnabled,
+      isOwner: context.role === "OWNER",
+      ownersRequired: env().MFA_REQUIRED_FOR_OWNERS,
+    })
+  ) {
+    return redirect({ href: "/security?required=owner", locale });
+  }
+  return context;
 }

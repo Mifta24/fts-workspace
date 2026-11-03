@@ -2,6 +2,7 @@ import "server-only";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
+import { twoFactor } from "better-auth/plugins";
 import { db } from "@/lib/db";
 import { sendEmail } from "@/lib/email";
 import { env } from "@/lib/env";
@@ -67,7 +68,8 @@ export function createAuth(overrides: { rateLimit?: RateLimitOptions } = {}) {
       database: { generateId: "uuid" },
       useSecureCookies: config.NODE_ENV === "production",
     },
-    plugins: [nextCookies()],
+    // nextCookies must stay last.
+    plugins: [twoFactor({ issuer: "FTS Workspace" }), nextCookies()],
   });
 }
 

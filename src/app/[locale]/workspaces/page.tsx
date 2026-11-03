@@ -22,7 +22,12 @@ export default async function WorkspacesPage() {
     <main className="mx-auto w-full max-w-3xl space-y-6 px-4 py-10">
       <header className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-        <SignOutButton />
+        <div className="flex items-center gap-3">
+          <Link href="/security" className="text-sm text-primary hover:underline">
+            {t("security")}
+          </Link>
+          <SignOutButton />
+        </div>
       </header>
 
       <Card>

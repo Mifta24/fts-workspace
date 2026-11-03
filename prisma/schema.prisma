@@ -17,19 +17,22 @@ datasource db {
 // ---------------------------------------------------------------------------
 
 model User {
-  id            String   @id @default(uuid(7)) @db.Uuid
-  name          String
-  email         String   @unique
-  emailVerified Boolean  @default(false)
-  image         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id               String   @id @default(uuid(7)) @db.Uuid
+  name             String
+  email            String   @unique
+  emailVerified    Boolean  @default(false)
+  image            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
   /// IANA time zone used to show and enter meeting times; null means UTC.
-  timeZone      String?
+  timeZone         String?
+  /// Set by Better Auth once an authenticator app is confirmed. Operators must have it (ADR-025).
+  twoFactorEnabled Boolean  @default(false)
 
   sessions    Session[]
   accounts    Account[]
   memberships Member[]
+  twoFactors  TwoFactor[]
 
   @@map("users")
 }
@@ -67,6 +70,23 @@ model Account {
 
   @@index([userId])
   @@map("accounts")
+}
+
+/// Authenticator-app secret and recovery codes (Better Auth two-factor plugin). Both are stored
+/// encrypted with the auth secret; the plugin never returns them after set-up.
+model TwoFactor {
+  id                      String    @id @default(uuid(7)) @db.Uuid
+  secret                  String
+  backupCodes             String
+  userId                  String    @db.Uuid
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// False between "turn on" and the first confirmed code.
+  verified                Boolean   @default(true)
+  failedVerificationCount Int       @default(0)
+  lockedUntil             DateTime?
+
+  @@index([userId])
+  @@map("two_factors")
 }
 
 model Verification {
@@ -114,7 +134,7 @@ model Organization {
   /// period (`DELETION_GRACE_DAYS`) has passed.
   deletionRequestedAt   DateTime?
   /// The owner who asked (a user id, kept without a foreign key so it survives that account).
-  deletionRequestedBy   String?             @db.Uuid
+  deletionRequestedBy   String?               @db.Uuid
   /// Set when the workspace's data was removed after a deletion request. The row stays as a tombstone
   /// (renamed, no personal data) so the final audit event keeps its foreign key.
   purgedAt              DateTime?

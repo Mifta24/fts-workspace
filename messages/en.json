@@ -45,7 +45,15 @@
     "verifyTitle": "Check your inbox",
     "verifyBody": "We sent a verification link to your email. Open it to activate your account.",
     "backToSignIn": "Back to sign in",
-    "signUpTerms": "By creating an account you agree to the <terms>Terms of use</terms> and the <privacy>Privacy notice</privacy>."
+    "signUpTerms": "By creating an account you agree to the <terms>Terms of use</terms> and the <privacy>Privacy notice</privacy>.",
+    "codeHint": "Enter the six-digit code from your authenticator app.",
+    "codeLabel": "Code from the app",
+    "recoveryHint": "Enter one of your recovery codes. Each works once.",
+    "recoveryLabel": "Recovery code",
+    "codeSubmit": "Verify",
+    "codeFailed": "That code is not valid. Try again.",
+    "useRecoveryCode": "Use a recovery code instead",
+    "useAppCode": "Use the authenticator app instead"
   },
   "Workspaces": {
     "title": "Your workspaces",
@@ -57,7 +65,30 @@
     "slugHint": "Lowercase letters, numbers and hyphens.",
     "createSubmit": "Create workspace",
     "invalid": "Check the workspace name and URL.",
-    "conflict": "This workspace URL is already taken."
+    "conflict": "This workspace URL is already taken.",
+    "security": "Security"
+  },
+  "Security": {
+    "title": "Account security",
+    "intro": "Two-step sign-in asks for a code from an authenticator app after your password.",
+    "back": "Back to your workspaces",
+    "requiredOperator": "Operator access needs two-step sign-in. Turn it on to open the operator console.",
+    "requiredOwner": "Workspace owners need two-step sign-in. Turn it on to open your workspace.",
+    "statusOn": "Two-step sign-in is on.",
+    "statusOff": "Two-step sign-in is off.",
+    "passwordLabel": "Your password",
+    "turnOn": "Turn on",
+    "setupSteps": "Add this key to an authenticator app: choose “enter a setup key”, paste the key, then type the code the app shows.",
+    "keyLabel": "Setup key",
+    "openInApp": "Open in an authenticator app on this device",
+    "recoveryTitle": "Recovery codes",
+    "recoveryHint": "Keep these somewhere safe. Each code works once if you lose your phone. They are shown only now.",
+    "codeLabel": "Code from the app",
+    "confirm": "Confirm and turn on",
+    "newRecoveryCodes": "Get new recovery codes",
+    "turnOff": "Turn off",
+    "turnOffHint": "Turning it off removes the extra step. Operators then lose access to the operator console.",
+    "failed": "That did not work. Check the details and try again."
   },
   "Workspace": {
     "overview": "Overview",
