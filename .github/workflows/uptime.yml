@@ -1,0 +1,23 @@
+# An outside check that the site answers. If it fails, GitHub emails the person who last changed this
+# file, so an outage is noticed even when the server (and its own alert mail) is down.
+# Scheduled runs can be late by several minutes, and GitHub pauses scheduled workflows in a public
+# repository after 60 days without activity: push anything (or run this workflow by hand) to wake it.
+name: Uptime
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Health endpoint answers and the database is reachable
+        run: |
+          body=$(curl -fsS --retry 2 --retry-delay 5 --max-time 15 https://workspace.fts-tech.co.id/api/health)
+          echo "$body"
+          echo "$body" | grep -q '"status":"ok"' && echo "$body" | grep -q '"database":"ok"'
