@@ -609,6 +609,7 @@ describe("operator", () => {
         "members",
         "name",
         "plan",
+        "purgedAt",
         "slug",
         "suspended",
         "trialEndsAt",
