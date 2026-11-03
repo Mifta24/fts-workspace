@@ -39,6 +39,9 @@ runuser -u fts -- rsync -a --delete \
 
 echo "==> install, migrate, build"
 as_fts /opt/plesk/node/24/bin/pnpm install --frozen-lockfile --prod=false
+# `pnpm install` only runs the postinstall (prisma generate) when it installs something, so a schema
+# change alone leaves the generated client stale and the build fails on types. Generate explicitly.
+as_fts /opt/plesk/node/24/bin/pnpm exec prisma generate
 as_fts /opt/plesk/node/24/bin/pnpm exec prisma migrate deploy
 as_fts /opt/plesk/node/24/bin/pnpm exec next build
 
