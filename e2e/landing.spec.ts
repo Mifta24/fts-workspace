@@ -7,6 +7,11 @@ const landingByLocale = [
 ] as const;
 
 test("public landing page is complete and fits phone and desktop widths", async ({ page }) => {
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { level: 1, name: landingByLocale[0].title }),
+  ).toBeVisible();
+
   await page.setViewportSize({ width: 390, height: 844 });
 
   for (const { locale, title, signIn } of landingByLocale) {
