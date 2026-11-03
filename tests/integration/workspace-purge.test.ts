@@ -1,4 +1,7 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { DELETION_GRACE_DAYS } from "@/features/organizations/schemas/deletion";
 import {
   cancelWorkspaceDeletion,
@@ -9,8 +12,8 @@ import { PURGE_TABLE_NAMES, purgeWorkspace } from "@/features/organizations/serv
 import { db } from "@/lib/db";
 import { AppError } from "@/lib/errors";
 import { runJobs } from "@/server/jobs/queue";
-import type { StoragePort } from "@/server/storage/storage";
-import { createTestOrganization, createTestUser, resetDatabase } from "../helpers/db";
+import { createLocalStorage, type StoragePort } from "@/server/storage/storage";
+import { createTestOrganization, resetDatabase } from "../helpers/db";
 
 async function seedAppendOnly(organizationId: string, userId: string) {
   const contact = await db().crmContact.create({
@@ -463,5 +466,127 @@ describe("purgeWorkspace", () => {
     expect(await db().job.count({ where: { organizationId: a.organization.id } })).toBe(0);
     const ran = await runJobs(db(), { noop: async () => {} }, { max: 10 });
     expect(ran.done + ran.retried + ran.failed).toBe(0);
+  });
+});
+
+describe("purgeWorkspace files and failures", () => {
+  let dir: string;
+  let storage: StoragePort;
+
+  beforeEach(async () => {
+    await resetDatabase();
+    dir = await mkdtemp(path.join(tmpdir(), "fts-purge-"));
+    storage = createLocalStorage(dir);
+  });
+  afterEach(() => rm(dir, { recursive: true, force: true }));
+
+  async function putFile(organizationId: string, withRow: boolean, userId: string) {
+    const key = `${organizationId}/${crypto.randomUUID()}`;
+    await storage.put(key, new Uint8Array([1, 2, 3]));
+    if (withRow) {
+      await db().fileObject.create({
+        data: {
+          organizationId,
+          uploadedById: userId,
+          name: "x.bin",
+          mimeType: "application/octet-stream",
+          sizeBytes: 3,
+          sha256: "1".repeat(64),
+          storageKey: key,
+        },
+      });
+    }
+    return key;
+  }
+
+  it("removes file bytes, including bytes with no row, and keeps the other workspace's files", async () => {
+    const a = await createTestOrganization("acme");
+    const b = await createTestOrganization("beta");
+    const keys = [
+      await putFile(a.organization.id, true, a.users.owner.id),
+      await putFile(a.organization.id, true, a.users.owner.id),
+      await putFile(a.organization.id, false, a.users.owner.id),
+    ];
+    const keep = await putFile(b.organization.id, true, b.users.owner.id);
+    await requestAt(a.organization.id, REQUESTED);
+
+    const result = await purgeWorkspace(
+      { prisma: db(), storage },
+      { organizationId: a.organization.id, actor },
+      NOW,
+    );
+
+    expect(result.filesRemoved).toBe(3);
+    for (const key of keys) expect(await storage.get(key)).toBeNull();
+    expect(await storage.get(keep)).not.toBeNull();
+    expect(await db().fileObject.count({ where: { organizationId: b.organization.id } })).toBe(1);
+    const event = await db().auditLog.findFirstOrThrow({
+      where: { organizationId: a.organization.id, action: "organization.purged" },
+    });
+    expect((event.metadata as { filesRemoved: number }).filesRemoved).toBe(3);
+  });
+
+  it("keeps the database unchanged when removing bytes fails, and finishes on retry", async () => {
+    const a = await seedWorkspace("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    const before = await countRows(a.organization.id);
+    const broken: StoragePort = {
+      ...storage,
+      deletePrefix: async () => {
+        throw new Error("disk unavailable");
+      },
+    };
+    await expect(
+      purgeWorkspace(
+        { prisma: db(), storage: broken },
+        { organizationId: a.organization.id, actor },
+        NOW,
+      ),
+    ).rejects.toThrow("disk unavailable");
+    expect(await countRows(a.organization.id)).toEqual(before);
+    expect(
+      (await db().organization.findUniqueOrThrow({ where: { id: a.organization.id } })).purgedAt,
+    ).toBeNull();
+
+    const result = await purgeWorkspace(
+      { prisma: db(), storage },
+      { organizationId: a.organization.id, actor },
+      NOW,
+    );
+    expect(result.alreadyPurged).toBe(false);
+  });
+
+  it("rolls everything back when the database step fails, and finishes on retry", async () => {
+    const a = await seedWorkspace("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    const before = await countRows(a.organization.id);
+    await db().$executeRawUnsafe(`
+      CREATE FUNCTION test_fail_purge() RETURNS trigger AS $$
+      BEGIN RAISE EXCEPTION 'simulated failure'; END; $$ LANGUAGE plpgsql;
+      CREATE TRIGGER test_fail_purge BEFORE INSERT ON audit_logs
+        FOR EACH ROW WHEN (NEW.action = 'organization.purged') EXECUTE FUNCTION test_fail_purge();`);
+    try {
+      await expect(
+        purgeWorkspace(
+          { prisma: db(), storage },
+          { organizationId: a.organization.id, actor },
+          NOW,
+        ),
+      ).rejects.toThrow(/simulated failure/);
+      expect(await countRows(a.organization.id)).toEqual(before);
+      expect(
+        (await db().organization.findUniqueOrThrow({ where: { id: a.organization.id } })).purgedAt,
+      ).toBeNull();
+    } finally {
+      await db().$executeRawUnsafe(
+        "DROP TRIGGER test_fail_purge ON audit_logs; DROP FUNCTION test_fail_purge();",
+      );
+    }
+    const result = await purgeWorkspace(
+      { prisma: db(), storage },
+      { organizationId: a.organization.id, actor },
+      NOW,
+    );
+    expect(result.alreadyPurged).toBe(false);
   });
 });

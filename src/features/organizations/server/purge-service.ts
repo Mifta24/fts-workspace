@@ -81,7 +81,7 @@ export const PURGE_TABLE_NAMES: readonly string[] = PURGE_STEPS.map(([name]) => 
  * Calling it again, or after a failure, is safe.
  */
 export async function purgeWorkspace(
-  { prisma, correlationId }: Deps,
+  { prisma, storage, correlationId }: Deps,
   input: { organizationId: string; actor: PurgeActor },
   now: Date = new Date(),
 ): Promise<PurgeResult> {
@@ -99,6 +99,17 @@ export async function purgeWorkspace(
   };
   if (organization.purgedAt) return already;
   assertDue(organization.deletionRequestedAt, now);
+
+  // Bytes go first: if this fails nothing in the database has changed and a retry starts over. The
+  // prefix sweep also removes bytes that no row points at; it runs before the per-file deletes so
+  // its count includes every file on disk.
+  const onDisk = await storage.deletePrefix(organizationId);
+  const files = await prisma.fileObject.findMany({
+    where: { organizationId },
+    select: { storageKey: true },
+  });
+  for (const file of files) await storage.delete(file.storageKey);
+  const filesRemoved = Math.max(files.length, onDisk);
 
   return prisma.$transaction(
     async (tx) => {
@@ -138,10 +149,10 @@ export async function purgeWorkspace(
         action: "organization.purged",
         resourceType: "organization",
         resourceId: organizationId,
-        metadata: { trigger: actor.trigger, filesRemoved: 0, rowCounts },
+        metadata: { trigger: actor.trigger, filesRemoved, rowCounts },
         correlationId,
       });
-      return { organizationId, alreadyPurged: false, filesRemoved: 0, rowCounts };
+      return { organizationId, alreadyPurged: false, filesRemoved, rowCounts };
     },
     { timeout: 120_000, maxWait: 10_000 },
   );
