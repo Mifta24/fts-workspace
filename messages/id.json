@@ -843,7 +843,10 @@
     "suspend": "Tangguhkan workspace",
     "unsuspend": "Pulihkan workspace",
     "limit": "Menampilkan paling banyak {count} workspace; persempit pencarian untuk yang lain.",
-    "deletionRequested": "Penghapusan diminta {requested}, dapat dihapus setelah {due}"
+    "deletionRequested": "Penghapusan diminta {requested}, dapat dihapus setelah {due}",
+    "purgeLabel": "Ketik alamat workspace untuk mengonfirmasi",
+    "purgeButton": "Hapus semua data sekarang",
+    "purged": "Dihapus {date}: datanya sudah dihapus"
   },
   "Automations": {
     "title": "Otomasi",

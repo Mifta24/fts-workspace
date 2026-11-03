@@ -843,7 +843,10 @@
     "suspend": "Suspend workspace",
     "unsuspend": "Restore workspace",
     "limit": "Showing at most {count} workspaces; narrow the search to find others.",
-    "deletionRequested": "Deletion requested {requested}, can be removed after {due}"
+    "deletionRequested": "Deletion requested {requested}, can be removed after {due}",
+    "purgeLabel": "Type the workspace address to confirm",
+    "purgeButton": "Remove all data now",
+    "purged": "Purged {date}: the data was removed"
   },
   "Automations": {
     "title": "Automations",

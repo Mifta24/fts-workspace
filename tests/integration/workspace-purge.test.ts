@@ -4,6 +4,11 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { DELETION_GRACE_DAYS } from "@/features/organizations/schemas/deletion";
 import {
+  listWorkspaces,
+  purgeWorkspaceAsOperator,
+  resolveOperator,
+} from "@/features/admin/server/admin-service";
+import {
   cancelWorkspaceDeletion,
   requestWorkspaceDeletion,
 } from "@/features/organizations/server/deletion-service";
@@ -13,7 +18,7 @@ import { db } from "@/lib/db";
 import { AppError } from "@/lib/errors";
 import { runJobs } from "@/server/jobs/queue";
 import { createLocalStorage, type StoragePort } from "@/server/storage/storage";
-import { createTestOrganization, resetDatabase } from "../helpers/db";
+import { createTestOrganization, createTestUser, resetDatabase } from "../helpers/db";
 
 async function seedAppendOnly(organizationId: string, userId: string) {
   const contact = await db().crmContact.create({
@@ -588,5 +593,81 @@ describe("purgeWorkspace files and failures", () => {
       NOW,
     );
     expect(result.alreadyPurged).toBe(false);
+  });
+});
+
+describe("operator trigger", () => {
+  beforeEach(resetDatabase);
+
+  async function operator() {
+    const user = await createTestUser("operator");
+    const resolved = resolveOperator(user, [user.email.toLowerCase()]);
+    if (!resolved) throw new Error("operator expected");
+    return resolved;
+  }
+
+  it("accepts the workspace address in any case with spaces, and records the operator", async () => {
+    const a = await seedWorkspace("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    const who = await operator();
+    const result = await purgeWorkspaceAsOperator(
+      deps(),
+      who,
+      { organizationId: a.organization.id, confirm: " ACME " },
+      NOW,
+    );
+    expect(result.alreadyPurged).toBe(false);
+    const event = await db().auditLog.findFirstOrThrow({
+      where: { organizationId: a.organization.id, action: "organization.purged" },
+    });
+    expect(event.actorId).toBe(who.userId);
+    expect((event.metadata as { trigger: string }).trigger).toBe("admin");
+  });
+
+  it("refuses a different address and an unknown workspace, and deletes nothing", async () => {
+    const a = await seedWorkspace("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    const who = await operator();
+    const before = await countRows(a.organization.id);
+    await expectRefused(
+      purgeWorkspaceAsOperator(
+        deps(),
+        who,
+        { organizationId: a.organization.id, confirm: "beta" },
+        NOW,
+      ),
+    );
+    await expectRefused(
+      purgeWorkspaceAsOperator(
+        deps(),
+        who,
+        { organizationId: a.organization.id, confirm: "" },
+        NOW,
+      ),
+    );
+    await expectRefused(
+      purgeWorkspaceAsOperator(
+        deps(),
+        who,
+        { organizationId: crypto.randomUUID(), confirm: "acme" },
+        NOW,
+      ),
+    );
+    await expectRefused(purgeWorkspaceAsOperator(deps(), who, { confirm: "acme" }, NOW));
+    expect(await countRows(a.organization.id)).toEqual(before);
+  });
+
+  it("lists a purged workspace as purged", async () => {
+    const a = await seedWorkspace("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    const who = await operator();
+    await purgeWorkspaceAsOperator(
+      deps(),
+      who,
+      { organizationId: a.organization.id, confirm: "acme" },
+      NOW,
+    );
+    const rows = await listWorkspaces(deps(), who, "");
+    expect(rows.find((row) => row.id === a.organization.id)?.purgedAt).toEqual(NOW);
   });
 });

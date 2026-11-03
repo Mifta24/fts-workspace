@@ -9,7 +9,11 @@ import { MAX_TRIAL_DAYS } from "@/features/admin/schemas/admin";
 import { dueAfter } from "@/features/organizations/schemas/deletion";
 import { PLAN_KEYS } from "@/features/billing/schemas/plans";
 import { getOperationsSnapshot, listWorkspaces } from "@/features/admin/server/admin-service";
-import { setPlanAction, setSuspendedAction } from "@/features/admin/server/actions";
+import {
+  purgeWorkspaceAction,
+  setPlanAction,
+  setSuspendedAction,
+} from "@/features/admin/server/actions";
 import { requireOperator } from "@/features/admin/server/require-operator";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
@@ -37,6 +41,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
     listWorkspaces(deps, operator, search.slice(0, 80)),
   ]);
   logger.info({ operatorId: operator.userId, search: search.length > 0 }, "admin.console viewed");
+  const now = new Date();
   const number = new Intl.NumberFormat(locale);
   const date = (value: Date) =>
     new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(value);
@@ -130,55 +135,86 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
                       })}
                     </p>
                   )}
+                  {workspace.purgedAt && (
+                    <p className="text-sm font-medium" data-testid={`purged-${workspace.slug}`}>
+                      {t("purged", { date: date(workspace.purgedAt) })}
+                    </p>
+                  )}
                   <p className="text-sm text-muted-foreground">
                     {t("usage", {
                       members: workspace.members,
                       tokens: number.format(workspace.aiTokensThisMonth),
                     })}
                   </p>
-                  <ServerForm
-                    action={setPlanAction}
-                    fields={{ organizationId: workspace.id }}
-                    submitLabel={t("setPlan")}
-                    resetOnSuccess={false}
-                    showSaved
-                    className="flex flex-wrap items-end gap-3"
-                  >
-                    <div className="space-y-2">
-                      <Label htmlFor={`plan-${workspace.id}`}>{t("planLabel")}</Label>
-                      <Select
-                        id={`plan-${workspace.id}`}
-                        name="plan"
-                        defaultValue={workspace.plan === "UNMETERED" ? "UNMETERED" : workspace.plan}
+                  {!workspace.purgedAt && (
+                    <>
+                      <ServerForm
+                        action={setPlanAction}
+                        fields={{ organizationId: workspace.id }}
+                        submitLabel={t("setPlan")}
+                        resetOnSuccess={false}
+                        showSaved
+                        className="flex flex-wrap items-end gap-3"
                       >
-                        {[...PLAN_KEYS, "UNMETERED" as const].map((plan) => (
-                          <option key={plan} value={plan}>
-                            {t(`plan.${plan}`)}
-                          </option>
-                        ))}
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor={`trial-${workspace.id}`}>{t("trialDays")}</Label>
-                      <Input
-                        id={`trial-${workspace.id}`}
-                        name="trialDays"
-                        type="number"
-                        min={1}
-                        max={MAX_TRIAL_DAYS}
-                        inputMode="numeric"
-                        className="w-28"
+                        <div className="space-y-2">
+                          <Label htmlFor={`plan-${workspace.id}`}>{t("planLabel")}</Label>
+                          <Select
+                            id={`plan-${workspace.id}`}
+                            name="plan"
+                            defaultValue={
+                              workspace.plan === "UNMETERED" ? "UNMETERED" : workspace.plan
+                            }
+                          >
+                            {[...PLAN_KEYS, "UNMETERED" as const].map((plan) => (
+                              <option key={plan} value={plan}>
+                                {t(`plan.${plan}`)}
+                              </option>
+                            ))}
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`trial-${workspace.id}`}>{t("trialDays")}</Label>
+                          <Input
+                            id={`trial-${workspace.id}`}
+                            name="trialDays"
+                            type="number"
+                            min={1}
+                            max={MAX_TRIAL_DAYS}
+                            inputMode="numeric"
+                            className="w-28"
+                          />
+                        </div>
+                      </ServerForm>
+                      <ActionButton
+                        action={setSuspendedAction}
+                        fields={{
+                          organizationId: workspace.id,
+                          suspended: workspace.suspended ? "false" : "true",
+                        }}
+                        label={workspace.suspended ? t("unsuspend") : t("suspend")}
                       />
-                    </div>
-                  </ServerForm>
-                  <ActionButton
-                    action={setSuspendedAction}
-                    fields={{
-                      organizationId: workspace.id,
-                      suspended: workspace.suspended ? "false" : "true",
-                    }}
-                    label={workspace.suspended ? t("unsuspend") : t("suspend")}
-                  />
+                      {workspace.deletionRequestedAt &&
+                        now >= dueAfter(workspace.deletionRequestedAt) && (
+                          <ServerForm
+                            action={purgeWorkspaceAction}
+                            fields={{ organizationId: workspace.id }}
+                            submitLabel={t("purgeButton")}
+                            className="flex flex-wrap items-end gap-3 border-t pt-4"
+                          >
+                            <div className="space-y-2">
+                              <Label htmlFor={`purge-${workspace.id}`}>{t("purgeLabel")}</Label>
+                              <Input
+                                id={`purge-${workspace.id}`}
+                                name="confirm"
+                                autoComplete="off"
+                                maxLength={80}
+                                required
+                              />
+                            </div>
+                          </ServerForm>
+                        )}
+                    </>
+                  )}
                 </Card>
               </li>
             ))}

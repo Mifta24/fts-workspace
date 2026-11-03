@@ -843,7 +843,10 @@
     "suspend": "ワークスペースを停止",
     "unsuspend": "ワークスペースを再開",
     "limit": "表示は最大 {count} 件です。他は検索で絞り込んでください。",
-    "deletionRequested": "削除の依頼: {requested}、{due} 以降に削除可能"
+    "deletionRequested": "削除の依頼: {requested}、{due} 以降に削除可能",
+    "purgeLabel": "確認のためワークスペースのアドレスを入力",
+    "purgeButton": "今すぐすべてのデータを削除",
+    "purged": "{date} に削除済み: データは削除されました"
   },
   "Automations": {
     "title": "自動化",

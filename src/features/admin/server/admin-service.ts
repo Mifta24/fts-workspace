@@ -2,9 +2,12 @@ import "server-only";
 import type { PrismaClient } from "@/generated/prisma/client";
 import { searchSchema, setPlanSchema, setSuspendedSchema } from "@/features/admin/schemas/admin";
 import { resolveEntitlements, type Entitlements } from "@/features/billing/schemas/plans";
+import { purgeConfirmSchema, type PurgeResult } from "@/features/organizations/schemas/purge";
+import { purgeWorkspace } from "@/features/organizations/server/purge-service";
 import { AppError } from "@/lib/errors";
 import { startOfUtcMonth } from "@/server/ai/usage";
 import { recordAuditEvent } from "@/server/services/audit";
+import type { StoragePort } from "@/server/storage/storage";
 
 type Deps = { prisma: PrismaClient; correlationId?: string };
 
@@ -36,6 +39,8 @@ export type WorkspaceRow = {
   suspended: boolean;
   /** When the owner asked to delete the workspace; null when no request is waiting. */
   deletionRequestedAt: Date | null;
+  /** When the workspace's data was removed; the row is only a tombstone from then on. */
+  purgedAt: Date | null;
   plan: Entitlements["plan"];
   /** The plan as stored (a trial that ran out is still stored as TRIALING). */
   trialEndsAt: Date | null;
@@ -70,6 +75,7 @@ export async function listWorkspaces(
       createdAt: true,
       suspendedAt: true,
       deletionRequestedAt: true,
+      purgedAt: true,
       subscription: { select: { planKey: true, status: true, trialEndsAt: true } },
     },
     orderBy: [{ createdAt: "desc" }, { id: "asc" }],
@@ -99,6 +105,7 @@ export async function listWorkspaces(
       createdAt: organization.createdAt,
       suspended: organization.suspendedAt !== null,
       deletionRequestedAt: organization.deletionRequestedAt,
+      purgedAt: organization.purgedAt,
       plan: entitlements.plan,
       trialEndsAt: entitlements.trialEndsAt,
       trialExpired: entitlements.trialExpired,
@@ -229,7 +236,7 @@ export async function getOperationsSnapshot(
     aiCalls,
     aiErrors,
   ] = await Promise.all([
-    prisma.organization.count(),
+    prisma.organization.count({ where: { purgedAt: null } }),
     prisma.organization.count({ where: { suspendedAt: { not: null } } }),
     prisma.user.count(),
     prisma.user.count({ where: { createdAt: { gte: since } } }),
@@ -261,4 +268,36 @@ export async function getOperationsSnapshot(
     },
     ai: { callsLast24h: aiCalls, errorsLast24h: aiErrors },
   };
+}
+
+/**
+ * Removes a workspace's data after the owner's request has passed its waiting period. The operator
+ * types the workspace address; the rules (request still standing, date passed) are checked by
+ * `purgeWorkspace`, not here.
+ */
+export async function purgeWorkspaceAsOperator(
+  deps: Deps & { storage: StoragePort },
+  operator: Operator,
+  rawInput: unknown,
+  now: Date = new Date(),
+): Promise<PurgeResult> {
+  const parsed = purgeConfirmSchema.safeParse(rawInput);
+  if (!parsed.success)
+    throw new AppError("INVALID_INPUT", "Choose a workspace and type its address.");
+  const organization = await deps.prisma.organization.findUnique({
+    where: { id: parsed.data.organizationId },
+    select: { slug: true },
+  });
+  if (!organization) throw new AppError("NOT_FOUND", "Workspace not found.");
+  if (parsed.data.confirm.toLowerCase() !== organization.slug) {
+    throw new AppError("INVALID_INPUT", "The confirmation does not match the workspace address.");
+  }
+  return purgeWorkspace(
+    deps,
+    {
+      organizationId: parsed.data.organizationId,
+      actor: { trigger: "admin", userId: operator.userId },
+    },
+    now,
+  );
 }
