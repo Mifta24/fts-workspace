@@ -19,8 +19,8 @@ Out of scope: deleting global `User` accounts (a person may belong to other work
 | Trigger | Who / how | Notes |
 | --- | --- | --- |
 | Admin console | Operator on `/admin`; types the workspace slug to confirm; server action | Uses the existing operator check (`require-operator.ts`); non-operators get 404. Actor = the operator. |
-| CLI | `pnpm purge:workspace <slug>` run on the server | Actor recorded as `system:cli`. Prints the counts. |
-| Worker | Sweep in `worker/main.ts`, same cadence style as the deadline sweep | Runs only when `AUTO_PURGE_ENABLED=true`; **default off**. Actor `system:worker`. Purges at most a few workspaces per sweep. |
+| CLI | `pnpm purge:workspace <slug>` run on the server | Actor: `audit_logs.actorId` is a UUID column, so it is null and `metadata.trigger` is `cli`. Prints the counts. |
+| Worker | Sweep in `worker/main.ts`, same cadence style as the deadline sweep | Runs only when `AUTO_PURGE_ENABLED=true`; **default off**. Actor null, `metadata.trigger` is `worker`. Purges at most a few workspaces per sweep. |
 
 The worker trigger reverses ADR-023's "no automatic purge". ADR-024 records why it is allowed (opt-in flag, off by default; the 14-day wait and the owner's cancel remain the safeguards) and what it costs (a stolen owner session plus 14 unnoticed days now loses the workspace without an operator looking).
 
@@ -35,7 +35,7 @@ Order matters; each step is safe to repeat.
 
 1. **File bytes.** List the workspace's `files` rows and delete each stored key; then sweep the `<organizationId>/` prefix through a new `StoragePort.deletePrefix` so bytes with no row are removed too. Bytes go first: if this fails, nothing in the database has changed and a retry resumes. Missing bytes are not an error.
 2. **One database transaction** (`SET LOCAL app.purge_org = '<organizationId>'` first), deleting every row with this `organizationId`, children before parents, always filtered by `organizationId`: form submissions, appointment attendees, appointments, booking pages, forms, contact stage changes, consent events, CRM activities/deals/contacts, automation runs and rules, task due reminders, calendar feeds and connections, document chunks, knowledge documents, file shares, files, AI usage events, jobs, notifications, messages, channel members, channels, point events, challenges, task comments, tasks, milestones, goals, AI task plans, projects, invitations, members, subscription, audit logs. The final list is derived from the Prisma schema in the plan and checked by a test (below).
-3. **Tombstone.** The `organizations` row stays: `name` and `slug` become `deleted-<first 12 chars of id>`, `purgedAt` is set, `deletionRequestedBy` is cleared, other settings are reset. This keeps the final audit row's foreign key valid, avoids dropping constraints, and frees the old slug.
+3. **Tombstone.** The `organizations` row stays: `name` and `slug` become `deleted-<id without hyphens>` (the first 12 characters of a UUIDv7 are a timestamp and can collide), `purgedAt` is set, `deletionRequestedBy` is cleared, other settings are reset. This keeps the final audit row's foreign key valid, avoids dropping constraints, and frees the old slug.
 4. **Final audit event** `organization.purged` on the tombstone: actor, trigger (`admin`, `cli`, `worker`), counts per table, number of files removed. No names, emails or content.
 
 Because the tombstone is set in the same transaction as the deletes, a purge either fully happens or not at all in the database; a crash before step 2 leaves a still-due workspace that a retry cleans.
