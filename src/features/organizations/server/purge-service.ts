@@ -1,8 +1,12 @@
 import "server-only";
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import { AppError } from "@/lib/errors";
-import { dueAfter } from "@/features/organizations/schemas/deletion";
-import type { PurgeActor, PurgeResult } from "@/features/organizations/schemas/purge";
+import { DELETION_GRACE_DAYS, dueAfter } from "@/features/organizations/schemas/deletion";
+import {
+  PURGE_BATCH,
+  type PurgeActor,
+  type PurgeResult,
+} from "@/features/organizations/schemas/purge";
 import { recordAuditEvent } from "@/server/services/audit";
 import type { StoragePort } from "@/server/storage/storage";
 
@@ -168,4 +172,36 @@ function assertDue(requestedAt: Date | null, now: Date): void {
   if (now < dueAfter(requestedAt)) {
     throw new AppError("UNPROCESSABLE", "The waiting period for this workspace is not over yet.");
   }
+}
+
+/**
+ * The worker's sweep (only run when `AUTO_PURGE_ENABLED=true`): purges up to `PURGE_BATCH`
+ * workspaces whose waiting period is over, oldest request first. One failing workspace is counted
+ * and does not stop the others; it is picked up again on the next sweep.
+ */
+export async function purgeDueWorkspaces(
+  deps: Deps,
+  now: Date = new Date(),
+): Promise<{ purged: number; failed: number }> {
+  const dueBefore = new Date(now.getTime() - DELETION_GRACE_DAYS * 86_400_000);
+  const due = await deps.prisma.organization.findMany({
+    where: { purgedAt: null, deletionRequestedAt: { lte: dueBefore } },
+    orderBy: [{ deletionRequestedAt: "asc" }, { id: "asc" }],
+    take: PURGE_BATCH,
+    select: { id: true },
+  });
+  const counts = { purged: 0, failed: 0 };
+  for (const { id } of due) {
+    try {
+      const result = await purgeWorkspace(
+        deps,
+        { organizationId: id, actor: { trigger: "worker", userId: null } },
+        now,
+      );
+      if (!result.alreadyPurged) counts.purged += 1;
+    } catch {
+      counts.failed += 1;
+    }
+  }
+  return counts;
 }

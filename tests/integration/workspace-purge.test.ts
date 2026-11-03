@@ -14,7 +14,11 @@ import {
   requestWorkspaceDeletion,
 } from "@/features/organizations/server/deletion-service";
 import { getAuthorizedOrganization } from "@/features/organizations/server/organization-service";
-import { PURGE_TABLE_NAMES, purgeWorkspace } from "@/features/organizations/server/purge-service";
+import {
+  PURGE_TABLE_NAMES,
+  purgeDueWorkspaces,
+  purgeWorkspace,
+} from "@/features/organizations/server/purge-service";
 import { db } from "@/lib/db";
 import { AppError } from "@/lib/errors";
 import { runJobs } from "@/server/jobs/queue";
@@ -707,5 +711,70 @@ describe("cli", () => {
     expect((await run(["nothing", "--confirm", "nothing"])).code).toBe(1);
     expect((await run(["acme", "--confirm", "acme"], new Date(NOW.getTime() - DAY))).code).toBe(1);
     expect(await countRows(a.organization.id)).toEqual(before);
+  });
+});
+
+describe("sweep", () => {
+  beforeEach(resetDatabase);
+
+  const purged = async (organizationId: string) =>
+    (await db().organization.findUniqueOrThrow({ where: { id: organizationId } })).purgedAt !==
+    null;
+
+  it("purges due workspaces only, as the worker", async () => {
+    const due = await seedWorkspace("acme");
+    const waiting = await seedWorkspace("beta");
+    const never = await seedWorkspace("gamma");
+    await requestAt(due.organization.id, REQUESTED);
+    await requestAt(waiting.organization.id, new Date(NOW.getTime() - DAY));
+
+    expect(await purgeDueWorkspaces(deps(), NOW)).toEqual({ purged: 1, failed: 0 });
+    expect(await purged(due.organization.id)).toBe(true);
+    expect(await purged(waiting.organization.id)).toBe(false);
+    expect(await purged(never.organization.id)).toBe(false);
+    const event = await db().auditLog.findFirstOrThrow({
+      where: { organizationId: due.organization.id, action: "organization.purged" },
+    });
+    expect(event.actorId).toBeNull();
+    expect((event.metadata as { trigger: string }).trigger).toBe("worker");
+  });
+
+  it("purges at most three per call, oldest request first", async () => {
+    const ids: string[] = [];
+    for (let i = 0; i < 5; i++) {
+      const w = await seedWorkspace(`org${i}`);
+      await requestAt(w.organization.id, new Date(REQUESTED.getTime() - (5 - i) * DAY));
+      ids.push(w.organization.id);
+    }
+    expect(await purgeDueWorkspaces(deps(), NOW)).toEqual({ purged: 3, failed: 0 });
+    expect(await Promise.all(ids.map(purged))).toEqual([true, true, true, false, false]);
+    expect(await purgeDueWorkspaces(deps(), NOW)).toEqual({ purged: 2, failed: 0 });
+  });
+
+  it("counts a failure and still purges the others", async () => {
+    const bad = await seedWorkspace("acme");
+    const good = await seedWorkspace("beta");
+    await requestAt(bad.organization.id, new Date(REQUESTED.getTime() - DAY));
+    await requestAt(good.organization.id, REQUESTED);
+    const storage: StoragePort = {
+      ...fakeStorage(),
+      deletePrefix: async (organizationId) => {
+        if (organizationId === bad.organization.id) throw new Error("disk unavailable");
+        return 0;
+      },
+    };
+    expect(await purgeDueWorkspaces({ prisma: db(), storage }, NOW)).toEqual({
+      purged: 1,
+      failed: 1,
+    });
+    expect(await purged(bad.organization.id)).toBe(false);
+    expect(await purged(good.organization.id)).toBe(true);
+  });
+
+  it("skips workspaces that are already purged", async () => {
+    const a = await seedWorkspace("acme");
+    await requestAt(a.organization.id, REQUESTED);
+    await purge(a.organization.id);
+    expect(await purgeDueWorkspaces(deps(), NOW)).toEqual({ purged: 0, failed: 0 });
   });
 });
