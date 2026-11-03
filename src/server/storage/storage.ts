@@ -1,5 +1,5 @@
 import "server-only";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { env } from "@/lib/env";
 
@@ -11,11 +11,15 @@ export type StoragePort = {
   put(key: string, bytes: Uint8Array): Promise<void>;
   get(key: string): Promise<Uint8Array | null>;
   delete(key: string): Promise<void>;
+  /** Removes everything stored for one organization; returns how many files it held. */
+  deletePrefix(organizationId: string): Promise<number>;
 };
 
+const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+
 /** "<organization uuid>/<file uuid>" and nothing else; blocks traversal by construction. */
-const KEY =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const KEY = new RegExp(`^${UUID}/${UUID}$`);
+const ORGANIZATION = new RegExp(`^${UUID}$`);
 
 export function createLocalStorage(baseDir: string): StoragePort {
   const root = path.resolve(baseDir);
@@ -41,6 +45,20 @@ export function createLocalStorage(baseDir: string): StoragePort {
     },
     async delete(key) {
       await rm(resolve(key), { force: true });
+    },
+    async deletePrefix(organizationId) {
+      if (!ORGANIZATION.test(organizationId)) throw new Error("Invalid storage key");
+      const directory = path.resolve(root, organizationId);
+      if (!directory.startsWith(root + path.sep)) throw new Error("Invalid storage key");
+      let held = 0;
+      try {
+        held = (await readdir(directory)).length;
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") return 0;
+        throw error;
+      }
+      await rm(directory, { recursive: true, force: true });
+      return held;
     },
   };
 }
