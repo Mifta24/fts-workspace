@@ -20,7 +20,7 @@ Last updated 2026-11-03. CI passes on `main` (run 41601317852).
 | Load test with login | public site, 2026-11-03: 800 requests, no failures |
 | Email (sign-up, password reset) | reset mail signed with DKIM and accepted by Gmail on 2026-11-03 |
 | Backups copied every day to the owner's Mac and verified (launchd job, run on 2026-11-03: ok); a damaged copy or an unreachable server fails loudly | `deploy/backup-pull.sh`, run by hand and by the job |
-| Outside uptime check of `/api/health` every 10 minutes | GitHub Actions workflow `Uptime`, run once on 2026-11-03: ok |
+| Outside uptime check of `/api/health` (asked every 10 minutes; GitHub actually runs it every few hours, so it is a slow safety net) | GitHub Actions workflow `Uptime`, run once on 2026-11-03: ok |
 | Health alerts by email to the operator address | test alert sent and accepted by Gmail on 2026-11-03 |
 | Public privacy and terms pages (en, id, ja) | live |
 | Realtime chat | 2,000-socket test, and in a browser on the server |
