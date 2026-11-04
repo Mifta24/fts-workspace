@@ -33,9 +33,9 @@ import { createSecretBox } from "@/server/security/secret-box";
 import { createTestOrganization, resetDatabase } from "../helpers/db";
 
 const HOUR = 3_600_000;
-// Monday 2026-11-02 08:00 UTC.
-const NOW = new Date("2026-11-02T08:00:00Z");
-const slotAt = (day: number, hour: number) => new Date(Date.UTC(2026, 10, day, hour));
+// Monday 2040-01-02 08:00 UTC. Far enough ahead that the real clock never passes it.
+const NOW = new Date("2040-01-02T08:00:00Z");
+const slotAt = (day: number, hour: number) => new Date(Date.UTC(2040, 0, day, hour));
 const box = createSecretBox(randomBytes(32));
 const REDIRECT = "http://localhost:3000/api/integrations/google/callback";
 

@@ -18,7 +18,7 @@ import { createTestOrganization, resetDatabase } from "../helpers/db";
 
 const deps = () => ({ prisma: db() });
 const HOUR = 3_600_000;
-const NOW = new Date("2026-11-02T08:00:00Z");
+const NOW = new Date("2040-01-02T08:00:00Z");
 const at = (hours: number) => new Date(NOW.getTime() + hours * HOUR);
 
 async function expectCode(promise: Promise<unknown>, code: AppError["code"]) {

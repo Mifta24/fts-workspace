@@ -22,7 +22,7 @@ import { createTestOrganization, resetDatabase } from "../helpers/db";
 const deps = () => ({ prisma: db() });
 const DAY = 86_400_000;
 const HOUR = 3_600_000;
-const NOW = new Date("2026-11-02T08:00:00Z");
+const NOW = new Date("2040-01-02T08:00:00Z");
 const inDays = (days: number) => new Date(NOW.getTime() + days * DAY);
 
 const contextFor = (slug: string, userId: string): Promise<OrganizationContext> =>
@@ -224,8 +224,10 @@ describe("calendar feed", () => {
 
     it("serves the calendar without a session, with private caching headers", async () => {
       const { alice } = await setup();
-      await book(alice, "Mine", inDays(1));
-      const { token } = await createFeed(deps(), alice);
+      // The route reads the real clock, so this meeting is booked relative to it, not to the fixed NOW.
+      const realNow = new Date();
+      await book(alice, "Mine", new Date(realNow.getTime() + DAY), [], realNow);
+      const { token } = await createFeed(deps(), alice, realNow);
       for (const path of [token, `${token}.ics`]) {
         const response = await call(path);
         expect(response.status).toBe(200);

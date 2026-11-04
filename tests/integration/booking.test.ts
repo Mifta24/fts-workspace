@@ -30,9 +30,9 @@ import { createTestOrganization, resetDatabase } from "../helpers/db";
 const deps = () => ({ prisma: db() });
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
-// Monday 2026-11-02 08:00 UTC.
-const NOW = new Date("2026-11-02T08:00:00Z");
-const slotAt = (day: number, hour: number) => new Date(Date.UTC(2026, 10, day, hour));
+// Monday 2040-01-02 08:00 UTC. Far enough ahead that the real clock never passes it.
+const NOW = new Date("2040-01-02T08:00:00Z");
+const slotAt = (day: number, hour: number) => new Date(Date.UTC(2040, 0, day, hour));
 
 async function expectCode(promise: Promise<unknown>, code: AppError["code"]) {
   await expect(promise).rejects.toSatisfy(
@@ -217,7 +217,7 @@ describe("booking pages", () => {
         durationMinutes: 60,
         timeZone: "UTC",
       });
-      // Monday's slots start before now + 4 h, so the first offer is Tuesday 3 November 09:00.
+      // Monday's slots start before now + 4 h, so the first offer is Tuesday 3 January 09:00.
       expect(view.slots[0]).toEqual(slotAt(3, 9));
       expect(JSON.stringify(view)).not.toMatch(/ownerId|organizationId|Test acme/i);
     });
@@ -525,7 +525,7 @@ describe("booking pages", () => {
       const mail = testOutbox[0]!;
       expect(mail.to).toBe("visitor1@example.test");
       expect(mail.subject).toContain("Intro call");
-      expect(mail.text).toContain("2026-11-03 10:00 (UTC)");
+      expect(mail.text).toContain("2040-01-03 10:00 (UTC)");
       expect(mail.text).toContain("Halo Visitor 1");
       const token = tokenFrom();
       expect(token).toMatch(/^[A-Za-z0-9_-]{22}$/);

@@ -320,7 +320,7 @@ describe("AI allowance", () => {
 
   it("lets the plan lower the daily budget but never raise the admin's setting", async () => {
     const { acme, alice, owner } = await setup();
-    const now = new Date("2026-11-15T12:00:00Z");
+    const now = new Date("2040-01-15T12:00:00Z");
     await setPlan(acme.organization.id, "FREE");
     expect((await getAiUsage(db(), alice, now)).dailyBudget).toBe(PLANS.FREE.aiDailyTokens);
 
@@ -340,7 +340,7 @@ describe("AI allowance", () => {
 
   it("stops at the monthly allowance with a plan limit and resets next month", async () => {
     const { acme, alice, owner } = await setup();
-    const now = new Date("2026-11-30T12:00:00Z");
+    const now = new Date("2040-01-31T12:00:00Z");
     await setPlan(acme.organization.id, "FREE");
     // Spread over earlier days so the daily budget is not what stops it.
     for (const day of [1, 5, 10, 15, 20, 25, 28, 29, 29, 29]) {
@@ -348,11 +348,11 @@ describe("AI allowance", () => {
         acme.organization.id,
         owner.userId,
         PLANS.FREE.aiMonthlyTokens / 10,
-        new Date(`2026-11-${String(day).padStart(2, "0")}T08:00:00Z`),
+        new Date(`2040-01-${String(day).padStart(2, "0")}T08:00:00Z`),
       );
     }
     await expectCode(run(alice, now), "PLAN_LIMIT");
-    const december = new Date("2026-12-01T00:30:00Z");
+    const december = new Date("2040-02-01T00:30:00Z");
     await expect(run(alice, december)).resolves.toBe("ok");
   });
 });
@@ -438,7 +438,7 @@ describe("operator", () => {
   it("sets plans and trials, audits the change and is idempotent", async () => {
     const { acme } = await setup();
     const operator = await operatorUser();
-    const now = new Date("2026-11-10T10:00:00Z");
+    const now = new Date("2040-01-10T10:00:00Z");
     const organizationId = acme.organization.id;
 
     await setWorkspacePlan(deps(), operator, { organizationId, plan: "TEAM", trialDays: "7" }, now);
@@ -574,7 +574,7 @@ describe("operator", () => {
   it("lists workspaces with counts only, filtered by name or URL", async () => {
     const { acme } = await setup();
     const operator = await operatorUser();
-    const now = new Date("2026-11-10T10:00:00Z");
+    const now = new Date("2040-01-10T10:00:00Z");
     await setPlan(acme.organization.id, "TEAM");
     await db().aiUsageEvent.create({
       data: {
@@ -586,7 +586,7 @@ describe("operator", () => {
         status: "OK",
         tokens: 123,
         latencyMs: 1,
-        createdAt: new Date("2026-11-02T00:00:00Z"),
+        createdAt: new Date("2040-01-02T00:00:00Z"),
       },
     });
     const all = await listWorkspaces(deps(), operator, "", now);
@@ -622,7 +622,7 @@ describe("operator", () => {
   it("reports platform health as counts", async () => {
     const { acme } = await setup();
     const operator: Operator = await operatorUser();
-    const now = new Date("2026-11-10T10:00:00Z");
+    const now = new Date("2040-01-10T10:00:00Z");
     const job = (status: "QUEUED" | "RUNNING" | "FAILED", extra: Record<string, unknown>) =>
       db().job.create({
         data: { organizationId: acme.organization.id, type: "t", payload: {}, status, ...extra },
