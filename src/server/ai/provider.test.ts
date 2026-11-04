@@ -35,12 +35,14 @@ describe("OpenAI-compatible provider", () => {
       model: "m",
       jsonMode: false,
       maxOutputTokens: 4000,
+      timeoutMs: 90_000,
       fetchImpl: fetchImpl as unknown as typeof fetch,
     });
     await provider.complete({ system: "s", user: "u" });
     const [, init] = fetchImpl.mock.calls[0] as unknown as [string, RequestInit];
     const body = JSON.parse(init.body as string);
     expect(body.max_tokens).toBe(4000);
+    expect(init.signal).toBeInstanceOf(AbortSignal);
     expect(body).not.toHaveProperty("response_format");
   });
 

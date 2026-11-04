@@ -25,6 +25,9 @@ const envSchema = z
       .transform((value) => value === "on"),
     // Output limit per answer. Reasoning models spend part of it on thinking: raise it for them.
     AI_MAX_OUTPUT_TOKENS: z.coerce.number().int().min(200).max(8000).default(1500),
+    // How long to wait for one answer, in ms. Keep it under Cloudflare's 100 s limit when the model
+    // sits behind a Cloudflare tunnel.
+    AI_TIMEOUT_MS: z.coerce.number().int().min(5000).max(95000).default(30000),
     // Realtime gateway (Socket.IO). Without REALTIME_URL the app publishes nothing and works
     // exactly as before; the gateway only broadcasts identifiers.
     REALTIME_URL: z.url().optional(),

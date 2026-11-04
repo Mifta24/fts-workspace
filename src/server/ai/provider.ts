@@ -21,7 +21,7 @@ export type Completion = {
 /** Generic name for the same port, used by features other than task planning. */
 export type TextProvider = TaskPlanProvider;
 
-const TIMEOUT_MS = 30_000;
+const DEFAULT_TIMEOUT_MS = 30_000;
 const DEFAULT_MAX_OUTPUT_TOKENS = 1_500;
 
 /**
@@ -29,7 +29,8 @@ const DEFAULT_MAX_OUTPUT_TOKENS = 1_500;
  * configured so callers can show a disabled state instead of failing.
  */
 export function getTaskPlanProvider(): TaskPlanProvider | null {
-  const { AI_BASE_URL, AI_API_KEY, AI_MODEL, AI_JSON_MODE, AI_MAX_OUTPUT_TOKENS } = env();
+  const { AI_BASE_URL, AI_API_KEY, AI_MODEL, AI_JSON_MODE, AI_MAX_OUTPUT_TOKENS, AI_TIMEOUT_MS } =
+    env();
   if (!AI_BASE_URL || !AI_MODEL) return null;
   return createOpenAiCompatibleProvider({
     baseUrl: AI_BASE_URL,
@@ -37,6 +38,7 @@ export function getTaskPlanProvider(): TaskPlanProvider | null {
     model: AI_MODEL,
     jsonMode: AI_JSON_MODE,
     maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
+    timeoutMs: AI_TIMEOUT_MS,
   });
 }
 
@@ -52,6 +54,8 @@ export function createOpenAiCompatibleProvider(options: {
   jsonMode?: boolean;
   /** Reasoning models spend part of this on thinking, so they may need more than the default. */
   maxOutputTokens?: number;
+  /** How long to wait for an answer. Reasoning models on modest hardware can need a minute or more. */
+  timeoutMs?: number;
   fetchImpl?: typeof fetch;
 }): TaskPlanProvider {
   const endpoint = `${options.baseUrl.replace(/\/+$/, "")}/chat/completions`;
@@ -81,7 +85,7 @@ export function createOpenAiCompatibleProvider(options: {
               { role: "user", content: user },
             ],
           }),
-          signal: AbortSignal.timeout(TIMEOUT_MS),
+          signal: AbortSignal.timeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS),
         });
       } catch (error) {
         // Never log prompts or responses; they contain workspace content.
