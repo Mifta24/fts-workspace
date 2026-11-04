@@ -59,7 +59,7 @@ No durations are commitments; estimate after technical discovery and staffing as
 - [x] Backups copied off the server every day to the owner's Mac and verified (`deploy/backup-pull.sh` + a launchd job, 2026-11-03); a cloud bucket (`deploy/backup-offsite.sh`) is later
 - [x] Email through our own mail server: the password-reset mail was signed and accepted by Gmail (2026-11-03)
 - [x] Pilot onboarding and feedback prioritization (`docs/14-PILOT.md`: process only, there is no in-app feedback form)
-**Exit gate:** `13-PRODUCTION-READINESS.md` signed off. **Pilot-ready, not signed off.** Before real customers: a lawyer's review of privacy and terms (brief: `15-LEGAL-REVIEW-BRIEF.md`) and one more purge/restore try at real data size. Everything else is under *Later* there.
+**Exit gate:** `13-PRODUCTION-READINESS.md` signed off. **Pilot-ready; the product owner approved it on 2026-11-04, the other sign-off rows are still blank.** Before real customers: a lawyer's review of privacy and terms (brief: `15-LEGAL-REVIEW-BRIEF.md`) and one more purge/restore try at real data size. Everything else is under *Later* there.
 
 ## Interface refresh (ADR-021)
 - [x] Colour tokens in light and dark, Plus Jakarta Sans, progress thread, complete product landing page with an illustrative workspace preview (en/id/ja), light sidebar (commits `555933f` and `87ff39c`; landing-page refresh verified 2026-11-03)

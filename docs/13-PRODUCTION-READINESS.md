@@ -50,7 +50,7 @@ Last updated 2026-11-03. CI passes on `main` (run 41601317852).
 
 | Role | Name | Decision | Date |
 | --- | --- | --- | --- |
-| Product owner | | | |
+| Product owner | | Approved the pilot as it is (checklist and legal brief), lawyer review still to come | 2026-11-04 |
 | Engineering lead | | | |
 | Security | | | |
 | Operations / on-call | | | |
