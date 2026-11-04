@@ -12,7 +12,7 @@ A team workspace (tasks, goals, chat, files, simple CRM, booking pages, forms) r
 - Audit trail and server logs: identifiers and counts, no content.
 
 ## Who else touches it (sub-processors)
-Cloudflare (traffic, including Turnstile captcha on public forms), the hosting provider (a Hostinger VPS in a shared server, location not named on the page), our own mail server on that VPS, Google only when a member connects a calendar. **AI is off**: no data goes to an AI provider.
+Cloudflare (traffic, including Turnstile captcha on public forms), the hosting provider (a Hostinger VPS in a shared server, location not named on the page), our own mail server on that VPS, Google only when a member connects a calendar. **AI is on (since 2026-11-04)** and uses a language model the owner runs on their own computer, reached through Cloudflare; no AI company receives the data. Only the request and the documents the member may see are sent.
 
 ## How long, and how it is deleted
 - A workspace owner can ask for deletion; after 14 days the operator removes all workspace data (database and files).

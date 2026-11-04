@@ -22,19 +22,21 @@ export type Completion = {
 export type TextProvider = TaskPlanProvider;
 
 const TIMEOUT_MS = 30_000;
-const MAX_OUTPUT_TOKENS = 1_500;
+const DEFAULT_MAX_OUTPUT_TOKENS = 1_500;
 
 /**
  * OpenAI-compatible chat completions adapter. Returns null when AI is not
  * configured so callers can show a disabled state instead of failing.
  */
 export function getTaskPlanProvider(): TaskPlanProvider | null {
-  const { AI_BASE_URL, AI_API_KEY, AI_MODEL } = env();
+  const { AI_BASE_URL, AI_API_KEY, AI_MODEL, AI_JSON_MODE, AI_MAX_OUTPUT_TOKENS } = env();
   if (!AI_BASE_URL || !AI_MODEL) return null;
   return createOpenAiCompatibleProvider({
     baseUrl: AI_BASE_URL,
     apiKey: AI_API_KEY,
     model: AI_MODEL,
+    jsonMode: AI_JSON_MODE,
+    maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
   });
 }
 
@@ -42,6 +44,14 @@ export function createOpenAiCompatibleProvider(options: {
   baseUrl: string;
   apiKey?: string;
   model: string;
+  /**
+   * Ask the server for JSON mode (`response_format: json_object`). Turn it off for servers that
+   * reject it, such as LM Studio (HTTP 400); the prompts already ask for JSON and the planner
+   * extracts the JSON object from the text.
+   */
+  jsonMode?: boolean;
+  /** Reasoning models spend part of this on thinking, so they may need more than the default. */
+  maxOutputTokens?: number;
   fetchImpl?: typeof fetch;
 }): TaskPlanProvider {
   const endpoint = `${options.baseUrl.replace(/\/+$/, "")}/chat/completions`;
@@ -64,8 +74,8 @@ export function createOpenAiCompatibleProvider(options: {
           body: JSON.stringify({
             model: options.model,
             temperature: 0.3,
-            max_tokens: MAX_OUTPUT_TOKENS,
-            response_format: { type: "json_object" },
+            max_tokens: options.maxOutputTokens ?? DEFAULT_MAX_OUTPUT_TOKENS,
+            ...(options.jsonMode === false ? {} : { response_format: { type: "json_object" } }),
             messages: [
               { role: "system", content: system },
               { role: "user", content: user },

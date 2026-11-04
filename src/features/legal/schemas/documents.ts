@@ -38,7 +38,7 @@ export const SECTIONS: Record<LegalDocument, readonly string[]> = {
 };
 
 /** Change this whenever the wording changes in a way people should know about (YYYY-MM-DD, UTC). */
-export const LEGAL_UPDATED = "2026-11-02";
+export const LEGAL_UPDATED = "2026-11-04";
 
 /** How many paragraphs and list items a section may have in the catalogs. */
 export const MAX_PARTS = 8;

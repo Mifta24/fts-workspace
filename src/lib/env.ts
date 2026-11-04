@@ -18,6 +18,13 @@ const envSchema = z
     AI_BASE_URL: z.url().optional(),
     AI_API_KEY: z.string().min(1).optional(),
     AI_MODEL: z.string().min(1).optional(),
+    // "off" for servers that reject `response_format: json_object` (LM Studio answers HTTP 400).
+    AI_JSON_MODE: z
+      .enum(["on", "off"])
+      .default("on")
+      .transform((value) => value === "on"),
+    // Output limit per answer. Reasoning models spend part of it on thinking: raise it for them.
+    AI_MAX_OUTPUT_TOKENS: z.coerce.number().int().min(200).max(8000).default(1500),
     // Realtime gateway (Socket.IO). Without REALTIME_URL the app publishes nothing and works
     // exactly as before; the gateway only broadcasts identifiers.
     REALTIME_URL: z.url().optional(),

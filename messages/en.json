@@ -1044,7 +1044,7 @@
       },
       "ai": {
         "title": "AI features",
-        "p1": "AI assistance is switched off on this service at the moment. Before we switch it on, we will name the provider on this page. What is sent to a model is limited to the request and the documents that member is allowed to see, and a person reviews what it drafts before anything is applied."
+        "p1": "AI assistance is switched on. It uses a language model that we run ourselves, not a service from an AI company: your requests travel through Cloudflare (the network that carries all traffic to this service) to our own model server, and no AI company receives them. What is sent to the model is limited to the request and the documents that member is allowed to see, and a person reviews what it drafts before anything is applied. If we ever use an AI service run by someone else, we will name it on this page first."
       },
       "sharing": {
         "title": "Who else handles data",

@@ -1044,7 +1044,7 @@
       },
       "ai": {
         "title": "Fitur AI",
-        "p1": "Bantuan AI saat ini dimatikan di layanan ini. Sebelum kami menyalakannya, kami akan menyebutkan penyedianya di halaman ini. Yang dikirim ke model dibatasi pada permintaan dan dokumen yang boleh dilihat anggota tersebut, dan seseorang meninjau hasil rancangannya sebelum apa pun diterapkan."
+        "p1": "Bantuan AI dinyalakan. Layanan ini memakai model bahasa yang kami jalankan sendiri, bukan layanan dari perusahaan AI: permintaan Anda melewati Cloudflare (jaringan yang membawa seluruh lalu lintas ke layanan ini) menuju server model milik kami, dan tidak ada perusahaan AI yang menerimanya. Yang dikirim ke model dibatasi pada permintaan dan dokumen yang boleh dilihat anggota tersebut, dan seseorang meninjau hasil rancangannya sebelum apa pun diterapkan. Jika suatu saat kami memakai layanan AI milik pihak lain, kami akan menyebutkannya di halaman ini terlebih dahulu."
       },
       "sharing": {
         "title": "Siapa lagi yang memproses data",

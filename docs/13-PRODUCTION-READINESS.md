@@ -34,7 +34,7 @@ Last updated 2026-11-03. CI passes on `main` (run 41601317852).
 
 - Independent security review; CSP `script-src` (needs per-request nonces).
 - Prices, checkout and invoices (OD-05); plans and limits already work.
-- AI provider and data location (OD-08): AI stays off until decided.
+- A paid AI service instead of the owner's own model (OD-08 is decided for the pilot, ADR-026): the AI features depend on the owner's computer being on.
 - Region, a second host, a real object store (OD-01, OD-04).
 - Error tracking, paging, a named on-call person.
 - Data export, a QR code for two-step setup, requiring two-step for owners (`MFA_REQUIRED_FOR_OWNERS`).

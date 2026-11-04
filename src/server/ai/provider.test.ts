@@ -28,6 +28,22 @@ describe("OpenAI-compatible provider", () => {
     expect(body.messages.map((m: { role: string }) => m.role)).toEqual(["system", "user"]);
   });
 
+  it("can leave JSON mode off and raise the output limit for servers that need it", async () => {
+    const fetchImpl = vi.fn(async () => ok("{}"));
+    const provider = createOpenAiCompatibleProvider({
+      baseUrl: "http://localhost:1234/v1",
+      model: "m",
+      jsonMode: false,
+      maxOutputTokens: 4000,
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    await provider.complete({ system: "s", user: "u" });
+    const [, init] = fetchImpl.mock.calls[0] as unknown as [string, RequestInit];
+    const body = JSON.parse(init.body as string);
+    expect(body.max_tokens).toBe(4000);
+    expect(body).not.toHaveProperty("response_format");
+  });
+
   it("omits the authorization header without a key", async () => {
     const fetchImpl = vi.fn(async () => ok("{}"));
     const provider = createOpenAiCompatibleProvider({
