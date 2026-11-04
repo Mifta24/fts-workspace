@@ -29,6 +29,7 @@ describe("navigation view", () => {
       "tasks",
       "chat",
       "notifications",
+      "progress",
       "schedule",
       "members",
     ]);

@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ProgressThread } from "@/components/ui/progress-thread";
 import { Label } from "@/components/ui/label";
+import { MyProgressCard } from "@/features/gamification/components/my-progress-card";
+import { pickFeaturedChallenge } from "@/features/gamification/server/featured-challenge";
+import { getMyStats, listChallenges } from "@/features/gamification/server/gamification-service";
 import { DASHBOARD_RANGES, dashboardFilterSchema } from "@/features/dashboard/schemas/dashboard";
 import { getDashboard } from "@/features/dashboard/server/dashboard-service";
 import { WorkspaceShell } from "@/features/organizations/components/workspace-shell";
@@ -11,10 +14,29 @@ import { requireWorkspace } from "@/features/organizations/server/require-worksp
 import { listProjects } from "@/features/projects/server/project-service";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
+import { logger } from "@/lib/logger";
 import { roleHasPermission } from "@/lib/permissions/matrix";
 
 const selectClass =
   "flex h-10 w-full rounded-md border border-input bg-card px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+/** Progress is an extra on this page: if it cannot load, the overview still opens without it. */
+async function loadMyProgress(
+  deps: { prisma: ReturnType<typeof db> },
+  context: Awaited<ReturnType<typeof requireWorkspace>>,
+) {
+  if (!roleHasPermission(context.role, "gamification:read")) return null;
+  try {
+    const [stats, challenges] = await Promise.all([
+      getMyStats(deps, context),
+      listChallenges(deps, context),
+    ]);
+    return { stats, challenge: pickFeaturedChallenge(challenges) };
+  } catch (error) {
+    logger.warn({ err: error, organizationId: context.organization.id }, "my progress failed");
+    return null;
+  }
+}
 
 const first = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
 
@@ -34,11 +56,12 @@ export default async function WorkspacePage({
   });
   const filter = parsed.success ? parsed.data : dashboardFilterSchema.parse({});
 
-  const [t, data, projects, members] = await Promise.all([
+  const [t, data, projects, members, myProgress] = await Promise.all([
     getTranslations("Dashboard"),
     getDashboard(deps, context, filter),
     listProjects(deps, context),
     listActiveMembers(deps, context),
+    loadMyProgress(deps, context),
   ]);
   const filtered = Boolean(filter.projectId || filter.assigneeId);
   const isEmpty = data.activeGoals === 0 && data.totalTasks === 0 && !filtered;
@@ -59,6 +82,14 @@ export default async function WorkspacePage({
   return (
     <WorkspaceShell context={context} active="overview">
       <h1 className="text-2xl font-semibold tracking-tight">{context.organization.name}</h1>
+
+      {myProgress && (
+        <MyProgressCard
+          stats={myProgress.stats}
+          challenge={myProgress.challenge}
+          href={`${base}/progress`}
+        />
+      )}
 
       <form method="get" className="flex flex-wrap items-end gap-4" aria-label={t("filters")}>
         <div className="space-y-2">

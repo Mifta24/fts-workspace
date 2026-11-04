@@ -10,7 +10,10 @@ export const DEFAULT_NAV_MODE: NavMode = "simple";
 export const NAV_MODE_COOKIE = "fts_nav_mode";
 export const NAV_MODE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 
-/** The everyday work of a team. Everything else is one click away in the full view. */
+/**
+ * The everyday work of a team, plus progress, which keeps people motivated. Everything else is
+ * one click away in the full view.
+ */
 const ESSENTIAL: ReadonlySet<string> = new Set([
   "overview",
   "goals",
@@ -19,6 +22,7 @@ const ESSENTIAL: ReadonlySet<string> = new Set([
   "chat",
   "schedule",
   "notifications",
+  "progress",
   "members",
 ]);
 

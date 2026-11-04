@@ -485,6 +485,16 @@
     },
     "anItem": "項目"
   },
+  "MyProgress": {
+    "title": "自分の進捗",
+    "seeAll": "進捗をすべて見る",
+    "empty": "自分に割り当てられた最初のタスクを完了して、ポイントを集め始めましょう。",
+    "totalPoints": "合計ポイント",
+    "pointsLast7Days": "過去 7 日間",
+    "streakDays": "連続日数",
+    "challengeProgress": "{title} の進捗",
+    "completed": "達成"
+  },
   "Progress": {
     "title": "進捗",
     "intro": "ポイントは完了した仕事を称えるものです。お金や残高ではありません。自分に割り当てられ、自分で完了したタスクだけが対象で、1 日の上限があります。",

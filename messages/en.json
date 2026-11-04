@@ -485,6 +485,16 @@
     },
     "anItem": "Someone"
   },
+  "MyProgress": {
+    "title": "My progress",
+    "seeAll": "See all progress",
+    "empty": "Finish the first task assigned to you to start collecting points.",
+    "totalPoints": "Total points",
+    "pointsLast7Days": "Last 7 days",
+    "streakDays": "Day streak",
+    "challengeProgress": "Progress of {title}",
+    "completed": "Completed"
+  },
   "Progress": {
     "title": "Progress",
     "intro": "Points recognise finished work. They are not money or a balance. Only tasks assigned to you and completed by you count, with a daily limit.",

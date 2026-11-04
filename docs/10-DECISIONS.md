@@ -114,6 +114,8 @@ Each record: ID, status, context, decision, consequences, review trigger. Propos
 
 **Addendum (2026-11-03), at the owner's direction ("keep it simple, delete what is complicated from the list"):** Phase 4 was closed by building only the simple leftover, the booking confirmation email with a cancel link (the SMTP transport exists since ADR-019). Working-hours availability across several people and uploads on public forms were removed from the roadmap and are not planned, like two-way sync and Outlook.
 
+**Addendum (2026-11-04), at the owner's direction (a simple gamification everyone can see, to keep people motivated):** Progress joins the simple view, and the Overview shows a "My progress" card with the member's own points, streak and running challenge. Nothing else changed: no new tables, the leaderboard stays opt-in (see docs/04-FEATURES.md, ranking and challenges), and the card carries only the caller's own numbers. Badges, levels and an open leaderboard were considered and not built.
+
 ## ADR-018 — Built-in automation rules, no rule builder and no model-run actions (Phase 3 follow-up)
 **Status:** Accepted (2026-10-30), at the owner's request to build the automation feature, starting small.  
 **Context:** the roadmap's last Phase 3 item was an automation prototype. A general engine (users write rules, or a model picks and runs tools) is the riskiest surface in the product (`11-MCP-THREAT-MODEL.md`), needs a real model provider (OD-08 is open; only a local LM Studio model exists for development), and conflicts with the keep-it-simple direction (ADR-017).  

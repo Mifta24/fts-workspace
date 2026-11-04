@@ -485,6 +485,16 @@
     },
     "anItem": "Sesuatu"
   },
+  "MyProgress": {
+    "title": "Progres saya",
+    "seeAll": "Lihat semua progres",
+    "empty": "Selesaikan tugas pertama yang ditugaskan kepada Anda untuk mulai mengumpulkan poin.",
+    "totalPoints": "Total poin",
+    "pointsLast7Days": "7 hari terakhir",
+    "streakDays": "Rentetan hari",
+    "challengeProgress": "Progres {title}",
+    "completed": "Tercapai"
+  },
   "Progress": {
     "title": "Progres",
     "intro": "Poin mengakui pekerjaan yang selesai. Poin bukan uang atau saldo. Hanya tugas yang ditugaskan kepada Anda dan Anda selesaikan yang dihitung, dengan batas harian.",
