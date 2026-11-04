@@ -35,3 +35,19 @@ test("a viewer sees their own progress but no management forms", async ({ page }
   await expect(page.getByText("Create a challenge")).toHaveCount(0);
   await expect(page.getByText("Leaderboard policy")).toHaveCount(0);
 });
+
+test("everyone sees a My progress card on the overview, with Progress in the simple menu", async ({
+  page,
+}) => {
+  await signIn(page, "viewer@acme.test");
+  await page.goto("/en/w/acme");
+  const card = page.getByRole("region", { name: "My progress" });
+  await expect(card).toBeVisible();
+  await expect(
+    page
+      .getByRole("navigation", { name: "Primary" })
+      .getByRole("link", { name: "Progress", exact: true }),
+  ).toBeVisible();
+  await card.getByRole("link", { name: "See all progress" }).click();
+  await expect(page.getByRole("heading", { name: "Progress", level: 1 })).toBeVisible();
+});

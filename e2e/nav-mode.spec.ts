@@ -12,7 +12,16 @@ test("navigation: simple by default, everything one click away, remembered, and 
   await page.goto("/en/w/acme");
 
   // New people see the everyday work only.
-  for (const name of ["Overview", "Goals", "Tasks", "Projects", "Chat", "Schedule", "Members"]) {
+  for (const name of [
+    "Overview",
+    "Goals",
+    "Tasks",
+    "Projects",
+    "Chat",
+    "Schedule",
+    "Progress",
+    "Members",
+  ]) {
     await expect(link(page, name)).toBeVisible();
   }
   for (const name of ["CRM", "Forms", "Knowledge", "Insights", "Plan", "Files", "Assistant"]) {
