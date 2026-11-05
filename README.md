@@ -42,6 +42,7 @@ Users organize goals and tasks, collaborate in workspaces, manage knowledge and 
 | `docs/12-OPERATIONS.md` | Operator console, monitoring signals, incident procedure, backup and restore |
 | `docs/13-PRODUCTION-READINESS.md` | Phase 5 exit gate: what is verified, launch blockers, sign-off (not approved) |
 | `docs/14-PILOT.md` | Pilot onboarding and feedback prioritization |
+| `docs/16-USER-GUIDE.id.md` | Panduan pengguna (Bahasa Indonesia), versi panjang; the in-app version is the public `/help` page |
 
 ## Status
 **Phase 0 (foundation) implemented.** Email/password auth with verification and reset, organizations with role-based membership, a tenant authorization service, i18n (`en`, `ja`, `id`), health check, CI. Goals, tasks, dashboard and AI arrive in Phase 1. No production readiness is claimed.

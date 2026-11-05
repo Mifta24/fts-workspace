@@ -1168,5 +1168,122 @@
     "pendingBody": "Anda meminta workspace ini dihapus pada {requested}. Workspace dihapus setelah {due}. Sampai saat itu ia tetap berfungsi.",
     "cancelButton": "Batalkan penghapusan",
     "privacyLink": "Cara kami menangani data pribadi"
+  },
+  "Help": {
+    "nav": "Cara pakai",
+    "title": "Cara memakai FTS Workspace",
+    "intro": "Panduan singkat untuk semua anggota workspace: cara memulai, fungsi tiap halaman, dan siapa boleh melakukan apa. Anda tidak perlu masuk untuk membacanya.",
+    "back": "Kembali ke beranda",
+    "contents": "Di halaman ini",
+    "footer": "Masih bingung? Tanyakan kepada Pemilik atau Admin workspace Anda. Mereka dapat mengubah peran, mengirim undangan, dan menghubungi operator platform.",
+    "sections": {
+      "start": {
+        "title": "Mulai dalam lima langkah",
+        "p1": "FTS Workspace menyatukan tujuan, tugas, obrolan tim, berkas, dan pekerjaan dengan pelanggan di satu tempat. AI dapat menyiapkan draf, sementara tim tetap memegang kendali.",
+        "i1": "Buat akun dengan email dan kata sandi minimal 12 karakter, lalu buka tautan verifikasi yang kami kirim ke email Anda. Sebelum itu Anda belum bisa masuk.",
+        "i2": "Buat workspace: pilih nama dan alamat (huruf kecil, angka, dan tanda hubung). Anda otomatis menjadi Pemilik.",
+        "i3": "Di Ringkasan, pilih Buat tujuan pertama dan tuliskan hasil yang ingin dicapai.",
+        "i4": "Tambahkan tugas di bawah tujuan itu, atau pilih Rencanakan tugas dengan AI lalu tinjau drafnya.",
+        "i5": "Undang rekan dari menu Anggota dengan email dan peran. Mereka menerima lewat tautan di email, setelah masuk dengan alamat yang diundang."
+      },
+      "account": {
+        "title": "Akun dan keamanan Anda",
+        "p1": "Satu akun dapat menjadi anggota beberapa workspace. Gunakan Ganti workspace di bagian atas halaman workspace untuk berpindah.",
+        "i1": "Lupa kata sandi? Pilih Lupa kata sandi di halaman masuk, lalu ikuti tautan di email.",
+        "i2": "Aktifkan masuk dua langkah dari Keamanan (tautannya ada di halaman Workspace Anda). Tambahkan kunci penyiapan ke aplikasi autentikator dan simpan kode pemulihan di tempat aman: setiap kode hanya berlaku sekali dan hanya ditampilkan sekali.",
+        "i3": "Tautan bahasa (English, Bahasa Indonesia, 日本語) ada di beranda. Alamatnya diawali /en, /id, atau /ja.",
+        "i4": "Menu samping awalnya hanya menampilkan yang penting. Pilih Tampilkan semua fitur untuk melihat semua halaman, dan Tampilkan yang penting saja untuk kembali. Ini hanya mengubah apa yang ditampilkan, bukan apa yang boleh Anda lakukan."
+      },
+      "goals": {
+        "title": "Tujuan dan tonggak",
+        "p1": "Tujuan dapat disusun bertingkat di bawah tujuan lain. Saat membuatnya, pilih cara progres dihitung:",
+        "i1": "Dari tugas: porsi tugas pada tujuan itu yang sudah selesai.",
+        "i2": "Dari tonggak: porsi tonggak yang Anda tandai selesai.",
+        "i3": "KPI numerik: nilai saat ini dibagi nilai target.",
+        "i4": "Manual: persentase yang Anda isi sendiri.",
+        "i5": "Rencanakan tugas dengan AI (di halaman tujuan) hanya membuat draf. Tidak ada yang dibuat sebelum Anda meninjau dan memilih Buat tugas terpilih."
+      },
+      "tasks": {
+        "title": "Tugas",
+        "p1": "Setiap tugas punya status, prioritas, tenggat (opsional), dan penanggung jawab.",
+        "i1": "Status bergerak dari Backlog ke Akan dikerjakan, Sedang dikerjakan, Ditinjau, lalu Selesai (atau Dibatalkan). Prioritas: Rendah, Sedang, Tinggi, atau Mendesak.",
+        "i2": "Gunakan tampilan Semua, Untuk saya, dan Terlambat untuk menemukan yang penting.",
+        "i3": "Buka sebuah tugas untuk berkomentar, menambah subtugas, dan mengubah detail.",
+        "i4": "Anda mendapat notifikasi di Kotak masuk saat tugas ditugaskan kepada Anda atau dikomentari."
+      },
+      "chat": {
+        "title": "Obrolan dan Kotak masuk",
+        "p1": "Obrolan punya kanal (terbuka untuk workspace, atau privat khusus undangan) dan pesan langsung.",
+        "i1": "Gabung ke kanal terbuka lewat Kanal lainnya, atau buat sendiri. Nama kanal memakai huruf kecil, angka, dan tanda hubung.",
+        "i2": "Pesan baru muncul seketika. Anda dapat mengubah atau menghapus pesan Anda sendiri.",
+        "i3": "Peninjau dapat membaca percakapan tetapi tidak dapat mengirim.",
+        "i4": "Kotak masuk mengumpulkan penugasan, komentar, pesan langsung, perubahan rapat, pengingat, dan isian formulir atau pemesanan baru. Tandai dibaca satu per satu atau sekaligus."
+      },
+      "files": {
+        "title": "Berkas dan pengetahuan",
+        "p1": "Berkas bersifat privat untuk workspace Anda dan mengikuti siapa yang Anda beri akses.",
+        "i1": "Unggah berkas teks, Markdown, CSV, PDF, PNG, JPEG, atau WebP hingga 10 MB.",
+        "i2": "Pilih siapa yang dapat melihat berkas: hanya Anda, Anda dan orang pilihan Anda, atau semua orang di workspace.",
+        "i3": "Untuk berkas teks, pilih Tambahkan ke pengetahuan. Setelah statusnya Terindeks, isinya bisa dicari.",
+        "i4": "Halaman Pengetahuan hanya mencari di berkas yang boleh Anda baca."
+      },
+      "assistant": {
+        "title": "Asisten",
+        "p1": "Asisten menjawab pertanyaan Anda dari berkas pengetahuan yang boleh Anda baca, lengkap dengan sumbernya. Jawaban bisa keliru, jadi periksa sumbernya.",
+        "i1": "Jika tidak ada yang cocok, tidak ada yang dikirim ke AI dan Anda diberi tahu.",
+        "i2": "Jika AI belum diatur di server ini, Anda melihat pemberitahuan. Tanyakan kepada administrator platform.",
+        "i3": "Pemakaian AI punya anggaran token harian. Pemilik dan Admin dapat mengubahnya (0 mematikan AI). Jika habis, AI berhenti sampai hari berikutnya (UTC)."
+      },
+      "crm": {
+        "title": "Pelanggan (CRM)",
+        "p1": "Kontak berisi data pribadi orang di luar tim Anda. Kumpulkan seperlunya dan catat bagaimana persetujuan diberikan.",
+        "i1": "Anggota melihat kontaknya sendiri. Manajer, Admin, dan Pemilik melihat semuanya.",
+        "i2": "Pindahkan deal lewat tahap Prospek, Terkualifikasi, Proposal, Negosiasi, lalu Menang atau Kalah.",
+        "i3": "Catat catatan, telepon, email, dan pertemuan pada sebuah kontak.",
+        "i4": "Pemilik dan Admin dapat menghapus data pribadi kontak. Deal dan riwayat persetujuan tetap ada. Tindakan ini tidak dapat dibatalkan."
+      },
+      "schedule": {
+        "title": "Jadwal dan halaman pemesanan",
+        "p1": "Jadwal menampilkan rapat Anda untuk 60 hari ke depan dalam zona waktu Anda sendiri.",
+        "i1": "Buat rapat, undang rekan, tambahkan pengingat, dan terima atau tolak undangan. Tidak ada yang bisa dipesan ganda pada waktu yang sama.",
+        "i2": "Langganan kalender memberi Anda tautan pribadi untuk Google Calendar, Apple Calendar, atau Outlook. Tautan hanya ditampilkan sekali dan siapa pun yang memilikinya dapat membaca rapat Anda, jadi jangan dibagikan.",
+        "i3": "Halaman pemesanan memungkinkan orang luar memesan waktu kosong Anda lewat tautan publik, tanpa akun. Atur jam mingguan Anda, lalu Terbitkan dan bagikan tautannya. Tutup untuk menghentikan.",
+        "i4": "Setiap pemesanan membuat atau memperbarui kontak CRM, mencatat persetujuan, dan muncul di jadwal Anda."
+      },
+      "forms": {
+        "title": "Formulir dan halaman publik",
+        "p1": "Manajer, Admin, dan Pemilik dapat mengumpulkan informasi dari siapa pun yang memiliki tautan, tanpa akun.",
+        "i1": "Mulai formulir dari templat, tambahkan kolom, dan tulis pernyataan persetujuan yang harus disetujui pengunjung.",
+        "i2": "Terbitkan untuk mendapat tautan publik. Setelah diterbitkan hanya label kolom yang dapat diubah, agar jawaban tersimpan tetap konsisten. Tutup formulir untuk menghentikannya.",
+        "i3": "Kiriman terdaftar di bawah formulir. Formulir yang membuat kontak menautkan tiap kiriman ke kontak CRM.",
+        "i4": "Otomasi (Pemilik dan Admin) menyediakan tiga aturan opsional, semuanya mati sampai Anda menyalakannya. Aturan itu hanya bekerja di dalam workspace."
+      },
+      "progress": {
+        "title": "Progres dan poin",
+        "p1": "Poin mengakui pekerjaan yang selesai. Poin bukan uang.",
+        "i1": "Hanya tugas yang ditugaskan kepada Anda dan Anda selesaikan yang dihitung, dengan batas harian.",
+        "i2": "Anda melihat total poin, 7 hari terakhir, rentetan hari, dan tantangan yang sedang berjalan.",
+        "i3": "Manajer ke atas membuat tantangan, misalnya menyelesaikan sejumlah tugas dalam satu periode.",
+        "i4": "Papan peringkat mati kecuali Pemilik atau Admin menyalakannya, dan itu pun hanya menampilkan orang yang memilih ikut. Anda dapat menyembunyikan diri kapan saja."
+      },
+      "roles": {
+        "title": "Peran: siapa boleh apa",
+        "p1": "Peran Anda menentukan halaman apa yang ada untuk Anda. Jika ada menu yang tidak muncul, biasanya inilah sebabnya.",
+        "i1": "Pemilik: semuanya, termasuk menghapus workspace (ada masa tenggang 14 hari untuk membatalkan).",
+        "i2": "Admin: anggota dan undangan, paket, otomasi, dan penghapusan data pribadi.",
+        "i3": "Manajer: proyek, formulir, tantangan, kanal, dan semua kontak CRM.",
+        "i4": "Anggota: tujuan, tugas, komentar, obrolan, berkas, pengetahuan, asisten, kontak dan rapat sendiri.",
+        "i5": "Peninjau: hanya-baca untuk tujuan, tugas, obrolan, berkas yang dibagikan, dan jadwal."
+      },
+      "faq": {
+        "title": "Ada yang tidak berjalan",
+        "p1": "Sebagian besar masalah punya penyebab sederhana.",
+        "i1": "Email verifikasi, undangan, atau atur ulang tidak datang: periksa folder spam, lalu minta administrator memastikan pengiriman email sudah diatur.",
+        "i2": "Undangan dinyatakan tidak tersedia: sudah dipakai, dicabut, atau kedaluwarsa. Minta yang baru, dan masuk dengan alamat yang diundang.",
+        "i3": "Sebuah halaman tidak ada di menu: pilih Tampilkan semua fitur, atau peran Anda memang tidak memilikinya.",
+        "i4": "Unggahan gagal: periksa tipe berkas, batas 10 MB, dan batas penyimpanan paket Anda.",
+        "i5": "Tidak bisa menambah anggota atau berkas lagi: batas paket tercapai. Minta operator platform mengubah paket."
+      }
+    }
   }
 }

@@ -68,5 +68,8 @@ A read-only page of counts for 7, 30 or 90 days against the period before. Secti
 ### CRM
 Tenant-scoped contact ownership, consent-aware data collection, customer journey stages, deal stages, activity timeline, meeting scheduling and analytics.
 
+### Help guide
+A public page at `/help` (en, id, ja) explains how to use the product: getting started, each area, roles and common problems. Anyone may read it without signing in. It is linked from the landing page, the footer of every page and the workspace top bar. The text lives in the `Help` message catalog; `src/features/help/schemas/sections.ts` fixes the section order, and a test keeps the sections and item numbering complete in every language. When a page or permission changes, update the matching section. A longer Indonesian version for operators is `docs/16-USER-GUIDE.id.md`.
+
 ## Definition of done for each feature
 Role matrix + UI states + input validation + API contract + auditing as needed + tenant boundary tests + accessible interactions + docs.

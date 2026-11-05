@@ -71,8 +71,9 @@ export async function WorkspaceShell({
   channelId?: string;
   children: ReactNode;
 }) {
-  const [t, roles, unread, cookieStore, locale] = await Promise.all([
+  const [t, help, roles, unread, cookieStore, locale] = await Promise.all([
     getTranslations("Workspace"),
+    getTranslations("Help"),
     getTranslations("Roles"),
     countUnread({ prisma: db() }, context),
     cookies(),
@@ -143,6 +144,9 @@ export async function WorkspaceShell({
             {t("role", { role: roles(context.role) })}
           </p>
           <div className="flex items-center gap-3">
+            <Link href="/help" className="text-sm font-medium text-primary hover:underline">
+              {help("nav")}
+            </Link>
             <Link href="/workspaces" className="text-sm font-medium text-primary hover:underline">
               {t("switch")}
             </Link>

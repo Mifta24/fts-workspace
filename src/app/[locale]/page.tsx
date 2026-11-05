@@ -61,9 +61,10 @@ const LANGUAGES = [
 ] as const;
 
 export default async function HomePage() {
-  const [locale, t, user] = await Promise.all([
+  const [locale, t, tHelp, user] = await Promise.all([
     getLocale(),
     getTranslations("Home"),
+    getTranslations("Help"),
     getSessionUser(),
   ]);
   if (user) redirect({ href: "/workspaces", locale });
@@ -104,6 +105,9 @@ export default async function HomePage() {
             <a className="whitespace-nowrap hover:text-foreground" href="#faq">
               {t("faqNav")}
             </a>
+            <Link className="whitespace-nowrap hover:text-foreground" href="/help">
+              {tHelp("nav")}
+            </Link>
           </nav>
 
           <div className="flex items-center gap-3">

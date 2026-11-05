@@ -1168,5 +1168,122 @@
     "pendingBody": "You asked for this workspace to be deleted on {requested}. It is removed after {due}. Until then it keeps working.",
     "cancelButton": "Cancel the deletion",
     "privacyLink": "How we handle personal data"
+  },
+  "Help": {
+    "nav": "How to use",
+    "title": "How to use FTS Workspace",
+    "intro": "A short guide for everyone in a workspace: how to get started, what each page is for, and who can do what. You do not need to sign in to read it.",
+    "back": "Back to the home page",
+    "contents": "On this page",
+    "footer": "Still stuck? Ask your workspace Owner or Admin. They can change your role, send invitations and contact the platform operator.",
+    "sections": {
+      "start": {
+        "title": "Get started in five steps",
+        "p1": "FTS Workspace brings goals, tasks, team chat, files and customer work into one place. AI can prepare drafts, and your team stays in control.",
+        "i1": "Create an account with your email and a password of at least 12 characters, then open the verification link we email you. You cannot sign in before that.",
+        "i2": "Create a workspace: choose a name and an address (lowercase letters, numbers and hyphens). You become its Owner.",
+        "i3": "On the Overview, choose Create your first goal and describe the result you want.",
+        "i4": "Add tasks under the goal, or choose Plan tasks with AI and review the draft.",
+        "i5": "Invite teammates from Members with their email and a role. They accept from the link in the email, signed in with the address that was invited."
+      },
+      "account": {
+        "title": "Your account and security",
+        "p1": "One account can belong to several workspaces. Use Switch workspace at the top of any workspace page to move between them.",
+        "i1": "Forgot your password? Choose Forgot password on the sign-in page and follow the link in the email.",
+        "i2": "Turn on two-step sign-in from Security (linked on the Your workspaces page). Add the setup key to an authenticator app and keep the recovery codes somewhere safe: each works once and is shown only once.",
+        "i3": "The language links (English, Bahasa Indonesia, 日本語) are on the home page. The address starts with /en, /id or /ja.",
+        "i4": "The side menu starts with the essentials only. Choose Show all features to see every page, and Show essentials only to go back. This changes only what is listed, never what you may do."
+      },
+      "goals": {
+        "title": "Goals and milestones",
+        "p1": "Goals can be nested under other goals. When you create one, choose how its progress is worked out:",
+        "i1": "From tasks: the share of the goal's tasks that are completed.",
+        "i2": "From milestones: the share of milestones you mark as done.",
+        "i3": "Numeric KPI: current value divided by the target value.",
+        "i4": "Manual: a percentage you enter yourself.",
+        "i5": "Plan tasks with AI (on a goal page) only creates a draft. Nothing is created until you review it and choose Create selected tasks."
+      },
+      "tasks": {
+        "title": "Tasks",
+        "p1": "Every task has a status, a priority, an optional due date and an assignee.",
+        "i1": "Status moves from Backlog to To do, In progress, In review and Completed (or Cancelled). Priority is Low, Medium, High or Urgent.",
+        "i2": "Use the All, For me and Overdue views to find what matters.",
+        "i3": "Open a task to comment, add subtasks and change details.",
+        "i4": "You get an Inbox notification when a task is assigned to you or commented on."
+      },
+      "chat": {
+        "title": "Chat and Inbox",
+        "p1": "Chat has channels (open to the workspace, or private and invitation only) and direct messages.",
+        "i1": "Join an open channel from More channels, or create one. Channel names use lowercase letters, numbers and hyphens.",
+        "i2": "New messages appear instantly. You can edit or delete your own messages.",
+        "i3": "Viewers can read conversations but not post.",
+        "i4": "The Inbox collects assignments, comments, direct messages, meeting changes, reminders and new form or booking entries. Mark them as read one by one or all at once."
+      },
+      "files": {
+        "title": "Files and knowledge",
+        "p1": "Files are private to your workspace and respect who you share them with.",
+        "i1": "Upload text, Markdown, CSV, PDF, PNG, JPEG or WebP files up to 10 MB.",
+        "i2": "Choose who can see a file: only you, you and people you pick, or everyone in the workspace.",
+        "i3": "For text files, choose Add to knowledge. After the status changes to Indexed, the file can be searched.",
+        "i4": "The Knowledge page searches only files you are allowed to read."
+      },
+      "assistant": {
+        "title": "The assistant",
+        "p1": "The assistant answers your question from knowledge files you are allowed to read, and shows its sources. Answers can be wrong, so check the sources.",
+        "i1": "If nothing matches, nothing is sent to the AI and you are told so.",
+        "i2": "If AI is not set up on this server, you see a notice. Ask the platform administrator.",
+        "i3": "AI use has a daily token budget. Owners and Admins can change it (0 turns AI off). When it runs out, AI stops until the next day (UTC)."
+      },
+      "crm": {
+        "title": "Customers (CRM)",
+        "p1": "Contacts hold personal data about people outside your team. Collect only what you need and record how consent was given.",
+        "i1": "Members see their own contacts. Managers, Admins and Owners see all of them.",
+        "i2": "Move deals through the stages Lead, Qualified, Proposal, Negotiation, then Won or Lost.",
+        "i3": "Log notes, calls, emails and meetings on a contact.",
+        "i4": "Owners and Admins can erase a contact's personal data. Deals and the consent history stay. This cannot be undone."
+      },
+      "schedule": {
+        "title": "Schedule and booking pages",
+        "p1": "Schedule shows your meetings for the next 60 days in your own time zone.",
+        "i1": "Create a meeting, invite teammates, add a reminder, and accept or decline invitations. Nobody can be booked twice at the same time.",
+        "i2": "Calendar subscription gives you a private link for Google Calendar, Apple Calendar or Outlook. It is shown once and anyone who has it can read your meetings, so do not share it.",
+        "i3": "A booking page lets outsiders book your free time from a public link, without an account. Set your weekly hours, then Publish and share the link. Close it to stop.",
+        "i4": "Each booking creates or updates a CRM contact, records consent and appears on your schedule."
+      },
+      "forms": {
+        "title": "Forms and public pages",
+        "p1": "Managers, Admins and Owners can collect information from anyone with a link, with no account needed.",
+        "i1": "Start a form from a template, add fields and write the consent statement visitors must accept.",
+        "i2": "Publish to get the public link. After publishing only the field labels can change, so saved answers stay consistent. Close the form to stop it.",
+        "i3": "Submissions are listed under the form. A form that creates contacts links each submission to a CRM contact.",
+        "i4": "Automations (Owners and Admins) offers three optional rules, all off until you switch them on. They only act inside the workspace."
+      },
+      "progress": {
+        "title": "Progress and points",
+        "p1": "Points recognise finished work. They are not money.",
+        "i1": "Only tasks assigned to you that you complete count, with a daily limit.",
+        "i2": "You see your total points, the last 7 days, your streak and your running challenge.",
+        "i3": "Managers and above create challenges, such as completing a number of tasks in a period.",
+        "i4": "The leaderboard is off unless an Owner or Admin turns it on, and even then only people who choose to appear are shown. You can hide yourself at any time."
+      },
+      "roles": {
+        "title": "Roles: who can do what",
+        "p1": "Your role decides which pages exist for you. If a menu entry is missing, this is the usual reason.",
+        "i1": "Owner: everything, including deleting the workspace (there is a 14-day grace period to cancel).",
+        "i2": "Admin: members and invitations, plan, automations and erasing personal data.",
+        "i3": "Manager: projects, forms, challenges, channels and all CRM contacts.",
+        "i4": "Member: goals, tasks, comments, chat, files, knowledge, the assistant, own contacts and meetings.",
+        "i5": "Viewer: read-only access to goals, tasks, chat, shared files and the schedule."
+      },
+      "faq": {
+        "title": "Something is not working",
+        "p1": "Most problems have a simple cause.",
+        "i1": "No verification, invitation or reset email: check your spam folder, then ask your administrator to check that email sending is set up.",
+        "i2": "An invitation says it is unavailable: it was already used, withdrawn or expired. Ask for a new one, and sign in with the invited address.",
+        "i3": "A page is missing from the menu: choose Show all features, or your role does not include it.",
+        "i4": "An upload fails: check the file type, the 10 MB limit and your plan's storage limit.",
+        "i5": "You cannot add more members or files: the plan limit is reached. Ask the platform operator to change the plan."
+      }
+    }
   }
 }
